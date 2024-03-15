@@ -26,13 +26,7 @@ pub(crate) fn t_test(
         .build_cartesian_2d(x_range, y_range.clone())
         .unwrap();
 
-    chart
-        .configure_mesh()
-        .disable_mesh()
-        .y_desc("Density")
-        .x_desc("t score")
-        .draw()
-        .unwrap();
+    chart.configure_mesh().disable_mesh().y_desc("Density").x_desc("t score").draw().unwrap();
 
     chart
         .draw_series(AreaSeries::new(

@@ -21,11 +21,7 @@ where
     pub fn new(sample: &'a Sample<A>) -> Resamples<'a, A> {
         let slice = sample;
 
-        Resamples {
-            rng: new_rng(),
-            sample: slice,
-            stage: None,
-        }
+        Resamples { rng: new_rng(), sample: slice, stage: None }
     }
 
     pub fn next(&mut self) -> &Sample<A> {

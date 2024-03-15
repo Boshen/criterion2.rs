@@ -35,29 +35,14 @@ fn abs_distribution(
     let (kde_xs, ys) = kde::sweep(scaled_xs_sample, KDE_POINTS, Some((start, end)));
 
     // interpolate between two points of the KDE sweep to find the Y position at the point estimate.
-    let n_point = kde_xs
-        .iter()
-        .position(|&x| x >= point)
-        .unwrap_or(kde_xs.len() - 1)
-        .max(1); // Must be at least the second element or this will panic
+    let n_point = kde_xs.iter().position(|&x| x >= point).unwrap_or(kde_xs.len() - 1).max(1); // Must be at least the second element or this will panic
     let slope = (ys[n_point] - ys[n_point - 1]) / (kde_xs[n_point] - kde_xs[n_point - 1]);
     let y_point = ys[n_point - 1] + (slope * (point - kde_xs[n_point - 1]));
 
     let zero = iter::repeat(0);
 
-    let start = kde_xs
-        .iter()
-        .enumerate()
-        .find(|&(_, &x)| x >= lb)
-        .unwrap()
-        .0;
-    let end = kde_xs
-        .iter()
-        .enumerate()
-        .rev()
-        .find(|&(_, &x)| x <= ub)
-        .unwrap()
-        .0;
+    let start = kde_xs.iter().enumerate().find(|&(_, &x)| x >= lb).unwrap().0;
+    let end = kde_xs.iter().enumerate().rev().find(|&(_, &x)| x <= ub).unwrap().0;
     let len = end - start;
 
     let kde_xs_sample = Sample::new(&kde_xs);
@@ -66,11 +51,7 @@ fn abs_distribution(
     figure
         .set(Font(DEFAULT_FONT))
         .set(size.unwrap_or(SIZE))
-        .set(Title(format!(
-            "{}: {}",
-            gnuplot_escape(id.as_title()),
-            statistic
-        )))
+        .set(Title(format!("{}: {}", gnuplot_escape(id.as_title()), statistic)))
         .configure(Axis::BottomX, |a| {
             a.set(Label(format!("Average time ({})", unit)))
                 .set(Range::Limits(kde_xs_sample.min(), kde_xs_sample.max()))
@@ -81,42 +62,23 @@ fn abs_distribution(
                 .set(Order::SampleText)
                 .set(Position::Outside(Vertical::Top, Horizontal::Right))
         })
-        .plot(
-            Lines {
-                x: &*kde_xs,
-                y: &*ys,
-            },
-            |c| {
-                c.set(DARK_BLUE)
-                    .set(LINEWIDTH)
-                    .set(Label("Bootstrap distribution"))
-                    .set(LineType::Solid)
-            },
-        )
+        .plot(Lines { x: &*kde_xs, y: &*ys }, |c| {
+            c.set(DARK_BLUE)
+                .set(LINEWIDTH)
+                .set(Label("Bootstrap distribution"))
+                .set(LineType::Solid)
+        })
         .plot(
             FilledCurve {
                 x: kde_xs.iter().skip(start).take(len),
                 y1: ys.iter().skip(start),
                 y2: zero,
             },
-            |c| {
-                c.set(DARK_BLUE)
-                    .set(Label("Confidence interval"))
-                    .set(Opacity(0.25))
-            },
+            |c| c.set(DARK_BLUE).set(Label("Confidence interval")).set(Opacity(0.25)),
         )
-        .plot(
-            Lines {
-                x: &[point, point],
-                y: &[0., y_point],
-            },
-            |c| {
-                c.set(DARK_BLUE)
-                    .set(LINEWIDTH)
-                    .set(Label("Point estimate"))
-                    .set(LineType::Dash)
-            },
-        );
+        .plot(Lines { x: &[point, point], y: &[0., y_point] }, |c| {
+            c.set(DARK_BLUE).set(LINEWIDTH).set(Label("Point estimate")).set(LineType::Dash)
+        });
 
     let path = context.report_path(id, &format!("{}.svg", statistic));
     debug_script(&path, &figure);
@@ -134,22 +96,11 @@ pub(crate) fn abs_distributions(
         .iter()
         .filter_map(|stat| {
             measurements.distributions.get(*stat).and_then(|dist| {
-                measurements
-                    .absolute_estimates
-                    .get(*stat)
-                    .map(|est| (*stat, dist, est))
+                measurements.absolute_estimates.get(*stat).map(|est| (*stat, dist, est))
             })
         })
         .map(|(statistic, distribution, estimate)| {
-            abs_distribution(
-                id,
-                context,
-                formatter,
-                statistic,
-                distribution,
-                estimate,
-                size,
-            )
+            abs_distribution(id, context, formatter, statistic, distribution, estimate, size)
         })
         .collect::<Vec<_>>()
 }
@@ -173,11 +124,7 @@ fn rel_distribution(
 
     // interpolate between two points of the KDE sweep to find the Y position at the point estimate.
     let point = estimate.point_estimate;
-    let n_point = xs
-        .iter()
-        .position(|&x| x >= point)
-        .unwrap_or(ys.len() - 1)
-        .max(1);
+    let n_point = xs.iter().position(|&x| x >= point).unwrap_or(ys.len() - 1).max(1);
     let slope = (ys[n_point] - ys[n_point - 1]) / (xs[n_point] - xs[n_point - 1]);
     let y_point = ys[n_point - 1] + (slope * (point - xs[n_point - 1]));
 
@@ -185,13 +132,7 @@ fn rel_distribution(
     let zero = iter::repeat(0);
 
     let start = xs.iter().enumerate().find(|&(_, &x)| x >= lb).unwrap().0;
-    let end = xs
-        .iter()
-        .enumerate()
-        .rev()
-        .find(|&(_, &x)| x <= ub)
-        .unwrap()
-        .0;
+    let end = xs.iter().enumerate().rev().find(|&(_, &x)| x <= ub).unwrap().0;
     let len = end - start;
 
     let x_min = xs_.min();
@@ -203,16 +144,8 @@ fn rel_distribution(
         (middle, middle)
     } else {
         (
-            if -noise_threshold < x_min {
-                x_min
-            } else {
-                -noise_threshold
-            },
-            if noise_threshold > x_max {
-                x_max
-            } else {
-                noise_threshold
-            },
+            if -noise_threshold < x_min { x_min } else { -noise_threshold },
+            if noise_threshold > x_max { x_max } else { noise_threshold },
         )
     };
 
@@ -227,11 +160,7 @@ fn rel_distribution(
                 .set(Order::SampleText)
                 .set(Position::Outside(Vertical::Top, Horizontal::Right))
         })
-        .set(Title(format!(
-            "{}: {}",
-            gnuplot_escape(id.as_title()),
-            statistic
-        )))
+        .set(Title(format!("{}: {}", gnuplot_escape(id.as_title()), statistic)))
         .configure(Axis::BottomX, |a| {
             a.set(Label("Relative change (%)"))
                 .set(Range::Limits(x_min * 100., x_max * 100.))
@@ -249,37 +178,14 @@ fn rel_distribution(
                 y1: ys.iter().skip(start),
                 y2: zero.clone(),
             },
-            |c| {
-                c.set(DARK_BLUE)
-                    .set(Label("Confidence interval"))
-                    .set(Opacity(0.25))
-            },
+            |c| c.set(DARK_BLUE).set(Label("Confidence interval")).set(Opacity(0.25)),
         )
-        .plot(
-            Lines {
-                x: &[point, point],
-                y: &[0., y_point],
-            },
-            |c| {
-                c.set(DARK_BLUE)
-                    .set(LINEWIDTH)
-                    .set(Label("Point estimate"))
-                    .set(LineType::Dash)
-            },
-        )
-        .plot(
-            FilledCurve {
-                x: &[fc_start, fc_end],
-                y1: one,
-                y2: zero,
-            },
-            |c| {
-                c.set(Axes::BottomXRightY)
-                    .set(DARK_RED)
-                    .set(Label("Noise threshold"))
-                    .set(Opacity(0.1))
-            },
-        );
+        .plot(Lines { x: &[point, point], y: &[0., y_point] }, |c| {
+            c.set(DARK_BLUE).set(LINEWIDTH).set(Label("Point estimate")).set(LineType::Dash)
+        })
+        .plot(FilledCurve { x: &[fc_start, fc_end], y1: one, y2: zero }, |c| {
+            c.set(Axes::BottomXRightY).set(DARK_RED).set(Label("Noise threshold")).set(Opacity(0.1))
+        });
 
     let path = context.report_path(id, &format!("change/{}.svg", statistic));
     debug_script(&path, &figure);

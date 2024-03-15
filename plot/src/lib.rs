@@ -371,10 +371,6 @@
 #![cfg_attr(feature = "cargo-clippy", allow(clippy::doc_markdown))]
 #![cfg_attr(feature = "cargo-clippy", allow(clippy::many_single_char_names))]
 
-extern crate cast;
-#[macro_use]
-extern crate itertools;
-
 use std::borrow::Cow;
 use std::fmt;
 use std::fs::File;
@@ -912,10 +908,7 @@ impl Plot {
     where
         S: Script,
     {
-        Plot {
-            data,
-            script: script.script(),
-        }
+        Plot { data, script: script.script() }
     }
 
     fn data(&self) -> &Matrix {
@@ -947,11 +940,9 @@ impl fmt::Display for VersionError {
                 write!(f, "`gnuplot --version` failed with error message:\n{}", msg)
             }
             VersionError::OutputError => write!(f, "`gnuplot --version` returned invalid utf-8"),
-            VersionError::ParseError(msg) => write!(
-                f,
-                "`gnuplot --version` returned an unparseable version string: {}",
-                msg
-            ),
+            VersionError::ParseError(msg) => {
+                write!(f, "`gnuplot --version` returned an unparseable version string: {}", msg)
+            }
         }
     }
 }
@@ -985,10 +976,8 @@ pub struct Version {
 
 /// Returns `gnuplot` version
 pub fn version() -> Result<Version, VersionError> {
-    let command_output = Command::new("gnuplot")
-        .arg("--version")
-        .output()
-        .map_err(VersionError::Exec)?;
+    let command_output =
+        Command::new("gnuplot").arg("--version").output().map_err(VersionError::Exec)?;
     if !command_output.status.success() {
         let error =
             String::from_utf8(command_output.stderr).map_err(|_| VersionError::OutputError)?;
@@ -1007,11 +996,7 @@ fn parse_version(version_str: &str) -> Result<Version, Option<ParseIntError>> {
     let minor = version.next().ok_or(None)?.parse()?;
     let patchlevel = words.nth(1).ok_or(None)?.to_owned();
 
-    Ok(Version {
-        major,
-        minor,
-        patch: patchlevel,
-    })
+    Ok(Version { major, minor, patch: patchlevel })
 }
 
 fn scale_factor(map: &map::axis::Map<axis::Properties>, axes: Axes) -> (f64, f64) {

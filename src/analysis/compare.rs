@@ -41,11 +41,8 @@ pub(crate) fn common<M: Measurement>(
     estimates_file.push("estimates.json");
     let base_estimates: Estimates = fs::load(&estimates_file)?;
 
-    let base_avg_times: Vec<f64> = iters
-        .iter()
-        .zip(times.iter())
-        .map(|(iters, elapsed)| elapsed / iters)
-        .collect();
+    let base_avg_times: Vec<f64> =
+        iters.iter().zip(times.iter()).map(|(iters, elapsed)| elapsed / iters).collect();
     let base_avg_time_sample = Sample::new(&base_avg_times);
 
     let mut change_dir = criterion.output_directory.clone();
@@ -106,10 +103,7 @@ fn estimates<M: Measurement>(
     criterion: &Criterion<M>,
 ) -> (ChangeEstimates, ChangeDistributions) {
     fn stats(a: &Sample<f64>, b: &Sample<f64>) -> (f64, f64) {
-        (
-            a.mean() / b.mean() - 1.,
-            a.percentiles().median() / b.percentiles().median() - 1.,
-        )
+        (a.mean() / b.mean() - 1., a.percentiles().median() / b.percentiles().median() - 1.)
     }
 
     let cl = config.confidence_level;
@@ -120,10 +114,7 @@ fn estimates<M: Measurement>(
         univariate::bootstrap(avg_times, base_avg_times, nresamples, stats)
     );
 
-    let distributions = ChangeDistributions {
-        mean: dist_mean,
-        median: dist_median,
-    };
+    let distributions = ChangeDistributions { mean: dist_mean, median: dist_median };
 
     let (mean, median) = stats(avg_times, base_avg_times);
     let points = ChangePointEstimates { mean, median };

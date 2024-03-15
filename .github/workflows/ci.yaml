@@ -1,11 +1,10 @@
 on:
   push:
     branches:
-      - master
+      - main
   pull_request:
     branches:
-      - master
-      - version-0.4
+      - main
 
 name: tests
 env:

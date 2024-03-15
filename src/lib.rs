@@ -17,7 +17,6 @@
 
 #![warn(missing_docs)]
 #![warn(bare_trait_objects)]
-#![cfg_attr(feature = "real_blackbox", feature(test))]
 #![cfg_attr(
     feature = "cargo-clippy",
     allow(
@@ -30,19 +29,9 @@
 #[cfg(all(feature = "rayon", target_arch = "wasm32"))]
 compile_error!("Rayon cannot be used when targeting wasi32. Try disabling default features.");
 
-#[cfg(test)]
-extern crate approx;
-
-#[cfg(test)]
-extern crate quickcheck;
-
 use regex::Regex;
 
-#[cfg(feature = "real_blackbox")]
-extern crate test;
-
-#[macro_use]
-extern crate serde_derive;
+use serde::{Deserialize, Serialize};
 
 // Needs to be declared before other modules
 // in order to be usable there.
@@ -110,10 +99,7 @@ static DEFAULT_PLOTTING_BACKEND: Lazy<PlottingBackend> = Lazy::new(|| match &*GN
     Err(e) => {
         match e {
             VersionError::Exec(_) => eprintln!("Gnuplot not found, using plotters backend"),
-            e => eprintln!(
-                "Gnuplot not found or not usable, using plotters backend\n{}",
-                e
-            ),
+            e => eprintln!("Gnuplot not found or not usable, using plotters backend\n{}", e),
         };
         PlottingBackend::Plotters
     }
@@ -154,7 +140,7 @@ fn debug_enabled() -> bool {
 /// This variant is backed by the (unstable) test::black_box function.
 #[cfg(feature = "real_blackbox")]
 pub fn black_box<T>(dummy: T) -> T {
-    test::black_box(dummy)
+    std::hint::black_box(dummy)
 }
 
 /// A function that is opaque to the optimizer, used to prevent the compiler from
@@ -386,16 +372,14 @@ fn cargo_target_directory() -> Option<PathBuf> {
         target_directory: PathBuf,
     }
 
-    env::var_os("CARGO_TARGET_DIR")
-        .map(PathBuf::from)
-        .or_else(|| {
-            let output = Command::new(env::var_os("CARGO")?)
-                .args(["metadata", "--format-version", "1"])
-                .output()
-                .ok()?;
-            let metadata: Metadata = serde_json::from_slice(&output.stdout).ok()?;
-            Some(metadata.target_directory)
-        })
+    env::var_os("CARGO_TARGET_DIR").map(PathBuf::from).or_else(|| {
+        let output = Command::new(env::var_os("CARGO")?)
+            .args(["metadata", "--format-version", "1"])
+            .output()
+            .ok()?;
+        let metadata: Metadata = serde_json::from_slice(&output.stdout).ok()?;
+        Some(metadata.target_directory)
+    })
 }
 
 impl Default for Criterion {
@@ -442,9 +426,7 @@ impl Default for Criterion {
             all_titles: HashSet::new(),
             measurement: WallTime,
             profiler: Box::new(RefCell::new(ExternalProfiler)),
-            connection: CARGO_CRITERION_CONNECTION
-                .as_ref()
-                .map(|mtx| mtx.lock().unwrap()),
+            connection: CARGO_CRITERION_CONNECTION.as_ref().map(|mtx| mtx.lock().unwrap()),
             mode: Mode::Benchmark,
         };
 
@@ -485,10 +467,7 @@ impl<M: Measurement> Criterion<M> {
     /// Changes the internal profiler for benchmarks run with this runner. See
     /// the Profiler trait for more details.
     pub fn with_profiler<P: Profiler + 'static>(self, p: P) -> Criterion<M> {
-        Criterion {
-            profiler: Box::new(RefCell::new(p)),
-            ..self
-        }
+        Criterion { profiler: Box::new(RefCell::new(p)), ..self }
     }
 
     #[must_use]
@@ -682,11 +661,7 @@ impl<M: Measurement> Criterion<M> {
     /// Names an explicit baseline and disables overwriting the previous results.
     pub fn retain_baseline(mut self, baseline: String, strict: bool) -> Criterion<M> {
         self.baseline_directory = baseline;
-        self.baseline = if strict {
-            Baseline::CompareStrict
-        } else {
-            Baseline::CompareLenient
-        };
+        self.baseline = if strict { Baseline::CompareStrict } else { Baseline::CompareLenient };
         self
     }
 
@@ -698,10 +673,7 @@ impl<M: Measurement> Criterion<M> {
     pub fn with_filter<S: Into<String>>(mut self, filter: S) -> Criterion<M> {
         let filter_text = filter.into();
         let filter = Regex::new(&filter_text).unwrap_or_else(|err| {
-            panic!(
-                "Unable to parse '{}' as a regular expression: {}",
-                filter_text, err
-            )
+            panic!("Unable to parse '{}' as a regular expression: {}", filter_text, err)
         });
         self.filter = BenchmarkFilter::Regex(filter);
 
@@ -951,9 +923,7 @@ https://bheisler.github.io/criterion.rs/book/faq.html
             }
 
             if matches.contains_id("baseline")
-                || matches
-                    .get_one::<String>("save-baseline")
-                    .map_or(false, |base| base != "base")
+                || matches.get_one::<String>("save-baseline").map_or(false, |base| base != "base")
                 || matches.contains_id("load-baseline")
             {
                 eprintln!("Error: baselines are not supported when running with cargo-criterion.");
@@ -1009,10 +979,7 @@ https://bheisler.github.io/criterion.rs/book/faq.html
                 BenchmarkFilter::Exact(filter.to_owned())
             } else {
                 let regex = Regex::new(filter).unwrap_or_else(|err| {
-                    panic!(
-                        "Unable to parse '{}' as a regular expression: {}",
-                        filter, err
-                    )
+                    panic!("Unable to parse '{}' as a regular expression: {}", filter, err)
                 });
                 BenchmarkFilter::Regex(regex)
             }
@@ -1162,8 +1129,7 @@ https://bheisler.github.io/criterion.rs/book/faq.html
     /// # Examples:
     ///
     /// ```rust
-    /// #[macro_use] extern crate criterion;
-    /// use self::criterion::*;
+    /// use self::criterion2::*;
     ///
     /// fn bench_simple(c: &mut Criterion) {
     ///     let mut group = c.benchmark_group("My Group");
@@ -1171,7 +1137,7 @@ https://bheisler.github.io/criterion.rs/book/faq.html
     ///     // Now we can perform benchmarks with this group
     ///     group.bench_function("Bench 1", |b| b.iter(|| 1 ));
     ///     group.bench_function("Bench 2", |b| b.iter(|| 2 ));
-    ///    
+    ///
     ///     group.finish();
     /// }
     /// criterion_group!(benches, bench_simple);
@@ -1184,8 +1150,7 @@ https://bheisler.github.io/criterion.rs/book/faq.html
         assert!(!group_name.is_empty(), "Group name must not be empty.");
 
         if let Some(conn) = &self.connection {
-            conn.send(&OutgoingMessage::BeginningBenchmarkGroup { group: &group_name })
-                .unwrap();
+            conn.send(&OutgoingMessage::BeginningBenchmarkGroup { group: &group_name }).unwrap();
         }
 
         BenchmarkGroup::new(self, group_name)
@@ -1200,8 +1165,7 @@ where
     /// # Example
     ///
     /// ```rust
-    /// #[macro_use] extern crate criterion;
-    /// use self::criterion::*;
+    /// use self::criterion2::*;
     ///
     /// fn bench(c: &mut Criterion) {
     ///     // Setup (construct data, allocate memory, etc)
@@ -1220,8 +1184,7 @@ where
     where
         F: FnMut(&mut Bencher<'_, M>),
     {
-        self.benchmark_group(id)
-            .bench_function(BenchmarkId::no_function(), f);
+        self.benchmark_group(id).bench_function(BenchmarkId::no_function(), f);
         self
     }
 
@@ -1231,8 +1194,7 @@ where
     /// # Example
     ///
     /// ```rust
-    /// #[macro_use] extern crate criterion;
-    /// use self::criterion::*;
+    /// use self::criterion2::*;
     ///
     /// fn bench(c: &mut Criterion) {
     ///     // Setup (construct data, allocate memory, etc)
@@ -1307,7 +1269,7 @@ pub enum AxisScale {
 /// or benchmark group.
 ///
 /// ```rust
-/// use self::criterion::{Bencher, Criterion, PlotConfiguration, AxisScale};
+/// use self::criterion2::{Bencher, Criterion, PlotConfiguration, AxisScale};
 ///
 /// let plot_config = PlotConfiguration::default()
 ///     .summary_scale(AxisScale::Logarithmic);
@@ -1325,9 +1287,7 @@ pub struct PlotConfiguration {
 
 impl Default for PlotConfiguration {
     fn default() -> PlotConfiguration {
-        PlotConfiguration {
-            summary_scale: AxisScale::Linear,
-        }
+        PlotConfiguration { summary_scale: AxisScale::Linear }
     }
 }
 

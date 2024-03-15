@@ -15,16 +15,12 @@ where
     P: AsRef<Path>,
 {
     let path = path.as_ref();
-    let mut f = File::open(path).map_err(|inner| Error::AccessError {
-        inner,
-        path: path.to_owned(),
-    })?;
+    let mut f =
+        File::open(path).map_err(|inner| Error::AccessError { inner, path: path.to_owned() })?;
     let mut string = String::new();
     let _ = f.read_to_string(&mut string);
-    let result: A = serde_json::from_str(string.as_str()).map_err(|inner| Error::SerdeError {
-        inner,
-        path: path.to_owned(),
-    })?;
+    let result: A = serde_json::from_str(string.as_str())
+        .map_err(|inner| Error::SerdeError { inner, path: path.to_owned() })?;
 
     Ok(result)
 }
@@ -41,10 +37,8 @@ pub fn mkdirp<P>(path: &P) -> Result<()>
 where
     P: AsRef<Path>,
 {
-    fs::create_dir_all(path.as_ref()).map_err(|inner| Error::AccessError {
-        inner,
-        path: path.as_ref().to_owned(),
-    })?;
+    fs::create_dir_all(path.as_ref())
+        .map_err(|inner| Error::AccessError { inner, path: path.as_ref().to_owned() })?;
     Ok(())
 }
 
@@ -62,10 +56,8 @@ where
     D: Serialize,
     P: AsRef<Path>,
 {
-    let buf = serde_json::to_string(&data).map_err(|inner| Error::SerdeError {
-        path: path.as_ref().to_owned(),
-        inner,
-    })?;
+    let buf = serde_json::to_string(&data)
+        .map_err(|inner| Error::SerdeError { path: path.as_ref().to_owned(), inner })?;
     save_string(&buf, path)
 }
 
@@ -77,10 +69,7 @@ where
 
     File::create(path)
         .and_then(|mut f| f.write_all(data.as_bytes()))
-        .map_err(|inner| Error::AccessError {
-            inner,
-            path: path.as_ref().to_owned(),
-        })?;
+        .map_err(|inner| Error::AccessError { inner, path: path.as_ref().to_owned() })?;
 
     Ok(())
 }

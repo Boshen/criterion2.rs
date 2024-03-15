@@ -59,8 +59,7 @@ pub fn line_comparison(
         })
         .set(Title(format!("{}: Comparison", gnuplot_escape(title))))
         .configure(Axis::BottomX, |a| {
-            a.set(Label(format!("Input{}", input_suffix)))
-                .set(axis_scale.to_gnuplot())
+            a.set(Label(format!("Input{}", input_suffix))).set(axis_scale.to_gnuplot())
         });
 
     let mut i = 0;
@@ -104,14 +103,10 @@ pub fn line_comparison(
             if let Some(name) = function_name {
                 c.set(Label(name));
             }
-            c.set(LINEWIDTH)
-                .set(LineType::Solid)
-                .set(COMPARISON_COLORS[i % NUM_COLORS])
+            c.set(LINEWIDTH).set(LineType::Solid).set(COMPARISON_COLORS[i % NUM_COLORS])
         })
         .plot(Points { x: &xs, y: &ys }, |p| {
-            p.set(PointType::FilledCircle)
-                .set(POINT_SIZE)
-                .set(COMPARISON_COLORS[i % NUM_COLORS])
+            p.set(PointType::FilledCircle).set(POINT_SIZE).set(COMPARISON_COLORS[i % NUM_COLORS])
         });
 
         i += 1;
@@ -176,14 +171,10 @@ pub fn violin(
                 .set(axis_scale.to_gnuplot())
         })
         .configure(Axis::LeftY, |a| {
-            a.set(Label("Input"))
-                .set(Range::Limits(0., all_curves.len() as f64))
-                .set(TicLabels {
-                    positions: tics(),
-                    labels: all_curves
-                        .iter()
-                        .map(|&&(id, _)| gnuplot_escape(id.as_title())),
-                })
+            a.set(Label("Input")).set(Range::Limits(0., all_curves.len() as f64)).set(TicLabels {
+                positions: tics(),
+                labels: all_curves.iter().map(|&&(id, _)| gnuplot_escape(id.as_title())),
+            })
         });
 
     let mut is_first = true;

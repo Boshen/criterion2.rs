@@ -23,11 +23,7 @@ macro_rules! elapsed {
         let out = $block;
         let elapsed = &start.elapsed();
 
-        info!(
-            "{} took {}",
-            $msg,
-            crate::format::time(elapsed.as_nanos() as f64)
-        );
+        info!("{} took {}", $msg, crate::format::time(elapsed.as_nanos() as f64));
 
         out
     }};
@@ -48,11 +44,7 @@ pub(crate) fn common<M: Measurement, T: ?Sized>(
     criterion.report.benchmark_start(id, report_context);
 
     if let Baseline::CompareStrict = criterion.baseline {
-        if !base_dir_exists(
-            id,
-            &criterion.baseline_directory,
-            &criterion.output_directory,
-        ) {
+        if !base_dir_exists(id, &criterion.baseline_directory, &criterion.output_directory) {
             panic!(
                 "Baseline '{base}' must exist before comparison is allowed; try --save-baseline {base}",
                 base=criterion.baseline_directory,
@@ -103,8 +95,7 @@ pub(crate) fn common<M: Measurement, T: ?Sized>(
             })
             .unwrap();
 
-            conn.serve_value_formatter(criterion.measurement.formatter())
-                .unwrap();
+            conn.serve_value_formatter(criterion.measurement.formatter()).unwrap();
             return;
         }
     }
@@ -180,46 +171,43 @@ pub(crate) fn common<M: Measurement, T: ?Sized>(
         });
     }
 
-    let compare_data = if base_dir_exists(
-        id,
-        &criterion.baseline_directory,
-        &criterion.output_directory,
-    ) {
-        let result = compare::common(id, avg_times, config, criterion);
-        match result {
-            Ok((
-                t_value,
-                t_distribution,
-                relative_estimates,
-                relative_distributions,
-                base_iter_counts,
-                base_sample_times,
-                base_avg_times,
-                base_estimates,
-            )) => {
-                let p_value = t_distribution.p_value(t_value, &Tails::Two);
-                Some(crate::report::ComparisonData {
-                    p_value,
-                    t_distribution,
+    let compare_data =
+        if base_dir_exists(id, &criterion.baseline_directory, &criterion.output_directory) {
+            let result = compare::common(id, avg_times, config, criterion);
+            match result {
+                Ok((
                     t_value,
+                    t_distribution,
                     relative_estimates,
                     relative_distributions,
-                    significance_threshold: config.significance_level,
-                    noise_threshold: config.noise_threshold,
                     base_iter_counts,
                     base_sample_times,
                     base_avg_times,
                     base_estimates,
-                })
+                )) => {
+                    let p_value = t_distribution.p_value(t_value, &Tails::Two);
+                    Some(crate::report::ComparisonData {
+                        p_value,
+                        t_distribution,
+                        t_value,
+                        relative_estimates,
+                        relative_distributions,
+                        significance_threshold: config.significance_level,
+                        noise_threshold: config.noise_threshold,
+                        base_iter_counts,
+                        base_sample_times,
+                        base_avg_times,
+                        base_estimates,
+                    })
+                }
+                Err(e) => {
+                    crate::error::log_error(&e);
+                    None
+                }
             }
-            Err(e) => {
-                crate::error::log_error(&e);
-                None
-            }
-        }
-    } else {
-        None
-    };
+        } else {
+            None
+        };
 
     let measurement_data = crate::report::MeasurementData {
         data: Data::new(&iters, &times),
@@ -311,17 +299,10 @@ fn estimates(avg_times: &Sample<f64>, config: &BenchmarkConfig) -> (Distribution
     let nresamples = config.nresamples;
 
     let (mean, std_dev, median, mad) = stats(avg_times);
-    let points = PointEstimates {
-        mean,
-        median,
-        std_dev,
-        median_abs_dev: mad,
-    };
+    let points = PointEstimates { mean, median, std_dev, median_abs_dev: mad };
 
-    let (dist_mean, dist_stddev, dist_median, dist_mad) = elapsed!(
-        "Bootstrapping the absolute statistics.",
-        avg_times.bootstrap(nresamples, stats)
-    );
+    let (dist_mean, dist_stddev, dist_median, dist_mad) =
+        elapsed!("Bootstrapping the absolute statistics.", avg_times.bootstrap(nresamples, stats));
 
     let distributions = Distributions {
         mean: dist_mean,
@@ -349,22 +330,10 @@ fn copy_new_dir_to_base(id: &str, baseline: &str, output_directory: &Path) {
     }
 
     // TODO: consider using walkdir or similar to generically copy.
-    try_else_return!(fs::cp(
-        &new_dir.join("estimates.json"),
-        &base_dir.join("estimates.json")
-    ));
-    try_else_return!(fs::cp(
-        &new_dir.join("sample.json"),
-        &base_dir.join("sample.json")
-    ));
-    try_else_return!(fs::cp(
-        &new_dir.join("tukey.json"),
-        &base_dir.join("tukey.json")
-    ));
-    try_else_return!(fs::cp(
-        &new_dir.join("benchmark.json"),
-        &base_dir.join("benchmark.json")
-    ));
+    try_else_return!(fs::cp(&new_dir.join("estimates.json"), &base_dir.join("estimates.json")));
+    try_else_return!(fs::cp(&new_dir.join("sample.json"), &base_dir.join("sample.json")));
+    try_else_return!(fs::cp(&new_dir.join("tukey.json"), &base_dir.join("tukey.json")));
+    try_else_return!(fs::cp(&new_dir.join("benchmark.json"), &base_dir.join("benchmark.json")));
     #[cfg(feature = "csv_output")]
     try_else_return!(fs::cp(&new_dir.join("raw.csv"), &base_dir.join("raw.csv")));
 }

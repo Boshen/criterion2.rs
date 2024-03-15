@@ -67,10 +67,6 @@ where
 
     /// Returns the 25th, 50th and 75th percentiles
     pub fn quartiles(&self) -> (A, A, A) {
-        (
-            self.at(A::cast(25)),
-            self.at(A::cast(50)),
-            self.at(A::cast(75)),
-        )
+        (self.at(A::cast(25)), self.at(A::cast(50)), self.at(A::cast(75)))
     }
 }

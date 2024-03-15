@@ -3,6 +3,8 @@
 use std::borrow::Cow;
 use std::iter::IntoIterator;
 
+use itertools::izip;
+
 use crate::data::Matrix;
 use crate::traits::{self, Data, Set};
 use crate::{Axes, Color, Default, Display, Figure, Label, Opacity, Plot, Script};
@@ -17,12 +19,7 @@ pub struct Properties {
 
 impl Default for Properties {
     fn default() -> Properties {
-        Properties {
-            axes: None,
-            color: None,
-            label: None,
-            opacity: None,
-        }
+        Properties { axes: None, color: None, label: None, opacity: None }
     }
 }
 

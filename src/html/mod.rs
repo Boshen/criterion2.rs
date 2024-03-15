@@ -102,10 +102,7 @@ struct Plot {
 }
 impl Plot {
     fn new(name: &str, url: &str) -> Plot {
-        Plot {
-            name: name.to_owned(),
-            url: url.to_owned(),
-        }
+        Plot { name: name.to_owned(), url: url.to_owned() }
     }
 }
 
@@ -139,38 +136,26 @@ impl<'a> ReportLink<'a> {
     fn group(output_directory: &Path, group_id: &'a str) -> ReportLink<'a> {
         let path = PathBuf::from(make_filename_safe(group_id));
 
-        ReportLink {
-            name: group_id,
-            path: if_exists(output_directory, &path),
-        }
+        ReportLink { name: group_id, path: if_exists(output_directory, &path) }
     }
 
     fn function(output_directory: &Path, group_id: &str, function_id: &'a str) -> ReportLink<'a> {
         let mut path = PathBuf::from(make_filename_safe(group_id));
         path.push(make_filename_safe(function_id));
 
-        ReportLink {
-            name: function_id,
-            path: if_exists(output_directory, &path),
-        }
+        ReportLink { name: function_id, path: if_exists(output_directory, &path) }
     }
 
     fn value(output_directory: &Path, group_id: &str, value_str: &'a str) -> ReportLink<'a> {
         let mut path = PathBuf::from(make_filename_safe(group_id));
         path.push(make_filename_safe(value_str));
 
-        ReportLink {
-            name: value_str,
-            path: if_exists(output_directory, &path),
-        }
+        ReportLink { name: value_str, path: if_exists(output_directory, &path) }
     }
 
     fn individual(output_directory: &Path, id: &'a BenchmarkId) -> ReportLink<'a> {
         let path = PathBuf::from(id.as_directory_name());
-        ReportLink {
-            name: id.as_title(),
-            path: if_exists(output_directory, &path),
-        }
+        ReportLink { name: id.as_title(), path: if_exists(output_directory, &path) }
     }
 }
 
@@ -254,12 +239,7 @@ impl<'a> BenchmarkGroup<'a> {
             .map(|os| os.map(|s| ReportLink::value(output_directory, group_id, s)))
             .collect::<Option<Vec<_>>>();
 
-        BenchmarkGroup {
-            group_report,
-            function_ids,
-            values,
-            individual_links: value_groups,
-        }
+        BenchmarkGroup { group_report, function_ids, values, individual_links: value_groups }
     }
 }
 
@@ -335,32 +315,22 @@ impl Report for Html {
             additional_plots.push(Plot::new("Slope", "slope.svg"));
         }
 
-        let throughput = measurements
-            .throughput
-            .as_ref()
-            .map(|thr| ConfidenceInterval {
-                lower: formatter
-                    .format_throughput(thr, typical_estimate.confidence_interval.upper_bound),
-                upper: formatter
-                    .format_throughput(thr, typical_estimate.confidence_interval.lower_bound),
-                point: formatter.format_throughput(thr, typical_estimate.point_estimate),
-            });
+        let throughput = measurements.throughput.as_ref().map(|thr| ConfidenceInterval {
+            lower: formatter
+                .format_throughput(thr, typical_estimate.confidence_interval.upper_bound),
+            upper: formatter
+                .format_throughput(thr, typical_estimate.confidence_interval.lower_bound),
+            point: formatter.format_throughput(thr, typical_estimate.point_estimate),
+        });
 
         let context = Context {
             title: id.as_title().to_owned(),
-            confidence: format!(
-                "{:.2}",
-                typical_estimate.confidence_interval.confidence_level
-            ),
+            confidence: format!("{:.2}", typical_estimate.confidence_interval.confidence_level),
 
             thumbnail_width: THUMBNAIL_SIZE.unwrap().0,
             thumbnail_height: THUMBNAIL_SIZE.unwrap().1,
 
-            slope: measurements
-                .absolute_estimates
-                .slope
-                .as_ref()
-                .map(time_interval),
+            slope: measurements.absolute_estimates.slope.as_ref().map(time_interval),
             mean: time_interval(&measurements.absolute_estimates.mean),
             median: time_interval(&measurements.absolute_estimates.median),
             mad: time_interval(&measurements.absolute_estimates.median_abs_dev),
@@ -376,10 +346,7 @@ impl Report for Html {
                     "{:0.7}",
                     Slope(typical_estimate.confidence_interval.upper_bound).r_squared(&data)
                 ),
-                point: format!(
-                    "{:0.7}",
-                    Slope(typical_estimate.point_estimate).r_squared(&data)
-                ),
+                point: format!("{:0.7}", Slope(typical_estimate.point_estimate).r_squared(&data)),
             },
 
             additional_plots,
@@ -491,9 +458,8 @@ impl Report for Html {
         // First sort the ids/data by value.
         // If all of the value strings can be parsed into a number, sort/dedupe
         // numerically. Otherwise sort lexicographically.
-        let all_values_numeric = all_data
-            .iter()
-            .all(|(id, _)| id.value_str.as_deref().and_then(try_parse).is_some());
+        let all_values_numeric =
+            all_data.iter().all(|(id, _)| id.value_str.as_deref().and_then(try_parse).is_some());
         if all_values_numeric {
             all_data.sort_unstable_by(|(a, _), (b, _)| {
                 let num1 = a.value_str.as_deref().and_then(try_parse);
@@ -547,10 +513,8 @@ impl Report for Html {
 
         debug_context(&report_path, &context);
 
-        let text = self
-            .templates
-            .render("index", &context)
-            .expect("Failed to render index template");
+        let text =
+            self.templates.render("index", &context).expect("Failed to render index template");
         try_else_return!(fs::save_string(&text, &report_path,));
     }
 }
@@ -624,18 +588,9 @@ impl Html {
         formatter: &dyn ValueFormatter,
         measurements: &MeasurementData<'_>,
     ) {
-        let plot_ctx = PlotContext {
-            id,
-            context,
-            size: None,
-            is_thumbnail: false,
-        };
+        let plot_ctx = PlotContext { id, context, size: None, is_thumbnail: false };
 
-        let plot_data = PlotData {
-            measurements,
-            formatter,
-            comparison: None,
-        };
+        let plot_data = PlotData { measurements, formatter, comparison: None };
 
         let plot_ctx_small = plot_ctx.thumbnail(true).size(THUMBNAIL_SIZE);
 
@@ -643,21 +598,13 @@ impl Html {
         self.plotter.borrow_mut().pdf(plot_ctx_small, plot_data);
         if measurements.absolute_estimates.slope.is_some() {
             self.plotter.borrow_mut().regression(plot_ctx, plot_data);
-            self.plotter
-                .borrow_mut()
-                .regression(plot_ctx_small, plot_data);
+            self.plotter.borrow_mut().regression(plot_ctx_small, plot_data);
         } else {
-            self.plotter
-                .borrow_mut()
-                .iteration_times(plot_ctx, plot_data);
-            self.plotter
-                .borrow_mut()
-                .iteration_times(plot_ctx_small, plot_data);
+            self.plotter.borrow_mut().iteration_times(plot_ctx, plot_data);
+            self.plotter.borrow_mut().iteration_times(plot_ctx_small, plot_data);
         }
 
-        self.plotter
-            .borrow_mut()
-            .abs_distributions(plot_ctx, plot_data);
+        self.plotter.borrow_mut().abs_distributions(plot_ctx, plot_data);
 
         if let Some(ref comp) = measurements.comparison {
             try_else_return!({
@@ -684,21 +631,13 @@ impl Html {
                 && comp.base_estimates.slope.is_some()
             {
                 self.plotter.borrow_mut().regression(plot_ctx, comp_data);
-                self.plotter
-                    .borrow_mut()
-                    .regression(plot_ctx_small, comp_data);
+                self.plotter.borrow_mut().regression(plot_ctx_small, comp_data);
             } else {
-                self.plotter
-                    .borrow_mut()
-                    .iteration_times(plot_ctx, comp_data);
-                self.plotter
-                    .borrow_mut()
-                    .iteration_times(plot_ctx_small, comp_data);
+                self.plotter.borrow_mut().iteration_times(plot_ctx, comp_data);
+                self.plotter.borrow_mut().iteration_times(plot_ctx_small, comp_data);
             }
             self.plotter.borrow_mut().t_test(plot_ctx, comp_data);
-            self.plotter
-                .borrow_mut()
-                .rel_distributions(plot_ctx, comp_data);
+            self.plotter.borrow_mut().rel_distributions(plot_ctx, comp_data);
         }
 
         self.plotter.borrow_mut().wait();
@@ -735,12 +674,7 @@ impl Html {
         formatter: &dyn ValueFormatter,
         full_summary: bool,
     ) {
-        let plot_ctx = PlotContext {
-            id,
-            context: report_context,
-            size: None,
-            is_thumbnail: false,
-        };
+        let plot_ctx = PlotContext { id, context: report_context, size: None, is_thumbnail: false };
 
         try_else_return!(
             {

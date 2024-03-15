@@ -16,8 +16,7 @@ use std::time::Duration;
 /// # Examples:
 ///
 /// ```no_run
-/// #[macro_use] extern crate criterion;
-/// use self::criterion::*;
+/// use self::criterion2::*;
 /// use std::time::Duration;
 ///
 /// fn bench_simple(c: &mut Criterion) {
@@ -26,7 +25,7 @@ use std::time::Duration;
 ///     // Now we can perform benchmarks with this group
 ///     group.bench_function("Bench 1", |b| b.iter(|| 1 ));
 ///     group.bench_function("Bench 2", |b| b.iter(|| 2 ));
-///    
+///
 ///     // It's recommended to call group.finish() explicitly at the end, but if you don't it will
 ///     // be called automatically when the group is dropped.
 ///     group.finish();
@@ -46,13 +45,13 @@ use std::time::Duration;
 ///                 |b, (p_x, p_y)| b.iter(|| p_x * p_y));
 ///         }
 ///     }
-///    
+///
 ///     group.finish();
 /// }
 ///
 /// fn bench_throughput(c: &mut Criterion) {
 ///     let mut group = c.benchmark_group("Summation");
-///     
+///
 ///     for size in [1024, 2048, 4096].iter() {
 ///         // Generate input of an appropriate size...
 ///         let input = vec![1u64, *size];
@@ -295,9 +294,7 @@ impl<'a, M: Measurement> BenchmarkGroup<'a, M> {
         );
 
         id.ensure_directory_name_unique(&self.criterion.all_directories);
-        self.criterion
-            .all_directories
-            .insert(id.as_directory_name().to_owned());
+        self.criterion.all_directories.insert(id.as_directory_name().to_owned());
         id.ensure_title_unique(&self.criterion.all_titles);
         self.criterion.all_titles.insert(id.as_title().to_owned());
 
@@ -371,13 +368,10 @@ impl<'a, M: Measurement> Drop for BenchmarkGroup<'a, M> {
         // I don't really like having a bunch of non-trivial code in drop, but this is the only way
         // to really write linear types like this in Rust...
         if let Some(conn) = &mut self.criterion.connection {
-            conn.send(&OutgoingMessage::FinishedBenchmarkGroup {
-                group: &self.group_name,
-            })
-            .unwrap();
-
-            conn.serve_value_formatter(self.criterion.measurement.formatter())
+            conn.send(&OutgoingMessage::FinishedBenchmarkGroup { group: &self.group_name })
                 .unwrap();
+
+            conn.serve_value_formatter(self.criterion.measurement.formatter()).unwrap();
         }
 
         if self.all_ids.len() > 1 && self.any_matched && self.criterion.mode.is_benchmark() {
@@ -415,7 +409,7 @@ impl BenchmarkId {
     ///
     /// # Examples
     /// ```
-    /// # use criterion::{BenchmarkId, Criterion};
+    /// # use criterion2::{BenchmarkId, Criterion};
     /// // A basic benchmark ID is typically constructed from a constant string and a simple
     /// // parameter
     /// let basic_id = BenchmarkId::new("my_id", 5);
@@ -448,24 +442,15 @@ impl BenchmarkId {
     /// Construct a new benchmark ID from just a parameter value. Use this when benchmarking a
     /// single function with a variety of different inputs.
     pub fn from_parameter<P: ::std::fmt::Display>(parameter: P) -> BenchmarkId {
-        BenchmarkId {
-            function_name: None,
-            parameter: Some(format!("{}", parameter)),
-        }
+        BenchmarkId { function_name: None, parameter: Some(format!("{}", parameter)) }
     }
 
     pub(crate) fn no_function() -> BenchmarkId {
-        BenchmarkId {
-            function_name: None,
-            parameter: None,
-        }
+        BenchmarkId { function_name: None, parameter: None }
     }
 
     pub(crate) fn no_function_with_input<P: ::std::fmt::Display>(parameter: P) -> BenchmarkId {
-        BenchmarkId {
-            function_name: None,
-            parameter: Some(format!("{}", parameter)),
-        }
+        BenchmarkId { function_name: None, parameter: Some(format!("{}", parameter)) }
     }
 }
 
@@ -487,14 +472,8 @@ impl IntoBenchmarkId for BenchmarkId {
 impl<S: Into<String>> IntoBenchmarkId for S {
     fn into_benchmark_id(self) -> BenchmarkId {
         let function_name = self.into();
-        assert!(
-            !function_name.is_empty(),
-            "Function name must not be empty."
-        );
+        assert!(!function_name.is_empty(), "Function name must not be empty.");
 
-        BenchmarkId {
-            function_name: Some(function_name),
-            parameter: None,
-        }
+        BenchmarkId { function_name: Some(function_name), parameter: None }
     }
 }

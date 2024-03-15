@@ -64,10 +64,7 @@ pub mod axis {
         }
 
         pub fn iter(&self) -> Items<T> {
-            Items {
-                map: self,
-                state: Some(Axis::BottomX),
-            }
+            Items { map: self, state: Some(Axis::BottomX) }
         }
     }
 
@@ -76,12 +73,7 @@ pub mod axis {
         T: Clone,
     {
         fn clone(&self) -> Map<T> {
-            Map([
-                self.0[0].clone(),
-                self.0[1].clone(),
-                self.0[2].clone(),
-                self.0[3].clone(),
-            ])
+            Map([self.0[0].clone(), self.0[1].clone(), self.0[2].clone(), self.0[3].clone()])
         }
     }
 }
@@ -144,10 +136,7 @@ pub mod grid {
         }
 
         pub fn iter(&self) -> Items<T> {
-            Items {
-                map: self,
-                state: Some(Grid::Major),
-            }
+            Items { map: self, state: Some(Grid::Major) }
         }
     }
 

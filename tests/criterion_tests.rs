@@ -1,6 +1,6 @@
 #[cfg(feature = "plotters")]
-use criterion::SamplingMode;
-use criterion::{
+use criterion2::SamplingMode;
+use criterion2::{
     criterion_group, criterion_main, profiler::Profiler, BatchSize, BenchmarkId, Criterion,
 };
 use serde_json::value::Value;
@@ -46,19 +46,13 @@ impl Counter {
 }
 impl Default for Counter {
     fn default() -> Counter {
-        Counter {
-            counter: Rc::new(RefCell::new(0)),
-        }
+        Counter { counter: Rc::new(RefCell::new(0)) }
     }
 }
 
 fn verify_file(dir: &Path, path: &str) -> PathBuf {
     let full_path = dir.join(path);
-    assert!(
-        full_path.is_file(),
-        "File {:?} does not exist or is not a file",
-        full_path
-    );
+    assert!(full_path.is_file(), "File {:?} does not exist or is not a file", full_path);
     let metadata = full_path.metadata().unwrap();
     assert!(metadata.len() > 0);
     full_path
@@ -117,9 +111,7 @@ fn test_creates_directory() {
 #[test]
 fn test_without_plots() {
     let dir = temp_dir();
-    short_benchmark(&dir)
-        .without_plots()
-        .bench_function("test_without_plots", |b| b.iter(|| 10));
+    short_benchmark(&dir).without_plots().bench_function("test_without_plots", |b| b.iter(|| 10));
 
     for entry in WalkDir::new(dir.path().join("test_without_plots")) {
         let entry = entry.ok();
@@ -193,12 +185,10 @@ fn test_sample_size() {
     let counter = Counter::default();
 
     let clone = counter.clone();
-    short_benchmark(&dir)
-        .sample_size(50)
-        .bench_function("test_sample_size", move |b| {
-            clone.count();
-            b.iter(|| 10)
-        });
+    short_benchmark(&dir).sample_size(50).bench_function("test_sample_size", move |b| {
+        clone.count();
+        b.iter(|| 10)
+    });
 
     // This function will be called more than sample_size times because of the
     // warmup.
@@ -211,21 +201,23 @@ fn test_warmup_time() {
     let counter1 = Counter::default();
 
     let clone = counter1.clone();
-    short_benchmark(&dir)
-        .warm_up_time(Duration::from_millis(100))
-        .bench_function("test_warmup_time_1", move |b| {
+    short_benchmark(&dir).warm_up_time(Duration::from_millis(100)).bench_function(
+        "test_warmup_time_1",
+        move |b| {
             clone.count();
             b.iter(|| 10)
-        });
+        },
+    );
 
     let counter2 = Counter::default();
     let clone = counter2.clone();
-    short_benchmark(&dir)
-        .warm_up_time(Duration::from_millis(2000))
-        .bench_function("test_warmup_time_2", move |b| {
+    short_benchmark(&dir).warm_up_time(Duration::from_millis(2000)).bench_function(
+        "test_warmup_time_2",
+        move |b| {
             clone.count();
             b.iter(|| 10)
-        });
+        },
+    );
 
     assert!(counter1.read() < counter2.read());
 }
@@ -274,15 +266,11 @@ fn test_timing_loops() {
     let dir = temp_dir();
     let mut c = short_benchmark(&dir);
     let mut group = c.benchmark_group("test_timing_loops");
-    group.bench_function("iter_with_setup", |b| {
-        b.iter_with_setup(|| vec![10], |v| v[0])
-    });
+    group.bench_function("iter_with_setup", |b| b.iter_with_setup(|| vec![10], |v| v[0]));
     group.bench_function("iter_with_large_setup", |b| {
         b.iter_batched(|| vec![10], |v| v[0], BatchSize::NumBatches(1))
     });
-    group.bench_function("iter_with_large_drop", |b| {
-        b.iter_with_large_drop(|| vec![10; 100])
-    });
+    group.bench_function("iter_with_large_drop", |b| b.iter_with_large_drop(|| vec![10; 100]));
     group.bench_function("iter_batched_small", |b| {
         b.iter_batched(|| vec![10], |v| v[0], BatchSize::SmallInput)
     });
@@ -460,9 +448,7 @@ fn test_benchmark_group_without_input() {
 fn test_criterion_doesnt_panic_if_measured_time_is_zero() {
     let dir = temp_dir();
     let mut c = short_benchmark(&dir);
-    c.bench_function("zero_time", |bencher| {
-        bencher.iter_custom(|_iters| Duration::new(0, 0))
-    });
+    c.bench_function("zero_time", |bencher| bencher.iter_custom(|_iters| Duration::new(0, 0)));
 }
 
 mod macros {
@@ -545,14 +531,10 @@ impl Profiler for TestProfiler {
 fn test_profiler_called() {
     let started = Rc::new(Cell::new(0u32));
     let stopped = Rc::new(Cell::new(0u32));
-    let profiler = TestProfiler {
-        started: started.clone(),
-        stopped: stopped.clone(),
-    };
+    let profiler = TestProfiler { started: started.clone(), stopped: stopped.clone() };
     let dir = temp_dir();
-    let mut criterion = short_benchmark(&dir)
-        .with_profiler(profiler)
-        .profile_time(Some(Duration::from_secs(1)));
+    let mut criterion =
+        short_benchmark(&dir).with_profiler(profiler).profile_time(Some(Duration::from_secs(1)));
     criterion.bench_function("profile_test", |b| b.iter(|| 10));
     assert_eq!(1, started.get());
     assert_eq!(1, stopped.get());

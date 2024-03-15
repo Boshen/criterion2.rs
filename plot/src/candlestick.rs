@@ -3,6 +3,8 @@
 use std::borrow::Cow;
 use std::iter::IntoIterator;
 
+use itertools::izip;
+
 use crate::data::Matrix;
 use crate::traits::{self, Data, Set};
 use crate::{Color, Default, Display, Figure, Label, LineType, LineWidth, Plot, Script};
@@ -17,12 +19,7 @@ pub struct Properties {
 
 impl Default for Properties {
     fn default() -> Properties {
-        Properties {
-            color: None,
-            label: None,
-            line_type: LineType::Solid,
-            linewidth: None,
-        }
+        Properties { color: None, label: None, line_type: LineType::Solid, linewidth: None }
     }
 }
 
@@ -132,20 +129,13 @@ where
         F: FnOnce(&mut Properties) -> &mut Properties,
     {
         let (x_factor, y_factor) = crate::scale_factor(&self.axes, crate::Axes::BottomXLeftY);
-        let Candlesticks {
-            x,
-            whisker_min,
-            box_min,
-            box_high,
-            whisker_high,
-        } = candlesticks;
+        let Candlesticks { x, whisker_min, box_min, box_high, whisker_high } = candlesticks;
 
         let data = Matrix::new(
             izip!(x, box_min, whisker_min, whisker_high, box_high),
             (x_factor, y_factor, y_factor, y_factor, y_factor),
         );
-        self.plots
-            .push(Plot::new(data, configure(&mut Default::default())));
+        self.plots.push(Plot::new(data, configure(&mut Default::default())));
         self
     }
 }

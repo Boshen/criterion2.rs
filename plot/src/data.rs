@@ -47,11 +47,7 @@ impl Matrix {
             row.append_to(&mut bytes, scale);
         }
 
-        Matrix {
-            bytes,
-            ncols,
-            nrows,
-        }
+        Matrix { bytes, ncols, nrows }
     }
 
     pub fn bytes(&self) -> &[u8] {

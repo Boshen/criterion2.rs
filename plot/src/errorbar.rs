@@ -3,6 +3,8 @@
 use std::borrow::Cow;
 use std::iter::IntoIterator;
 
+use itertools::izip;
+
 use crate::data::Matrix;
 use crate::traits::{self, Data, Set};
 use crate::{
@@ -234,39 +236,14 @@ where
 
         let style = e.style();
         let (x, y, length, height, e_factor) = match e {
-            ErrorBar::XErrorBars {
-                x,
-                y,
-                x_low,
-                x_high,
-            }
-            | ErrorBar::XErrorLines {
-                x,
-                y,
-                x_low,
-                x_high,
-            } => (x, y, x_low, x_high, x_factor),
-            ErrorBar::YErrorBars {
-                x,
-                y,
-                y_low,
-                y_high,
-            }
-            | ErrorBar::YErrorLines {
-                x,
-                y,
-                y_low,
-                y_high,
-            } => (x, y, y_low, y_high, y_factor),
+            ErrorBar::XErrorBars { x, y, x_low, x_high }
+            | ErrorBar::XErrorLines { x, y, x_low, x_high } => (x, y, x_low, x_high, x_factor),
+            ErrorBar::YErrorBars { x, y, y_low, y_high }
+            | ErrorBar::YErrorLines { x, y, y_low, y_high } => (x, y, y_low, y_high, y_factor),
         };
-        let data = Matrix::new(
-            izip!(x, y, length, height),
-            (x_factor, y_factor, e_factor, e_factor),
-        );
-        self.plots.push(Plot::new(
-            data,
-            configure(&mut ErrorBarDefault::default(style)),
-        ));
+        let data =
+            Matrix::new(izip!(x, y, length, height), (x_factor, y_factor, e_factor, e_factor));
+        self.plots.push(Plot::new(data, configure(&mut ErrorBarDefault::default(style))));
         self
     }
 }

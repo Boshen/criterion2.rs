@@ -84,10 +84,7 @@ pub(crate) fn regression_figure(
         .unwrap()
         .label("Linear regression")
         .legend(|(x, y)| {
-            PathElement::new(
-                vec![(x, y), (x + 20, y)],
-                DARK_BLUE.filled().stroke_width(2),
-            )
+            PathElement::new(vec![(x, y), (x + 20, y)], DARK_BLUE.filled().stroke_width(2))
         });
 
     chart
@@ -102,11 +99,7 @@ pub(crate) fn regression_figure(
         });
 
     if title.is_some() {
-        chart
-            .configure_series_labels()
-            .position(SeriesLabelPosition::UpperLeft)
-            .draw()
-            .unwrap();
+        chart.configure_series_labels().position(SeriesLabelPosition::UpperLeft).draw().unwrap();
     }
 }
 
@@ -133,23 +126,13 @@ pub(crate) fn regression_comparison_figure(
     };
 
     let Estimate {
-        confidence_interval:
-            ConfidenceInterval {
-                lower_bound: base_lb,
-                upper_bound: base_ub,
-                ..
-            },
+        confidence_interval: ConfidenceInterval { lower_bound: base_lb, upper_bound: base_ub, .. },
         point_estimate: base_point,
         ..
     } = comparison.base_estimates.slope.as_ref().unwrap();
 
     let Estimate {
-        confidence_interval:
-            ConfidenceInterval {
-                lower_bound: lb,
-                upper_bound: ub,
-                ..
-            },
+        confidence_interval: ConfidenceInterval { lower_bound: lb, upper_bound: ub, .. },
         point_estimate: point,
         ..
     } = measurements.absolute_estimates.slope.as_ref().unwrap();
@@ -218,17 +201,10 @@ pub(crate) fn regression_comparison_figure(
         .unwrap()
         .label("New Sample")
         .legend(|(x, y)| {
-            PathElement::new(
-                vec![(x, y), (x + 20, y)],
-                DARK_BLUE.filled().stroke_width(2),
-            )
+            PathElement::new(vec![(x, y), (x + 20, y)], DARK_BLUE.filled().stroke_width(2))
         });
 
     if title.is_some() {
-        chart
-            .configure_series_labels()
-            .position(SeriesLabelPosition::UpperLeft)
-            .draw()
-            .unwrap();
+        chart.configure_series_labels().position(SeriesLabelPosition::UpperLeft).draw().unwrap();
     }
 }

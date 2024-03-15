@@ -190,10 +190,7 @@ where
         let mean = mean.unwrap_or_else(|| self.mean());
         let slice = self;
 
-        let sum = slice
-            .iter()
-            .map(|&x| (x - mean).powi(2))
-            .fold(A::cast(0), Add::add);
+        let sum = slice.iter().map(|&x| (x - mean).powi(2)).fold(A::cast(0), Add::add);
 
         sum / A::cast(slice.len() - 1)
     }
@@ -215,10 +212,7 @@ where
         {
             (0..nresamples)
                 .into_par_iter()
-                .map_init(
-                    || Resamples::new(self),
-                    |resamples, _| statistic(resamples.next()),
-                )
+                .map_init(|| Resamples::new(self), |resamples, _| statistic(resamples.next()))
                 .fold(
                     || T::Builder::new(0),
                     |mut sub_distributions, sample| {

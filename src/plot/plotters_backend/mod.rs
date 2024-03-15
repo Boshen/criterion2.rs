@@ -38,15 +38,9 @@ impl Plotter for PlottersBackend {
     fn pdf(&mut self, ctx: PlotContext<'_>, data: PlotData<'_>) {
         if let Some(cmp) = data.comparison {
             let (path, title) = if ctx.is_thumbnail {
-                (
-                    ctx.context.report_path(ctx.id, "relative_pdf_small.svg"),
-                    None,
-                )
+                (ctx.context.report_path(ctx.id, "relative_pdf_small.svg"), None)
             } else {
-                (
-                    ctx.context.report_path(ctx.id, "both/pdf.svg"),
-                    Some(ctx.id.as_title()),
-                )
+                (ctx.context.report_path(ctx.id, "both/pdf.svg"), Some(ctx.id.as_title()))
             };
             pdf::pdf_comparison_figure(
                 path.as_ref(),
@@ -79,23 +73,16 @@ impl Plotter for PlottersBackend {
 
     fn regression(&mut self, ctx: PlotContext<'_>, data: PlotData<'_>) {
         let (title, path) = match (data.comparison.is_some(), ctx.is_thumbnail) {
-            (true, true) => (
-                None,
-                ctx.context
-                    .report_path(ctx.id, "relative_regression_small.svg"),
-            ),
-            (true, false) => (
-                Some(ctx.id.as_title()),
-                ctx.context.report_path(ctx.id, "both/regression.svg"),
-            ),
-            (false, true) => (
-                None,
-                ctx.context.report_path(ctx.id, "regression_small.svg"),
-            ),
-            (false, false) => (
-                Some(ctx.id.as_title()),
-                ctx.context.report_path(ctx.id, "regression.svg"),
-            ),
+            (true, true) => {
+                (None, ctx.context.report_path(ctx.id, "relative_regression_small.svg"))
+            }
+            (true, false) => {
+                (Some(ctx.id.as_title()), ctx.context.report_path(ctx.id, "both/regression.svg"))
+            }
+            (false, true) => (None, ctx.context.report_path(ctx.id, "regression_small.svg")),
+            (false, false) => {
+                (Some(ctx.id.as_title()), ctx.context.report_path(ctx.id, "regression.svg"))
+            }
         };
 
         if let Some(cmp) = data.comparison {
@@ -122,23 +109,17 @@ impl Plotter for PlottersBackend {
 
     fn iteration_times(&mut self, ctx: PlotContext<'_>, data: PlotData<'_>) {
         let (title, path) = match (data.comparison.is_some(), ctx.is_thumbnail) {
-            (true, true) => (
-                None,
-                ctx.context
-                    .report_path(ctx.id, "relative_iteration_times_small.svg"),
-            ),
+            (true, true) => {
+                (None, ctx.context.report_path(ctx.id, "relative_iteration_times_small.svg"))
+            }
             (true, false) => (
                 Some(ctx.id.as_title()),
                 ctx.context.report_path(ctx.id, "both/iteration_times.svg"),
             ),
-            (false, true) => (
-                None,
-                ctx.context.report_path(ctx.id, "iteration_times_small.svg"),
-            ),
-            (false, false) => (
-                Some(ctx.id.as_title()),
-                ctx.context.report_path(ctx.id, "iteration_times.svg"),
-            ),
+            (false, true) => (None, ctx.context.report_path(ctx.id, "iteration_times_small.svg")),
+            (false, false) => {
+                (Some(ctx.id.as_title()), ctx.context.report_path(ctx.id, "iteration_times.svg"))
+            }
         };
 
         if let Some(cmp) = data.comparison {
@@ -220,12 +201,7 @@ impl Plotter for PlottersBackend {
     fn t_test(&mut self, ctx: PlotContext<'_>, data: PlotData<'_>) {
         let title = ctx.id.as_title();
         let path = ctx.context.report_path(ctx.id, "change/t-test.svg");
-        t_test::t_test(
-            path.as_path(),
-            title,
-            data.comparison.unwrap(),
-            convert_size(ctx.size),
-        );
+        t_test::t_test(path.as_path(), title, data.comparison.unwrap(), convert_size(ctx.size));
     }
 
     fn wait(&mut self) {}

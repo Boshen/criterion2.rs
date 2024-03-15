@@ -57,9 +57,7 @@ impl<'a, M: Measurement> Bencher<'a, M> {
     /// # Example
     ///
     /// ```rust
-    /// #[macro_use] extern crate criterion;
-    ///
-    /// use criterion::*;
+    /// use criterion2::*;
     ///
     /// // The function to benchmark
     /// fn foo() {
@@ -102,9 +100,8 @@ impl<'a, M: Measurement> Bencher<'a, M> {
     ///
     /// # Example
     /// ```rust
-    /// #[macro_use] extern crate criterion;
-    /// use criterion::*;
-    /// use criterion::black_box;
+    /// use criterion2::*;
+    /// use criterion2::black_box;
     /// use std::time::Instant;
     ///
     /// fn foo() {
@@ -162,9 +159,7 @@ impl<'a, M: Measurement> Bencher<'a, M> {
     /// # Example
     ///
     /// ```rust
-    /// #[macro_use] extern crate criterion;
-    ///
-    /// use criterion::*;
+    /// use criterion2::*;
     ///
     /// fn create_vector() -> Vec<u64> {
     ///     # vec![]
@@ -205,9 +200,7 @@ impl<'a, M: Measurement> Bencher<'a, M> {
     /// # Example
     ///
     /// ```rust
-    /// #[macro_use] extern crate criterion;
-    ///
-    /// use criterion::*;
+    /// use criterion2::*;
     ///
     /// fn create_scrambled_data() -> Vec<u64> {
     ///     # vec![]
@@ -295,9 +288,7 @@ impl<'a, M: Measurement> Bencher<'a, M> {
     /// # Example
     ///
     /// ```rust
-    /// #[macro_use] extern crate criterion;
-    ///
-    /// use criterion::*;
+    /// use criterion2::*;
     ///
     /// fn create_scrambled_data() -> Vec<u64> {
     ///     # vec![]
@@ -371,10 +362,7 @@ impl<'a, M: Measurement> Bencher<'a, M> {
     // Benchmarks must actually call one of the iter methods. This causes benchmarks to fail loudly
     // if they don't.
     pub(crate) fn assert_iterated(&mut self) {
-        assert!(
-            self.iterated,
-            "Benchmark function must call Bencher::iter or related method."
-        );
+        assert!(self.iterated, "Benchmark function must call Bencher::iter or related method.");
         self.iterated = false;
     }
 
@@ -410,10 +398,8 @@ impl<'a, 'b, A: AsyncExecutor, M: Measurement> AsyncBencher<'a, 'b, A, M> {
     /// # Example
     ///
     /// ```rust
-    /// #[macro_use] extern crate criterion;
-    ///
-    /// use criterion::*;
-    /// use criterion::async_executor::FuturesExecutor;
+    /// use criterion2::*;
+    /// use criterion2::async_executor::FuturesExecutor;
     ///
     /// // The function to benchmark
     /// async fn foo() {
@@ -460,10 +446,9 @@ impl<'a, 'b, A: AsyncExecutor, M: Measurement> AsyncBencher<'a, 'b, A, M> {
     ///
     /// # Example
     /// ```rust
-    /// #[macro_use] extern crate criterion;
-    /// use criterion::*;
-    /// use criterion::black_box;
-    /// use criterion::async_executor::FuturesExecutor;
+    /// use criterion2::*;
+    /// use criterion2::black_box;
+    /// use criterion2::async_executor::FuturesExecutor;
     /// use std::time::Instant;
     ///
     /// async fn foo() {
@@ -528,10 +513,8 @@ impl<'a, 'b, A: AsyncExecutor, M: Measurement> AsyncBencher<'a, 'b, A, M> {
     /// # Example
     ///
     /// ```rust
-    /// #[macro_use] extern crate criterion;
-    ///
-    /// use criterion::*;
-    /// use criterion::async_executor::FuturesExecutor;
+    /// use criterion2::*;
+    /// use criterion2::async_executor::FuturesExecutor;
     ///
     /// async fn create_vector() -> Vec<u64> {
     ///     # vec![]
@@ -583,10 +566,8 @@ impl<'a, 'b, A: AsyncExecutor, M: Measurement> AsyncBencher<'a, 'b, A, M> {
     /// # Example
     ///
     /// ```rust
-    /// #[macro_use] extern crate criterion;
-    ///
-    /// use criterion::*;
-    /// use criterion::async_executor::FuturesExecutor;
+    /// use criterion2::*;
+    /// use criterion2::async_executor::FuturesExecutor;
     ///
     /// fn create_scrambled_data() -> Vec<u64> {
     ///     # vec![]
@@ -681,10 +662,8 @@ impl<'a, 'b, A: AsyncExecutor, M: Measurement> AsyncBencher<'a, 'b, A, M> {
     /// # Example
     ///
     /// ```rust
-    /// #[macro_use] extern crate criterion;
-    ///
-    /// use criterion::*;
-    /// use criterion::async_executor::FuturesExecutor;
+    /// use criterion2::*;
+    /// use criterion2::async_executor::FuturesExecutor;
     ///
     /// fn create_scrambled_data() -> Vec<u64> {
     ///     # vec![]

@@ -19,10 +19,8 @@ pub(crate) fn pdf_comparison_figure(
     let unit = formatter.scale_values(typical, &mut scaled_base_avg_times);
     let scaled_base_avg_times = Sample::new(&scaled_base_avg_times);
 
-    let mut scaled_new_avg_times: Vec<f64> = (&measurements.avg_times as &Sample<f64>)
-        .iter()
-        .cloned()
-        .collect();
+    let mut scaled_new_avg_times: Vec<f64> =
+        (&measurements.avg_times as &Sample<f64>).iter().cloned().collect();
     let _ = formatter.scale_values(typical, &mut scaled_new_avg_times);
     let scaled_new_avg_times = Sample::new(&scaled_new_avg_times);
 
@@ -184,10 +182,7 @@ pub(crate) fn pdf(
     let mean = scaled_avg_times.mean();
 
     let iter_counts = measurements.iter_counts();
-    let &max_iters = iter_counts
-        .iter()
-        .max_by_key(|&&iters| iters as u64)
-        .unwrap();
+    let &max_iters = iter_counts.iter().max_by_key(|&&iters| iters as u64).unwrap();
     let exponent = (max_iters.log10() / 3.).floor() as i32 * 3;
     let y_scale = 10f64.powi(-exponent);
 
@@ -271,37 +266,28 @@ pub(crate) fn pdf(
         .unwrap();
     use crate::stats::univariate::outliers::tukey::Label;
 
-    let mut draw_data_point_series =
-        |filter: &dyn Fn(&Label) -> bool, color: RGBAColor, name: &str| {
-            chart
-                .draw_series(
-                    avg_times
-                        .iter()
-                        .zip(scaled_avg_times.iter())
-                        .zip(iter_counts.iter())
-                        .filter_map(|(((_, label), t), i)| {
-                            if filter(&label) {
-                                Some(Circle::new((*t, *i), POINT_SIZE, color.filled()))
-                            } else {
-                                None
-                            }
-                        }),
-                )
-                .unwrap()
-                .label(name)
-                .legend(move |(x, y)| Circle::new((x + 10, y), POINT_SIZE, color.filled()));
-        };
+    let mut draw_data_point_series = |filter: &dyn Fn(&Label) -> bool,
+                                      color: RGBAColor,
+                                      name: &str| {
+        chart
+            .draw_series(
+                avg_times.iter().zip(scaled_avg_times.iter()).zip(iter_counts.iter()).filter_map(
+                    |(((_, label), t), i)| {
+                        if filter(&label) {
+                            Some(Circle::new((*t, *i), POINT_SIZE, color.filled()))
+                        } else {
+                            None
+                        }
+                    },
+                ),
+            )
+            .unwrap()
+            .label(name)
+            .legend(move |(x, y)| Circle::new((x + 10, y), POINT_SIZE, color.filled()));
+    };
 
-    draw_data_point_series(
-        &|l| !l.is_outlier(),
-        DARK_BLUE.to_rgba(),
-        "\"Clean\" sample",
-    );
-    draw_data_point_series(
-        &|l| l.is_mild(),
-        RGBColor(255, 127, 0).to_rgba(),
-        "Mild outliers",
-    );
+    draw_data_point_series(&|l| !l.is_outlier(), DARK_BLUE.to_rgba(), "\"Clean\" sample");
+    draw_data_point_series(&|l| l.is_mild(), RGBColor(255, 127, 0).to_rgba(), "Mild outliers");
     draw_data_point_series(&|l| l.is_severe(), DARK_RED.to_rgba(), "Severe outliers");
     chart.configure_series_labels().draw().unwrap();
 }

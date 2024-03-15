@@ -1,4 +1,4 @@
-use criterion::criterion_main;
+use criterion2::criterion_main;
 
 mod benchmarks;
 

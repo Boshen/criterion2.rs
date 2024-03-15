@@ -19,11 +19,7 @@ where
     Y: 'a + Float,
 {
     pub fn new(data: Data<'a, X, Y>) -> Resamples<'a, X, Y> {
-        Resamples {
-            rng: new_rng(),
-            data: (data.x(), data.y()),
-            stage: None,
-        }
+        Resamples { rng: new_rng(), data: (data.x(), data.y()), stage: None }
     }
 
     pub fn next(&mut self) -> Data<'_, X, Y> {

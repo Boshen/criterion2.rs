@@ -46,50 +46,21 @@ fn regression_figure(
         .set(Font(DEFAULT_FONT))
         .set(size.unwrap_or(SIZE))
         .configure(Axis::BottomX, |a| {
-            a.configure(Grid::Major, |g| g.show())
-                .set(Label(x_label))
-                .set(ScaleFactor(x_scale))
+            a.configure(Grid::Major, |g| g.show()).set(Label(x_label)).set(ScaleFactor(x_scale))
         })
         .configure(Axis::LeftY, |a| {
             a.configure(Grid::Major, |g| g.show())
                 .set(Label(format!("Total sample time ({})", unit)))
         })
-        .plot(
-            Points {
-                x: data.x().as_ref(),
-                y: scaled_y.as_ref(),
-            },
-            |c| {
-                c.set(DARK_BLUE)
-                    .set(Label("Sample"))
-                    .set(PointSize(0.5))
-                    .set(PointType::FilledCircle)
-            },
-        )
-        .plot(
-            Lines {
-                x: &[0., max_iters],
-                y: &[0., point],
-            },
-            |c| {
-                c.set(DARK_BLUE)
-                    .set(LINEWIDTH)
-                    .set(Label("Linear regression"))
-                    .set(LineType::Solid)
-            },
-        )
-        .plot(
-            FilledCurve {
-                x: &[0., max_iters],
-                y1: &[0., lb],
-                y2: &[0., ub],
-            },
-            |c| {
-                c.set(DARK_BLUE)
-                    .set(Label("Confidence interval"))
-                    .set(Opacity(0.25))
-            },
-        );
+        .plot(Points { x: data.x().as_ref(), y: scaled_y.as_ref() }, |c| {
+            c.set(DARK_BLUE).set(Label("Sample")).set(PointSize(0.5)).set(PointType::FilledCircle)
+        })
+        .plot(Lines { x: &[0., max_iters], y: &[0., point] }, |c| {
+            c.set(DARK_BLUE).set(LINEWIDTH).set(Label("Linear regression")).set(LineType::Solid)
+        })
+        .plot(FilledCurve { x: &[0., max_iters], y1: &[0., lb], y2: &[0., ub] }, |c| {
+            c.set(DARK_BLUE).set(Label("Confidence interval")).set(Opacity(0.25))
+        });
     figure
 }
 
@@ -149,23 +120,13 @@ fn regression_comparison_figure(
     };
 
     let Estimate {
-        confidence_interval:
-            ConfidenceInterval {
-                lower_bound: base_lb,
-                upper_bound: base_ub,
-                ..
-            },
+        confidence_interval: ConfidenceInterval { lower_bound: base_lb, upper_bound: base_ub, .. },
         point_estimate: base_point,
         ..
     } = comparison.base_estimates.slope.as_ref().unwrap();
 
     let Estimate {
-        confidence_interval:
-            ConfidenceInterval {
-                lower_bound: lb,
-                upper_bound: ub,
-                ..
-            },
+        confidence_interval: ConfidenceInterval { lower_bound: lb, upper_bound: ub, .. },
         point_estimate: point,
         ..
     } = measurements.absolute_estimates.slope.as_ref().unwrap();
@@ -186,9 +147,7 @@ fn regression_comparison_figure(
         .set(Font(DEFAULT_FONT))
         .set(size.unwrap_or(SIZE))
         .configure(Axis::BottomX, |a| {
-            a.configure(Grid::Major, |g| g.show())
-                .set(Label(x_label))
-                .set(ScaleFactor(x_scale))
+            a.configure(Grid::Major, |g| g.show()).set(Label(x_label)).set(ScaleFactor(x_scale))
         })
         .configure(Axis::LeftY, |a| {
             a.configure(Grid::Major, |g| g.show())
@@ -199,46 +158,18 @@ fn regression_comparison_figure(
                 .set(Order::SampleText)
                 .set(Position::Inside(Vertical::Top, Horizontal::Left))
         })
-        .plot(
-            FilledCurve {
-                x: &[0., max_iters],
-                y1: &[0., base_lb],
-                y2: &[0., base_ub],
-            },
-            |c| c.set(DARK_RED).set(Opacity(0.25)),
-        )
-        .plot(
-            FilledCurve {
-                x: &[0., max_iters],
-                y1: &[0., lb],
-                y2: &[0., ub],
-            },
-            |c| c.set(DARK_BLUE).set(Opacity(0.25)),
-        )
-        .plot(
-            Lines {
-                x: &[0., max_iters],
-                y: &[0., base_point],
-            },
-            |c| {
-                c.set(DARK_RED)
-                    .set(LINEWIDTH)
-                    .set(Label("Base sample"))
-                    .set(LineType::Solid)
-            },
-        )
-        .plot(
-            Lines {
-                x: &[0., max_iters],
-                y: &[0., point],
-            },
-            |c| {
-                c.set(DARK_BLUE)
-                    .set(LINEWIDTH)
-                    .set(Label("New sample"))
-                    .set(LineType::Solid)
-            },
-        );
+        .plot(FilledCurve { x: &[0., max_iters], y1: &[0., base_lb], y2: &[0., base_ub] }, |c| {
+            c.set(DARK_RED).set(Opacity(0.25))
+        })
+        .plot(FilledCurve { x: &[0., max_iters], y1: &[0., lb], y2: &[0., ub] }, |c| {
+            c.set(DARK_BLUE).set(Opacity(0.25))
+        })
+        .plot(Lines { x: &[0., max_iters], y: &[0., base_point] }, |c| {
+            c.set(DARK_RED).set(LINEWIDTH).set(Label("Base sample")).set(LineType::Solid)
+        })
+        .plot(Lines { x: &[0., max_iters], y: &[0., point] }, |c| {
+            c.set(DARK_BLUE).set(LINEWIDTH).set(Label("New sample")).set(LineType::Solid)
+        });
     figure
 }
 

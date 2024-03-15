@@ -61,15 +61,9 @@ pub fn iter_count(iterations: u64) -> String {
     } else if iterations < 1_000_000_000 {
         format!("{:.0}M iterations", (iterations as f64) / (1000.0 * 1000.0))
     } else if iterations < 10_000_000_000 {
-        format!(
-            "{:.1}B iterations",
-            (iterations as f64) / (1000.0 * 1000.0 * 1000.0)
-        )
+        format!("{:.1}B iterations", (iterations as f64) / (1000.0 * 1000.0 * 1000.0))
     } else {
-        format!(
-            "{:.0}B iterations",
-            (iterations as f64) / (1000.0 * 1000.0 * 1000.0)
-        )
+        format!("{:.0}B iterations", (iterations as f64) / (1000.0 * 1000.0 * 1000.0))
     }
 }
 

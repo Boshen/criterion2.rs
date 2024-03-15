@@ -1,4 +1,4 @@
-use criterion::{criterion_group, Criterion, Throughput};
+use criterion2::{criterion_group, Criterion, Throughput};
 use std::time::Duration;
 
 const SIZE: usize = 1024 * 1024;

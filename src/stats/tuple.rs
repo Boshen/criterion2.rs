@@ -110,10 +110,7 @@ where
     }
 
     fn complete(self) -> (Distribution<A>, Distribution<B>) {
-        (
-            Distribution(self.0.into_boxed_slice()),
-            Distribution(self.1.into_boxed_slice()),
-        )
+        (Distribution(self.0.into_boxed_slice()), Distribution(self.1.into_boxed_slice()))
     }
 }
 
@@ -144,11 +141,7 @@ where
     type Item = (A, B, C);
 
     fn new(size: usize) -> (Vec<A>, Vec<B>, Vec<C>) {
-        (
-            Vec::with_capacity(size),
-            Vec::with_capacity(size),
-            Vec::with_capacity(size),
-        )
+        (Vec::with_capacity(size), Vec::with_capacity(size), Vec::with_capacity(size))
     }
 
     fn push(&mut self, tuple: (A, B, C)) {
@@ -179,22 +172,12 @@ where
     C: Copy,
     D: Copy,
 {
-    type Distributions = (
-        Distribution<A>,
-        Distribution<B>,
-        Distribution<C>,
-        Distribution<D>,
-    );
+    type Distributions = (Distribution<A>, Distribution<B>, Distribution<C>, Distribution<D>);
     type Builder = (Vec<A>, Vec<B>, Vec<C>, Vec<D>);
 }
 
 impl<A, B, C, D> TupledDistributions
-    for (
-        Distribution<A>,
-        Distribution<B>,
-        Distribution<C>,
-        Distribution<D>,
-    )
+    for (Distribution<A>, Distribution<B>, Distribution<C>, Distribution<D>)
 where
     A: Copy,
     B: Copy,
@@ -235,14 +218,7 @@ where
         (self.3).append(&mut other.3);
     }
 
-    fn complete(
-        self,
-    ) -> (
-        Distribution<A>,
-        Distribution<B>,
-        Distribution<C>,
-        Distribution<D>,
-    ) {
+    fn complete(self) -> (Distribution<A>, Distribution<B>, Distribution<C>, Distribution<D>) {
         (
             Distribution(self.0.into_boxed_slice()),
             Distribution(self.1.into_boxed_slice()),

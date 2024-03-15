@@ -104,10 +104,7 @@ where
 
     /// Returns an iterator over the labeled data
     pub fn iter(&self) -> Iter<'a, A> {
-        Iter {
-            fences: self.fences,
-            iter: self.sample.iter(),
-        }
+        Iter { fences: self.fences, iter: self.sample.iter() }
     }
 }
 
@@ -265,12 +262,7 @@ where
     let k_s = A::cast(3);
 
     LabeledSample {
-        fences: (
-            q1 - k_s * iqr,
-            q1 - k_m * iqr,
-            q3 + k_m * iqr,
-            q3 + k_s * iqr,
-        ),
+        fences: (q1 - k_s * iqr, q1 - k_m * iqr, q3 + k_m * iqr, q3 + k_s * iqr),
         sample,
     }
 }

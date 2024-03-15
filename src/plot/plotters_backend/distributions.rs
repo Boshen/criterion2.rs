@@ -28,27 +28,12 @@ fn abs_distribution(
     let (kde_xs, ys) = kde::sweep(scaled_xs_sample, KDE_POINTS, Some((start, end)));
 
     // interpolate between two points of the KDE sweep to find the Y position at the point estimate.
-    let n_point = kde_xs
-        .iter()
-        .position(|&x| x >= point)
-        .unwrap_or(kde_xs.len() - 1)
-        .max(1); // Must be at least the second element or this will panic
+    let n_point = kde_xs.iter().position(|&x| x >= point).unwrap_or(kde_xs.len() - 1).max(1); // Must be at least the second element or this will panic
     let slope = (ys[n_point] - ys[n_point - 1]) / (kde_xs[n_point] - kde_xs[n_point - 1]);
     let y_point = ys[n_point - 1] + (slope * (point - kde_xs[n_point - 1]));
 
-    let start = kde_xs
-        .iter()
-        .enumerate()
-        .find(|&(_, &x)| x >= lb)
-        .unwrap()
-        .0;
-    let end = kde_xs
-        .iter()
-        .enumerate()
-        .rev()
-        .find(|&(_, &x)| x <= ub)
-        .unwrap()
-        .0;
+    let start = kde_xs.iter().enumerate().find(|&(_, &x)| x >= lb).unwrap().0;
+    let end = kde_xs.iter().enumerate().rev().find(|&(_, &x)| x <= ub).unwrap().0;
     let len = end - start;
 
     let kde_xs_sample = Sample::new(&kde_xs);
@@ -63,10 +48,7 @@ fn abs_distribution(
 
     let mut chart = ChartBuilder::on(&root_area)
         .margin((5).percent())
-        .caption(
-            format!("{}:{}", id.as_title(), statistic),
-            (DEFAULT_FONT, 20),
-        )
+        .caption(format!("{}:{}", id.as_title(), statistic), (DEFAULT_FONT, 20))
         .set_label_area_size(LabelAreaPosition::Left, (5).percent_width().min(60))
         .set_label_area_size(LabelAreaPosition::Bottom, (5).percent_height().min(40))
         .build_cartesian_2d(x_range, y_range)
@@ -93,12 +75,7 @@ fn abs_distribution(
 
     chart
         .draw_series(AreaSeries::new(
-            kde_xs
-                .iter()
-                .zip(ys.iter())
-                .skip(start)
-                .take(len)
-                .map(|(&x, &y)| (x, y)),
+            kde_xs.iter().zip(ys.iter()).skip(start).take(len).map(|(&x, &y)| (x, y)),
             0.0,
             DARK_BLUE.mix(0.25).filled().stroke_width(3),
         ))
@@ -117,11 +94,7 @@ fn abs_distribution(
         .label("Point estimate")
         .legend(|(x, y)| PathElement::new(vec![(x, y), (x + 20, y)], DARK_BLUE));
 
-    chart
-        .configure_series_labels()
-        .position(SeriesLabelPosition::UpperRight)
-        .draw()
-        .unwrap();
+    chart.configure_series_labels().position(SeriesLabelPosition::UpperRight).draw().unwrap();
 }
 
 pub(crate) fn abs_distributions(
@@ -135,22 +108,11 @@ pub(crate) fn abs_distributions(
         .iter()
         .filter_map(|stat| {
             measurements.distributions.get(*stat).and_then(|dist| {
-                measurements
-                    .absolute_estimates
-                    .get(*stat)
-                    .map(|est| (*stat, dist, est))
+                measurements.absolute_estimates.get(*stat).map(|est| (*stat, dist, est))
             })
         })
         .for_each(|(statistic, distribution, estimate)| {
-            abs_distribution(
-                id,
-                context,
-                formatter,
-                statistic,
-                distribution,
-                estimate,
-                size,
-            )
+            abs_distribution(id, context, formatter, statistic, distribution, estimate, size)
         })
 }
 
@@ -173,22 +135,12 @@ fn rel_distribution(
 
     // interpolate between two points of the KDE sweep to find the Y position at the point estimate.
     let point = estimate.point_estimate;
-    let n_point = xs
-        .iter()
-        .position(|&x| x >= point)
-        .unwrap_or(ys.len() - 1)
-        .max(1);
+    let n_point = xs.iter().position(|&x| x >= point).unwrap_or(ys.len() - 1).max(1);
     let slope = (ys[n_point] - ys[n_point - 1]) / (xs[n_point] - xs[n_point - 1]);
     let y_point = ys[n_point - 1] + (slope * (point - xs[n_point - 1]));
 
     let start = xs.iter().enumerate().find(|&(_, &x)| x >= lb).unwrap().0;
-    let end = xs
-        .iter()
-        .enumerate()
-        .rev()
-        .find(|&(_, &x)| x <= ub)
-        .unwrap()
-        .0;
+    let end = xs.iter().enumerate().rev().find(|&(_, &x)| x <= ub).unwrap().0;
     let len = end - start;
 
     let x_min = xs_.min();
@@ -200,16 +152,8 @@ fn rel_distribution(
         (middle, middle)
     } else {
         (
-            if -noise_threshold < x_min {
-                x_min
-            } else {
-                -noise_threshold
-            },
-            if noise_threshold > x_max {
-                x_max
-            } else {
-                noise_threshold
-            },
+            if -noise_threshold < x_min { x_min } else { -noise_threshold },
+            if noise_threshold > x_max { x_max } else { noise_threshold },
         )
     };
     let y_range = plotters::data::fitting_range(ys.iter());
@@ -218,10 +162,7 @@ fn rel_distribution(
 
     let mut chart = ChartBuilder::on(&root_area)
         .margin((5).percent())
-        .caption(
-            format!("{}:{}", id.as_title(), statistic),
-            (DEFAULT_FONT, 20),
-        )
+        .caption(format!("{}:{}", id.as_title(), statistic), (DEFAULT_FONT, 20))
         .set_label_area_size(LabelAreaPosition::Left, (5).percent_width().min(60))
         .set_label_area_size(LabelAreaPosition::Bottom, (5).percent_height().min(40))
         .build_cartesian_2d(x_min..x_max, y_range.clone())
@@ -238,21 +179,14 @@ fn rel_distribution(
         .unwrap();
 
     chart
-        .draw_series(LineSeries::new(
-            xs.iter().zip(ys.iter()).map(|(x, y)| (*x, *y)),
-            DARK_BLUE,
-        ))
+        .draw_series(LineSeries::new(xs.iter().zip(ys.iter()).map(|(x, y)| (*x, *y)), DARK_BLUE))
         .unwrap()
         .label("Bootstrap distribution")
         .legend(|(x, y)| PathElement::new(vec![(x, y), (x + 20, y)], DARK_BLUE));
 
     chart
         .draw_series(AreaSeries::new(
-            xs.iter()
-                .zip(ys.iter())
-                .skip(start)
-                .take(len)
-                .map(|(x, y)| (*x, *y)),
+            xs.iter().zip(ys.iter()).skip(start).take(len).map(|(x, y)| (*x, *y)),
             0.0,
             DARK_BLUE.mix(0.25).filled().stroke_width(3),
         ))
@@ -281,11 +215,7 @@ fn rel_distribution(
         .legend(|(x, y)| {
             Rectangle::new([(x, y - 5), (x + 20, y + 5)], DARK_RED.mix(0.25).filled())
         });
-    chart
-        .configure_series_labels()
-        .position(SeriesLabelPosition::UpperRight)
-        .draw()
-        .unwrap();
+    chart.configure_series_labels().position(SeriesLabelPosition::UpperRight).draw().unwrap();
 }
 
 pub(crate) fn rel_distributions(

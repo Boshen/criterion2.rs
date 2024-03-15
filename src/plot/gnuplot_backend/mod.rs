@@ -88,14 +88,7 @@ impl Plotter for Gnuplot {
                 pdf_small(ctx.id, ctx.context, data.formatter, data.measurements, size)
             }
         } else if let Some(cmp) = data.comparison {
-            pdf_comparison(
-                ctx.id,
-                ctx.context,
-                data.formatter,
-                data.measurements,
-                cmp,
-                size,
-            )
+            pdf_comparison(ctx.id, ctx.context, data.formatter, data.measurements, cmp, size)
         } else {
             pdf(ctx.id, ctx.context, data.formatter, data.measurements, size)
         });
@@ -192,8 +185,7 @@ impl Plotter for Gnuplot {
     fn t_test(&mut self, ctx: PlotContext<'_>, data: PlotData<'_>) {
         let size = ctx.size.map(|(w, h)| Size(w, h));
         if let Some(cmp) = data.comparison {
-            self.process_list
-                .push(t_test(ctx.id, ctx.context, data.measurements, cmp, size));
+            self.process_list.push(t_test(ctx.id, ctx.context, data.measurements, cmp, size));
         } else {
             error!("Comparison data is not provided for t_test plot");
         }

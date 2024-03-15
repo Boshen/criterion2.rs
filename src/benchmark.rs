@@ -39,9 +39,7 @@ impl PartialBenchmarkConfig {
             noise_threshold: self.noise_threshold.unwrap_or(defaults.noise_threshold),
             nresamples: self.nresamples.unwrap_or(defaults.nresamples),
             sample_size: self.sample_size.unwrap_or(defaults.sample_size),
-            significance_level: self
-                .significance_level
-                .unwrap_or(defaults.significance_level),
+            significance_level: self.significance_level.unwrap_or(defaults.significance_level),
             warm_up_time: self.warm_up_time.unwrap_or(defaults.warm_up_time),
             sampling_mode: self.sampling_mode.unwrap_or(defaults.sampling_mode),
             quick_mode: self.quick_mode.unwrap_or(defaults.quick_mode),

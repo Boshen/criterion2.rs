@@ -1,10 +1,13 @@
-use crate::report::BenchmarkId as InternalBenchmarkId;
-use crate::Throughput;
 use std::cell::RefCell;
 use std::convert::TryFrom;
 use std::io::{Read, Write};
 use std::mem::size_of;
 use std::net::TcpStream;
+
+use serde::{Deserialize, Serialize};
+
+use crate::report::BenchmarkId as InternalBenchmarkId;
+use crate::Throughput;
 
 #[derive(Debug)]
 pub enum MessageError {
@@ -30,21 +33,15 @@ impl From<std::io::Error> for MessageError {
 impl std::fmt::Display for MessageError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            MessageError::Deserialization(error) => write!(
-                f,
-                "Failed to deserialize message to Criterion.rs benchmark:\n{}",
-                error
-            ),
-            MessageError::Serialization(error) => write!(
-                f,
-                "Failed to serialize message to Criterion.rs benchmark:\n{}",
-                error
-            ),
-            MessageError::Io(error) => write!(
-                f,
-                "Failed to read or write message to Criterion.rs benchmark:\n{}",
-                error
-            ),
+            MessageError::Deserialization(error) => {
+                write!(f, "Failed to deserialize message to Criterion.rs benchmark:\n{}", error)
+            }
+            MessageError::Serialization(error) => {
+                write!(f, "Failed to serialize message to Criterion.rs benchmark:\n{}", error)
+            }
+            MessageError::Io(error) => {
+                write!(f, "Failed to read or write message to Criterion.rs benchmark:\n{}", error)
+            }
         }
     }
 }
@@ -147,9 +144,7 @@ pub struct Connection {
 }
 impl Connection {
     pub fn new(socket: TcpStream) -> Result<Self, std::io::Error> {
-        Ok(Connection {
-            inner: RefCell::new(InnerConnection::new(socket)?),
-        })
+        Ok(Connection { inner: RefCell::new(InnerConnection::new(socket)?) })
     }
 
     #[allow(dead_code)]
@@ -167,41 +162,25 @@ impl Connection {
     ) -> Result<(), MessageError> {
         loop {
             let response = match self.recv()? {
-                IncomingMessage::FormatValue { value } => OutgoingMessage::FormattedValue {
-                    value: formatter.format_value(value),
-                },
+                IncomingMessage::FormatValue { value } => {
+                    OutgoingMessage::FormattedValue { value: formatter.format_value(value) }
+                }
                 IncomingMessage::FormatThroughput { value, throughput } => {
                     OutgoingMessage::FormattedValue {
                         value: formatter.format_throughput(&throughput, value),
                     }
                 }
-                IncomingMessage::ScaleValues {
-                    typical_value,
-                    mut values,
-                } => {
+                IncomingMessage::ScaleValues { typical_value, mut values } => {
                     let unit = formatter.scale_values(typical_value, &mut values);
-                    OutgoingMessage::ScaledValues {
-                        unit,
-                        scaled_values: values,
-                    }
+                    OutgoingMessage::ScaledValues { unit, scaled_values: values }
                 }
-                IncomingMessage::ScaleThroughputs {
-                    typical_value,
-                    throughput,
-                    mut values,
-                } => {
+                IncomingMessage::ScaleThroughputs { typical_value, throughput, mut values } => {
                     let unit = formatter.scale_throughputs(typical_value, &throughput, &mut values);
-                    OutgoingMessage::ScaledValues {
-                        unit,
-                        scaled_values: values,
-                    }
+                    OutgoingMessage::ScaledValues { unit, scaled_values: values }
                 }
                 IncomingMessage::ScaleForMachines { mut values } => {
                     let unit = formatter.scale_for_machines(&mut values);
-                    OutgoingMessage::ScaledValues {
-                        unit,
-                        scaled_values: values,
-                    }
+                    OutgoingMessage::ScaledValues { unit, scaled_values: values }
                 }
                 IncomingMessage::Continue => break,
                 _ => panic!(),
@@ -216,25 +195,11 @@ impl Connection {
 #[derive(Debug, Deserialize)]
 pub enum IncomingMessage {
     // Value formatter requests
-    FormatValue {
-        value: f64,
-    },
-    FormatThroughput {
-        value: f64,
-        throughput: Throughput,
-    },
-    ScaleValues {
-        typical_value: f64,
-        values: Vec<f64>,
-    },
-    ScaleThroughputs {
-        typical_value: f64,
-        values: Vec<f64>,
-        throughput: Throughput,
-    },
-    ScaleForMachines {
-        values: Vec<f64>,
-    },
+    FormatValue { value: f64 },
+    FormatThroughput { value: f64, throughput: Throughput },
+    ScaleValues { typical_value: f64, values: Vec<f64> },
+    ScaleThroughputs { typical_value: f64, values: Vec<f64>, throughput: Throughput },
+    ScaleForMachines { values: Vec<f64> },
     Continue,
 
     __Other,
@@ -325,9 +290,7 @@ pub struct PlotConfiguration {
 }
 impl From<&crate::PlotConfiguration> for PlotConfiguration {
     fn from(other: &crate::PlotConfiguration) -> Self {
-        PlotConfiguration {
-            summary_scale: other.summary_scale.into(),
-        }
+        PlotConfiguration { summary_scale: other.summary_scale.into() }
     }
 }
 
@@ -338,10 +301,7 @@ struct Duration {
 }
 impl From<std::time::Duration> for Duration {
     fn from(other: std::time::Duration) -> Self {
-        Duration {
-            secs: other.as_secs(),
-            nanos: other.subsec_nanos(),
-        }
+        Duration { secs: other.as_secs(), nanos: other.subsec_nanos() }
     }
 }
 

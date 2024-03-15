@@ -11,6 +11,7 @@ use crate::stats::univariate::Sample;
 use crate::stats::Distribution;
 use crate::{PlotConfiguration, Throughput};
 use anes::{Attribute, ClearLine, Color, ResetAttributes, SetAttribute, SetForegroundColor};
+use serde::{Deserialize, Serialize};
 use std::cmp;
 use std::collections::HashSet;
 use std::fmt;
@@ -81,10 +82,7 @@ fn truncate_to_character_boundary(s: &mut String, max_len: usize) {
 }
 
 pub fn make_filename_safe(string: &str) -> String {
-    let mut string = string.replace(
-        &['?', '"', '/', '\\', '*', '<', '>', ':', '|', '^'][..],
-        "_",
-    );
+    let mut string = string.replace(&['?', '"', '/', '\\', '*', '<', '>', ':', '|', '^'][..], "_");
 
     // Truncate to last character boundary before max length...
     truncate_to_character_boundary(&mut string, MAX_DIRECTORY_NAME_LEN);
@@ -135,28 +133,16 @@ impl BenchmarkId {
                 make_filename_safe(func),
                 make_filename_safe(val)
             ),
-            (Some(func), &None) => format!(
-                "{}/{}",
-                make_filename_safe(&group_id),
-                make_filename_safe(func)
-            ),
-            (&None, Some(val)) => format!(
-                "{}/{}",
-                make_filename_safe(&group_id),
-                make_filename_safe(val)
-            ),
+            (Some(func), &None) => {
+                format!("{}/{}", make_filename_safe(&group_id), make_filename_safe(func))
+            }
+            (&None, Some(val)) => {
+                format!("{}/{}", make_filename_safe(&group_id), make_filename_safe(val))
+            }
             (&None, &None) => make_filename_safe(&group_id),
         };
 
-        BenchmarkId {
-            group_id,
-            function_id,
-            value_str,
-            throughput,
-            full_id,
-            directory_name,
-            title,
-        }
+        BenchmarkId { group_id, function_id, value_str, throughput, full_id, directory_name, title }
     }
 
     pub fn id(&self) -> &str {
@@ -176,10 +162,7 @@ impl BenchmarkId {
             Some(Throughput::Bytes(n))
             | Some(Throughput::Elements(n))
             | Some(Throughput::BytesDecimal(n)) => Some(n as f64),
-            None => self
-                .value_str
-                .as_ref()
-                .and_then(|string| string.parse::<f64>().ok()),
+            None => self.value_str.as_ref().and_then(|string| string.parse::<f64>().ok()),
         }
     }
 
@@ -386,11 +369,7 @@ impl CliReport {
         enable_text_coloring: bool,
         verbosity: CliVerbosity,
     ) -> CliReport {
-        CliReport {
-            enable_text_overwrite,
-            enable_text_coloring,
-            verbosity,
-        }
+        CliReport { enable_text_overwrite, enable_text_coloring, verbosity }
     }
 
     fn text_overwrite(&self) {
@@ -636,15 +615,9 @@ impl Report for CliReport {
                     println!(
                         "{}time:   [{} {} {}] (p = {:.2} {} {:.2})",
                         " ".repeat(24),
-                        self.faint(format::change(
-                            mean_est.confidence_interval.lower_bound,
-                            true
-                        )),
+                        self.faint(format::change(mean_est.confidence_interval.lower_bound, true)),
                         point_estimate_str,
-                        self.faint(format::change(
-                            mean_est.confidence_interval.upper_bound,
-                            true
-                        )),
+                        self.faint(format::change(mean_est.confidence_interval.upper_bound, true)),
                         comp.p_value,
                         if different_mean { "<" } else { ">" },
                         comp.significance_threshold
@@ -666,15 +639,9 @@ impl Report for CliReport {
                     println!(
                         "{}change: [{} {} {}] (p = {:.2} {} {:.2})",
                         " ".repeat(24),
-                        self.faint(format::change(
-                            mean_est.confidence_interval.lower_bound,
-                            true
-                        )),
+                        self.faint(format::change(mean_est.confidence_interval.lower_bound, true)),
                         point_estimate_str,
-                        self.faint(format::change(
-                            mean_est.confidence_interval.upper_bound,
-                            true
-                        )),
+                        self.faint(format::change(mean_est.confidence_interval.upper_bound, true)),
                         comp.p_value,
                         if different_mean { "<" } else { ">" },
                         comp.significance_threshold

@@ -20,10 +20,7 @@ pub(crate) fn pdf(
     let mean = scaled_avg_times.mean();
 
     let iter_counts = measurements.iter_counts();
-    let &max_iters = iter_counts
-        .iter()
-        .max_by_key(|&&iters| iters as u64)
-        .unwrap();
+    let &max_iters = iter_counts.iter().max_by_key(|&&iters| iters as u64).unwrap();
     let exponent = (max_iters.log10() / 3.).floor() as i32 * 3;
     let y_scale = 10f64.powi(-exponent);
 
@@ -62,57 +59,28 @@ pub(crate) fn pdf(
                 .set(Order::SampleText)
                 .set(Position::Outside(Vertical::Top, Horizontal::Right))
         })
-        .plot(
-            FilledCurve {
-                x: &*xs,
-                y1: &*ys,
-                y2: zeros,
-            },
-            |c| {
-                c.set(Axes::BottomXRightY)
-                    .set(DARK_BLUE)
-                    .set(Label("PDF"))
-                    .set(Opacity(0.25))
-            },
-        )
-        .plot(
-            Lines {
-                x: &[mean, mean],
-                y: vertical,
-            },
-            |c| {
-                c.set(DARK_BLUE)
-                    .set(LINEWIDTH)
-                    .set(LineType::Dash)
-                    .set(Label("Mean"))
-            },
-        )
+        .plot(FilledCurve { x: &*xs, y1: &*ys, y2: zeros }, |c| {
+            c.set(Axes::BottomXRightY).set(DARK_BLUE).set(Label("PDF")).set(Opacity(0.25))
+        })
+        .plot(Lines { x: &[mean, mean], y: vertical }, |c| {
+            c.set(DARK_BLUE).set(LINEWIDTH).set(LineType::Dash).set(Label("Mean"))
+        })
         .plot(
             Points {
-                x: avg_times
-                    .iter()
-                    .zip(scaled_avg_times.iter())
-                    .filter_map(
-                        |((_, label), t)| {
-                            if label.is_outlier() {
-                                None
-                            } else {
-                                Some(t)
-                            }
-                        },
-                    ),
-                y: avg_times
-                    .iter()
-                    .zip(iter_counts.iter())
-                    .filter_map(
-                        |((_, label), i)| {
-                            if label.is_outlier() {
-                                None
-                            } else {
-                                Some(i)
-                            }
-                        },
-                    ),
+                x: avg_times.iter().zip(scaled_avg_times.iter()).filter_map(|((_, label), t)| {
+                    if label.is_outlier() {
+                        None
+                    } else {
+                        Some(t)
+                    }
+                }),
+                y: avg_times.iter().zip(iter_counts.iter()).filter_map(|((_, label), i)| {
+                    if label.is_outlier() {
+                        None
+                    } else {
+                        Some(i)
+                    }
+                }),
             },
             |c| {
                 c.set(DARK_BLUE)
@@ -123,30 +91,20 @@ pub(crate) fn pdf(
         )
         .plot(
             Points {
-                x: avg_times
-                    .iter()
-                    .zip(scaled_avg_times.iter())
-                    .filter_map(
-                        |((_, label), t)| {
-                            if label.is_mild() {
-                                Some(t)
-                            } else {
-                                None
-                            }
-                        },
-                    ),
-                y: avg_times
-                    .iter()
-                    .zip(iter_counts.iter())
-                    .filter_map(
-                        |((_, label), i)| {
-                            if label.is_mild() {
-                                Some(i)
-                            } else {
-                                None
-                            }
-                        },
-                    ),
+                x: avg_times.iter().zip(scaled_avg_times.iter()).filter_map(|((_, label), t)| {
+                    if label.is_mild() {
+                        Some(t)
+                    } else {
+                        None
+                    }
+                }),
+                y: avg_times.iter().zip(iter_counts.iter()).filter_map(|((_, label), i)| {
+                    if label.is_mild() {
+                        Some(i)
+                    } else {
+                        None
+                    }
+                }),
             },
             |c| {
                 c.set(DARK_ORANGE)
@@ -157,30 +115,20 @@ pub(crate) fn pdf(
         )
         .plot(
             Points {
-                x: avg_times
-                    .iter()
-                    .zip(scaled_avg_times.iter())
-                    .filter_map(
-                        |((_, label), t)| {
-                            if label.is_severe() {
-                                Some(t)
-                            } else {
-                                None
-                            }
-                        },
-                    ),
-                y: avg_times
-                    .iter()
-                    .zip(iter_counts.iter())
-                    .filter_map(
-                        |((_, label), i)| {
-                            if label.is_severe() {
-                                Some(i)
-                            } else {
-                                None
-                            }
-                        },
-                    ),
+                x: avg_times.iter().zip(scaled_avg_times.iter()).filter_map(|((_, label), t)| {
+                    if label.is_severe() {
+                        Some(t)
+                    } else {
+                        None
+                    }
+                }),
+                y: avg_times.iter().zip(iter_counts.iter()).filter_map(|((_, label), i)| {
+                    if label.is_severe() {
+                        Some(i)
+                    } else {
+                        None
+                    }
+                }),
             },
             |c| {
                 c.set(DARK_RED)
@@ -189,34 +137,18 @@ pub(crate) fn pdf(
                     .set(PointType::FilledCircle)
             },
         )
-        .plot(
-            Lines {
-                x: &[lomt, lomt],
-                y: vertical,
-            },
-            |c| c.set(DARK_ORANGE).set(LINEWIDTH).set(LineType::Dash),
-        )
-        .plot(
-            Lines {
-                x: &[himt, himt],
-                y: vertical,
-            },
-            |c| c.set(DARK_ORANGE).set(LINEWIDTH).set(LineType::Dash),
-        )
-        .plot(
-            Lines {
-                x: &[lost, lost],
-                y: vertical,
-            },
-            |c| c.set(DARK_RED).set(LINEWIDTH).set(LineType::Dash),
-        )
-        .plot(
-            Lines {
-                x: &[hist, hist],
-                y: vertical,
-            },
-            |c| c.set(DARK_RED).set(LINEWIDTH).set(LineType::Dash),
-        );
+        .plot(Lines { x: &[lomt, lomt], y: vertical }, |c| {
+            c.set(DARK_ORANGE).set(LINEWIDTH).set(LineType::Dash)
+        })
+        .plot(Lines { x: &[himt, himt], y: vertical }, |c| {
+            c.set(DARK_ORANGE).set(LINEWIDTH).set(LineType::Dash)
+        })
+        .plot(Lines { x: &[lost, lost], y: vertical }, |c| {
+            c.set(DARK_RED).set(LINEWIDTH).set(LineType::Dash)
+        })
+        .plot(Lines { x: &[hist, hist], y: vertical }, |c| {
+            c.set(DARK_RED).set(LINEWIDTH).set(LineType::Dash)
+        });
     figure.set(Title(gnuplot_escape(id.as_title())));
 
     let path = context.report_path(id, "pdf.svg");
@@ -253,32 +185,15 @@ pub(crate) fn pdf_small(
             a.set(Label(format!("Average time ({})", unit)))
                 .set(Range::Limits(xs_.min(), xs_.max()))
         })
-        .configure(Axis::LeftY, |a| {
-            a.set(Label("Density (a.u.)"))
-                .set(Range::Limits(0., y_limit))
-        })
+        .configure(Axis::LeftY, |a| a.set(Label("Density (a.u.)")).set(Range::Limits(0., y_limit)))
         .configure(Axis::RightY, |a| a.hide())
         .configure(Key, |k| k.hide())
-        .plot(
-            FilledCurve {
-                x: &*xs,
-                y1: &*ys,
-                y2: zeros,
-            },
-            |c| {
-                c.set(Axes::BottomXRightY)
-                    .set(DARK_BLUE)
-                    .set(Label("PDF"))
-                    .set(Opacity(0.25))
-            },
-        )
-        .plot(
-            Lines {
-                x: &[mean, mean],
-                y: &[0., mean_y],
-            },
-            |c| c.set(DARK_BLUE).set(LINEWIDTH).set(Label("Mean")),
-        );
+        .plot(FilledCurve { x: &*xs, y1: &*ys, y2: zeros }, |c| {
+            c.set(Axes::BottomXRightY).set(DARK_BLUE).set(Label("PDF")).set(Opacity(0.25))
+        })
+        .plot(Lines { x: &[mean, mean], y: &[0., mean_y] }, |c| {
+            c.set(DARK_BLUE).set(LINEWIDTH).set(Label("Mean"))
+        });
 
     let path = context.report_path(id, "pdf_small.svg");
     debug_script(&path, &figure);
@@ -297,10 +212,8 @@ fn pdf_comparison_figure(
     let unit = formatter.scale_values(typical, &mut scaled_base_avg_times);
     let scaled_base_avg_times = Sample::new(&scaled_base_avg_times);
 
-    let mut scaled_new_avg_times: Vec<f64> = (&measurements.avg_times as &Sample<f64>)
-        .iter()
-        .cloned()
-        .collect();
+    let mut scaled_new_avg_times: Vec<f64> =
+        (&measurements.avg_times as &Sample<f64>).iter().cloned().collect();
     let _ = formatter.scale_values(typical, &mut scaled_new_avg_times);
     let scaled_new_avg_times = Sample::new(&scaled_new_avg_times);
 
@@ -318,9 +231,7 @@ fn pdf_comparison_figure(
     figure
         .set(Font(DEFAULT_FONT))
         .set(size.unwrap_or(SIZE))
-        .configure(Axis::BottomX, |a| {
-            a.set(Label(format!("Average time ({})", unit)))
-        })
+        .configure(Axis::BottomX, |a| a.set(Label(format!("Average time ({})", unit))))
         .configure(Axis::LeftY, |a| a.set(Label("Density (a.u.)")))
         .configure(Axis::RightY, |a| a.hide())
         .configure(Key, |k| {
@@ -328,36 +239,18 @@ fn pdf_comparison_figure(
                 .set(Order::SampleText)
                 .set(Position::Outside(Vertical::Top, Horizontal::Right))
         })
-        .plot(
-            FilledCurve {
-                x: &*base_xs,
-                y1: &*base_ys,
-                y2: zeros.clone(),
-            },
-            |c| c.set(DARK_RED).set(Label("Base PDF")).set(Opacity(0.5)),
-        )
-        .plot(
-            Lines {
-                x: &[base_mean, base_mean],
-                y: &[0., base_y_mean],
-            },
-            |c| c.set(DARK_RED).set(Label("Base Mean")).set(LINEWIDTH),
-        )
-        .plot(
-            FilledCurve {
-                x: &*xs,
-                y1: &*ys,
-                y2: zeros,
-            },
-            |c| c.set(DARK_BLUE).set(Label("New PDF")).set(Opacity(0.5)),
-        )
-        .plot(
-            Lines {
-                x: &[new_mean, new_mean],
-                y: &[0., y_mean],
-            },
-            |c| c.set(DARK_BLUE).set(Label("New Mean")).set(LINEWIDTH),
-        );
+        .plot(FilledCurve { x: &*base_xs, y1: &*base_ys, y2: zeros.clone() }, |c| {
+            c.set(DARK_RED).set(Label("Base PDF")).set(Opacity(0.5))
+        })
+        .plot(Lines { x: &[base_mean, base_mean], y: &[0., base_y_mean] }, |c| {
+            c.set(DARK_RED).set(Label("Base Mean")).set(LINEWIDTH)
+        })
+        .plot(FilledCurve { x: &*xs, y1: &*ys, y2: zeros }, |c| {
+            c.set(DARK_BLUE).set(Label("New PDF")).set(Opacity(0.5))
+        })
+        .plot(Lines { x: &[new_mean, new_mean], y: &[0., y_mean] }, |c| {
+            c.set(DARK_BLUE).set(Label("New Mean")).set(LINEWIDTH)
+        });
     figure
 }
 

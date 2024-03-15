@@ -32,9 +32,7 @@ pub(crate) trait Routine<M: Measurement, T: ?Sized> {
         time: Duration,
         parameter: &T,
     ) {
-        criterion
-            .report
-            .profile(id, report_context, time.as_nanos() as f64);
+        criterion.report.profile(id, report_context, time.as_nanos() as f64);
 
         let mut profile_path = report_context.output_directory.clone();
         if (*crate::CARGO_CRITERION_CONNECTION).is_some() {
@@ -46,10 +44,7 @@ pub(crate) trait Routine<M: Measurement, T: ?Sized> {
             profile_path.push(id.as_directory_name());
             profile_path.push("profile");
         }
-        criterion
-            .profiler
-            .borrow_mut()
-            .start_profiling(id.id(), &profile_path);
+        criterion.profiler.borrow_mut().start_profiling(id.id(), &profile_path);
 
         let time = time.as_nanos() as u64;
 
@@ -71,10 +66,7 @@ pub(crate) trait Routine<M: Measurement, T: ?Sized> {
             self.bench(measurement, &[iters], parameter);
         }
 
-        criterion
-            .profiler
-            .borrow_mut()
-            .stop_profiling(id.id(), &profile_path);
+        criterion.profiler.borrow_mut().stop_profiling(id.id(), &profile_path);
 
         criterion.report.terminated(id, report_context);
     }
@@ -110,10 +102,7 @@ pub(crate) trait Routine<M: Measurement, T: ?Sized> {
 
             // Main data collection loop.
             loop {
-                let t_now = *self
-                    .bench(measurement, &[n * 2], parameter)
-                    .first()
-                    .unwrap();
+                let t_now = *self.bench(measurement, &[n * 2], parameter).first().unwrap();
                 let t = (t_prev + 2. * t_now) / 5.;
                 let stdev = (sq(t_prev - t) + sq(t_now - 2. * t)).sqrt();
                 // println!("Sample: {} {:.2}", n, stdev / t);
@@ -132,16 +121,11 @@ pub(crate) trait Routine<M: Measurement, T: ?Sized> {
         let wu = config.warm_up_time;
         let m_ns = config.measurement_time.as_nanos();
 
-        criterion
-            .report
-            .warmup(id, report_context, wu.as_nanos() as f64);
+        criterion.report.warmup(id, report_context, wu.as_nanos() as f64);
 
         if let Some(conn) = &criterion.connection {
-            conn.send(&OutgoingMessage::Warmup {
-                id: id.into(),
-                nanos: wu.as_nanos() as f64,
-            })
-            .unwrap();
+            conn.send(&OutgoingMessage::Warmup { id: id.into(), nanos: wu.as_nanos() as f64 })
+                .unwrap();
         }
 
         let (wu_elapsed, wu_iters) = self.warm_up(measurement, wu, parameter);
@@ -159,17 +143,11 @@ pub(crate) trait Routine<M: Measurement, T: ?Sized> {
 
         let n = config.sample_size as u64;
 
-        let actual_sampling_mode = config
-            .sampling_mode
-            .choose_sampling_mode(met, n, m_ns as f64);
+        let actual_sampling_mode = config.sampling_mode.choose_sampling_mode(met, n, m_ns as f64);
 
         let m_iters = actual_sampling_mode.iteration_counts(met, n, &config.measurement_time);
 
-        let expected_ns = m_iters
-            .iter()
-            .copied()
-            .map(|count| count as f64 * met)
-            .sum();
+        let expected_ns = m_iters.iter().copied().map(|count| count as f64 * met).sum();
 
         // Use saturating_add to handle overflow.
         let mut total_iters = 0u64;
@@ -177,9 +155,7 @@ pub(crate) trait Routine<M: Measurement, T: ?Sized> {
             total_iters = total_iters.saturating_add(count);
         }
 
-        criterion
-            .report
-            .measurement_start(id, report_context, n, expected_ns, total_iters);
+        criterion.report.measurement_start(id, report_context, n, expected_ns, total_iters);
 
         if let Some(conn) = &criterion.connection {
             conn.send(&OutgoingMessage::MeasurementStart {
@@ -195,11 +171,7 @@ pub(crate) trait Routine<M: Measurement, T: ?Sized> {
 
         let m_iters_f: Vec<f64> = m_iters.iter().map(|&x| x as f64).collect();
 
-        (
-            actual_sampling_mode,
-            m_iters_f.into_boxed_slice(),
-            m_elapsed.into_boxed_slice(),
-        )
+        (actual_sampling_mode, m_iters_f.into_boxed_slice(), m_elapsed.into_boxed_slice())
     }
 }
 
@@ -219,11 +191,7 @@ where
     T: ?Sized,
 {
     pub fn new(f: F) -> Function<M, F, T> {
-        Function {
-            f,
-            _phantom: PhantomData,
-            _phamtom2: PhantomData,
-        }
+        Function { f, _phantom: PhantomData, _phamtom2: PhantomData }
     }
 }
 

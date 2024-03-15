@@ -22,24 +22,14 @@ fn iteration_times_figure(
     figure
         .set(Font(DEFAULT_FONT))
         .set(size.unwrap_or(SIZE))
-        .configure(Axis::BottomX, |a| {
-            a.configure(Grid::Major, |g| g.show()).set(Label("Sample"))
-        })
+        .configure(Axis::BottomX, |a| a.configure(Grid::Major, |g| g.show()).set(Label("Sample")))
         .configure(Axis::LeftY, |a| {
             a.configure(Grid::Major, |g| g.show())
                 .set(Label(format!("Average Iteration Time ({})", unit)))
         })
-        .plot(
-            Points {
-                x: 1..(data.len() + 1),
-                y: scaled_y.as_ref(),
-            },
-            |c| {
-                c.set(DARK_BLUE)
-                    .set(PointSize(0.5))
-                    .set(PointType::FilledCircle)
-            },
-        );
+        .plot(Points { x: 1..(data.len() + 1), y: scaled_y.as_ref() }, |c| {
+            c.set(DARK_BLUE).set(PointSize(0.5)).set(PointType::FilledCircle)
+        });
     figure
 }
 
@@ -101,9 +91,7 @@ fn iteration_times_comparison_figure(
     figure
         .set(Font(DEFAULT_FONT))
         .set(size.unwrap_or(SIZE))
-        .configure(Axis::BottomX, |a| {
-            a.configure(Grid::Major, |g| g.show()).set(Label("Sample"))
-        })
+        .configure(Axis::BottomX, |a| a.configure(Grid::Major, |g| g.show()).set(Label("Sample")))
         .configure(Axis::LeftY, |a| {
             a.configure(Grid::Major, |g| g.show())
                 .set(Label(format!("Average Iteration Time ({})", unit)))
@@ -113,30 +101,12 @@ fn iteration_times_comparison_figure(
                 .set(Order::SampleText)
                 .set(Position::Inside(Vertical::Top, Horizontal::Left))
         })
-        .plot(
-            Points {
-                x: 1..(current_data.len() + 1),
-                y: scaled_base_y.as_ref(),
-            },
-            |c| {
-                c.set(DARK_RED)
-                    .set(Label("Base"))
-                    .set(PointSize(0.5))
-                    .set(PointType::FilledCircle)
-            },
-        )
-        .plot(
-            Points {
-                x: 1..(current_data.len() + 1),
-                y: scaled_current_y.as_ref(),
-            },
-            |c| {
-                c.set(DARK_BLUE)
-                    .set(Label("Current"))
-                    .set(PointSize(0.5))
-                    .set(PointType::FilledCircle)
-            },
-        );
+        .plot(Points { x: 1..(current_data.len() + 1), y: scaled_base_y.as_ref() }, |c| {
+            c.set(DARK_RED).set(Label("Base")).set(PointSize(0.5)).set(PointType::FilledCircle)
+        })
+        .plot(Points { x: 1..(current_data.len() + 1), y: scaled_current_y.as_ref() }, |c| {
+            c.set(DARK_BLUE).set(Label("Current")).set(PointSize(0.5)).set(PointType::FilledCircle)
+        });
     figure
 }
 

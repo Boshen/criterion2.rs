@@ -52,11 +52,7 @@ pub(crate) fn iteration_times_figure(
         .legend(|(x, y)| Circle::new((x + 10, y), POINT_SIZE, DARK_BLUE.filled()));
 
     if title.is_some() {
-        chart
-            .configure_series_labels()
-            .position(SeriesLabelPosition::UpperLeft)
-            .draw()
-            .unwrap();
+        chart.configure_series_labels().position(SeriesLabelPosition::UpperLeft).draw().unwrap();
     }
 }
 
@@ -129,10 +125,6 @@ pub(crate) fn iteration_times_comparison_figure(
         .legend(|(x, y)| Circle::new((x + 10, y), POINT_SIZE, DARK_RED.filled()));
 
     if title.is_some() {
-        chart
-            .configure_series_labels()
-            .position(SeriesLabelPosition::UpperLeft)
-            .draw()
-            .unwrap();
+        chart.configure_series_labels().position(SeriesLabelPosition::UpperLeft).draw().unwrap();
     }
 }

@@ -1,4 +1,4 @@
-use criterion::{
+use criterion2::{
     black_box, criterion_group,
     measurement::{Measurement, ValueFormatter},
     Criterion, Throughput,
@@ -17,10 +17,9 @@ impl ValueFormatter for HalfSecFormatter {
             Throughput::Bytes(bytes) | Throughput::BytesDecimal(bytes) => {
                 format!("{} b/s/2", (bytes as f64) / (value * 2f64 * 10f64.powi(-9)))
             }
-            Throughput::Elements(elems) => format!(
-                "{} elem/s/2",
-                (elems as f64) / (value * 2f64 * 10f64.powi(-9))
-            ),
+            Throughput::Elements(elems) => {
+                format!("{} elem/s/2", (elems as f64) / (value * 2f64 * 10f64.powi(-9)))
+            }
         }
     }
 

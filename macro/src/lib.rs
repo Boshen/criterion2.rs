@@ -1,4 +1,3 @@
-extern crate proc_macro;
 use proc_macro::TokenStream;
 use proc_macro2::{Ident, TokenTree};
 use quote::quote_spanned;
@@ -12,13 +11,13 @@ pub fn criterion(attr: TokenStream, item: TokenStream) -> TokenStream {
 
     let init = if stream_length(attr.clone()) != 0 {
         attr
-    }
-    else {
+    } else {
         quote_spanned!(span=> criterion::Criterion::default())
     };
 
     let function_name = find_name(item.clone());
-    let wrapped_name = Ident::new(&format!("criterion_wrapped_{}", function_name.to_string()), span);
+    let wrapped_name =
+        Ident::new(&format!("criterion_wrapped_{}", function_name.to_string()), span);
 
     let output = quote_spanned!(span=>
         #[test_case]
@@ -46,11 +45,10 @@ fn find_name(stream: proc_macro2::TokenStream) -> Ident {
             }
         }
     }
-    
+
     if let Some(TokenTree::Ident(name)) = iter.next() {
         name
-    }
-    else {
+    } else {
         panic!("Unable to find function name")
     }
 }

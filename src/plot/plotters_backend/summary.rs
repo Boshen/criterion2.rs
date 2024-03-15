@@ -106,11 +106,7 @@ fn draw_line_comarision_figure<XR: AsRangedCoord<Value = f64>, YR: AsRangedCoord
         }
     }
 
-    chart
-        .configure_series_labels()
-        .position(SeriesLabelPosition::UpperLeft)
-        .draw()
-        .unwrap();
+    chart.configure_series_labels().position(SeriesLabelPosition::UpperLeft).draw().unwrap();
 }
 
 #[allow(clippy::type_complexity)]
@@ -174,10 +170,7 @@ pub fn violin(
         })
         .collect::<Vec<_>>();
 
-    let mut xs = kdes
-        .iter()
-        .flat_map(|(_, x, _)| x.iter())
-        .filter(|&&x| x > 0.);
+    let mut xs = kdes.iter().flat_map(|(_, x, _)| x.iter()).filter(|&&x| x > 0.);
     let (mut min, mut max) = {
         let &first = xs.next().unwrap();
         (first, first)

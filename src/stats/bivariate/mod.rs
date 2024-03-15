@@ -36,10 +36,7 @@ impl<'a, X, Y> Data<'a, X, Y> {
 
     /// Iterate over the data set
     pub fn iter(&self) -> Pairs<'a, X, Y> {
-        Pairs {
-            data: *self,
-            state: 0,
-        }
+        Pairs { data: *self, state: 0 }
     }
 }
 
@@ -77,10 +74,7 @@ where
         {
             (0..nresamples)
                 .into_par_iter()
-                .map_init(
-                    || Resamples::new(*self),
-                    |resamples, _| statistic(resamples.next()),
-                )
+                .map_init(|| Resamples::new(*self), |resamples, _| statistic(resamples.next()))
                 .fold(
                     || T::Builder::new(0),
                     |mut sub_distributions, sample| {
