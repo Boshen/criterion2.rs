@@ -1,9 +1,10 @@
 [package]
 authors = [
+  "Boshen <boshenc@gmail.com>",
   "Jorge Aparicio <japaricious@gmail.com>",
   "Brook Heisler <brookheisler@gmail.com>",
 ]
-name = "criterion"
+name = "criterion2"
 # When bumping:
 #
 # * Update version numbers in the book;
