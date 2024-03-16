@@ -150,11 +150,7 @@ pub fn black_box<T>(dummy: T) -> T {
 /// or fail to prevent code from being eliminated.
 #[cfg(not(feature = "real_blackbox"))]
 pub fn black_box<T>(dummy: T) -> T {
-    unsafe {
-        let ret = std::ptr::read_volatile(&dummy);
-        std::mem::forget(dummy);
-        ret
-    }
+    std::hint::black_box(dummy)
 }
 
 /// Argument to [`Bencher::iter_batched`] and [`Bencher::iter_batched_ref`] which controls the
