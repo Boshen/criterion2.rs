@@ -957,7 +957,7 @@ impl ::std::error::Error for VersionError {
         }
     }
 
-    fn cause(&self) -> Option<&dyn::std::error::Error> {
+    fn cause(&self) -> Option<&dyn ::std::error::Error> {
         match self {
             VersionError::Exec(err) => Some(err),
             _ => None,
