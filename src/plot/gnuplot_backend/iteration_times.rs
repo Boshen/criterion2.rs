@@ -1,6 +1,6 @@
 use std::process::Child;
 
-use criterion_plot::prelude::*;
+use crate::criterion_plot::prelude::*;
 
 use super::*;
 use crate::report::{BenchmarkId, ComparisonData, MeasurementData, ReportContext};

@@ -3,9 +3,9 @@
 use std::borrow::Cow;
 use std::iter::IntoIterator;
 
-use crate::map;
-use crate::traits::{Configure, Data, Set};
-use crate::{
+use super::map;
+use super::traits::{Configure, Data, Set};
+use super::{
     grid, Axis, Default, Display, Grid, Label, Range, Scale, ScaleFactor, Script, TicLabels,
 };
 
@@ -191,7 +191,7 @@ impl<'a> Script for (Axis, &'a Properties) {
     }
 }
 
-impl crate::ScaleFactorTrait for Properties {
+impl super::ScaleFactorTrait for Properties {
     fn scale_factor(&self) -> f64 {
         self.scale_factor
     }

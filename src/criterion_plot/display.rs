@@ -1,7 +1,7 @@
 use std::borrow::Cow;
 
-use crate::key::{Horizontal, Justification, Order, Stacked, Vertical};
-use crate::{Axes, Axis, Color, Display, Grid, LineType, PointType, Terminal};
+use super::key::{Horizontal, Justification, Order, Stacked, Vertical};
+use super::{Axes, Axis, Color, Display, Grid, LineType, PointType, Terminal};
 
 impl Display<&'static str> for Axis {
     fn display(&self) -> &'static str {

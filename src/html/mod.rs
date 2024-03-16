@@ -1,13 +1,13 @@
 use crate::report::{make_filename_safe, BenchmarkId, MeasurementData, Report, ReportContext};
 use crate::stats::bivariate::regression::Slope;
 
+use crate::criterion_plot::Size;
 use crate::estimate::Estimate;
 use crate::format;
 use crate::fs;
 use crate::measurement::ValueFormatter;
 use crate::plot::{PlotContext, PlotData, Plotter};
 use crate::SavedSample;
-use criterion_plot::Size;
 use serde::Serialize;
 use std::cell::RefCell;
 use std::cmp::Ordering;

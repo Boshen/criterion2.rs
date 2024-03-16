@@ -48,7 +48,6 @@ cast = "0.3"
 num-traits = { version = "0.2", default-features = false, features = ["std"] }
 oorandom = "11.1"
 regex = { version = "1.10", default-features = false, features = ["std"] }
-criterion-plot = { path = "plot", version = "0.5.0" }
 
 # Optional dependencies
 rayon = { version = "1.9", optional = true }
@@ -73,6 +72,8 @@ approx = "0.5.1"
 quickcheck = { version = "1.0", default-features = false }
 rand = "0.8"
 futures = { version = "0.3", default-features = false, features = ["executor"] }
+itertools-num = "0.1"
+num-complex = "0.4.5"
 
 [features]
 stable = [

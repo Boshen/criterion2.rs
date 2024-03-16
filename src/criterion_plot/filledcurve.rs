@@ -5,9 +5,9 @@ use std::iter::IntoIterator;
 
 use itertools::izip;
 
-use crate::data::Matrix;
-use crate::traits::{self, Data, Set};
-use crate::{Axes, Color, Default, Display, Figure, Label, Opacity, Plot, Script};
+use super::data::Matrix;
+use super::traits::{self, Data, Set};
+use super::{Axes, Color, Default, Display, Figure, Label, Opacity, Plot, Script};
 
 /// Properties common to filled curve plots
 pub struct Properties {
@@ -128,7 +128,7 @@ where
         configure(&mut props);
 
         let (x_factor, y_factor) =
-            crate::scale_factor(&self.axes, props.axes.unwrap_or(crate::Axes::BottomXLeftY));
+            super::scale_factor(&self.axes, props.axes.unwrap_or(super::Axes::BottomXLeftY));
 
         let data = Matrix::new(izip!(x, y1, y2), (x_factor, y_factor, y_factor));
         self.plots.push(Plot::new(data, &props));

@@ -2,7 +2,7 @@
 
 #![allow(non_snake_case)]
 
-use crate::{Font as FontType, Label as LabelType, Output as OutputType, Title as TitleType};
+use super::{Font as FontType, Label as LabelType, Output as OutputType, Title as TitleType};
 use std::borrow::Cow;
 use std::path::Path;
 

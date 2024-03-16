@@ -2,8 +2,8 @@ use std::iter;
 use std::path::Path;
 use std::process::Child;
 
+use crate::criterion_plot::prelude::*;
 use crate::stats::univariate::Sample;
-use criterion_plot::prelude::*;
 
 mod distributions;
 mod iteration_times;

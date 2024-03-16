@@ -30,7 +30,7 @@ pub(crate) struct PlotContext<'a> {
 }
 
 impl<'a> PlotContext<'a> {
-    pub fn size(mut self, s: Option<criterion_plot::Size>) -> PlotContext<'a> {
+    pub fn size(mut self, s: Option<crate::criterion_plot::Size>) -> PlotContext<'a> {
         if let Some(s) = s {
             self.size = Some((s.0, s.1));
         }

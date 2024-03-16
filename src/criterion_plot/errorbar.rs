@@ -5,9 +5,9 @@ use std::iter::IntoIterator;
 
 use itertools::izip;
 
-use crate::data::Matrix;
-use crate::traits::{self, Data, Set};
-use crate::{
+use super::data::Matrix;
+use super::traits::{self, Data, Set};
+use super::{
     Color, Display, ErrorBarDefault, Figure, Label, LineType, LineWidth, Plot, PointSize,
     PointType, Script,
 };
@@ -232,7 +232,7 @@ where
     where
         F: FnOnce(&mut Properties) -> &mut Properties,
     {
-        let (x_factor, y_factor) = crate::scale_factor(&self.axes, crate::Axes::BottomXLeftY);
+        let (x_factor, y_factor) = super::scale_factor(&self.axes, super::Axes::BottomXLeftY);
 
         let style = e.style();
         let (x, y, length, height, e_factor) = match e {

@@ -5,9 +5,9 @@ use std::iter::IntoIterator;
 
 use itertools::izip;
 
-use crate::data::Matrix;
-use crate::traits::{self, Data, Set};
-use crate::{Color, Default, Display, Figure, Label, LineType, LineWidth, Plot, Script};
+use super::data::Matrix;
+use super::traits::{self, Data, Set};
+use super::{Color, Default, Display, Figure, Label, LineType, LineWidth, Plot, Script};
 
 /// Properties common to candlestick plots
 pub struct Properties {
@@ -128,7 +128,7 @@ where
     where
         F: FnOnce(&mut Properties) -> &mut Properties,
     {
-        let (x_factor, y_factor) = crate::scale_factor(&self.axes, crate::Axes::BottomXLeftY);
+        let (x_factor, y_factor) = super::scale_factor(&self.axes, super::Axes::BottomXLeftY);
         let Candlesticks { x, whisker_min, box_min, box_high, whisker_high } = candlesticks;
 
         let data = Matrix::new(

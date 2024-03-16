@@ -1,3 +1,4 @@
+#![allow(unused)]
 //! [Criterion]'s plotting library.
 //!
 //! [Criterion]: https://github.com/bheisler/criterion.rs
@@ -15,9 +16,9 @@
 //! # use std::fs;
 //! # use std::path::Path;
 //! use itertools_num::linspace;
-//! use criterion_plot::prelude::*;
+//! use criterion2::criterion_plot::prelude::*;
 //!
-//! # if let Err(_) = criterion_plot::version() {
+//! # if let Err(_) = criterion2::criterion_plot::version() {
 //! #     return;
 //! # }
 //! let ref xs = linspace::<f64>(-10., 10., 51).collect::<Vec<_>>();
@@ -80,7 +81,7 @@
 //!
 //! use itertools_num::linspace;
 //! use rand::Rng;
-//! use criterion_plot::prelude::*;
+//! use criterion2::criterion_plot::prelude::*;
 //!
 //! fn sinc(mut x: f64) -> f64 {
 //!     if x == 0. {
@@ -91,7 +92,7 @@
 //!     }
 //! }
 //!
-//! # if let Err(_) = criterion_plot::version() {
+//! # if let Err(_) = criterion2::criterion_plot::version() {
 //! #     return;
 //! # }
 //! let ref xs_ = linspace::<f64>(-4., 4., 101).collect::<Vec<_>>();
@@ -156,10 +157,10 @@
 //! ```
 //! # use std::fs;
 //! # use std::path::Path;
-//! use criterion_plot::prelude::*;
+//! use criterion2::criterion_plot::prelude::*;
 //! use rand::Rng;
 //!
-//! # if let Err(_) = criterion_plot::version() {
+//! # if let Err(_) = criterion2::criterion_plot::version() {
 //! #     return;
 //! # }
 //! let xs = 1..11;
@@ -224,13 +225,13 @@
 //!
 //! use itertools_num::linspace;
 //! use num_complex::Complex;
-//! use criterion_plot::prelude::*;
+//! use criterion2::criterion_plot::prelude::*;
 //!
 //! fn tf(x: f64) -> Complex<f64> {
 //!     Complex::new(0., x) / Complex::new(10., x) / Complex::new(1., x / 10_000.)
 //! }
 //!
-//! # if let Err(_) = criterion_plot::version() {
+//! # if let Err(_) = criterion2::criterion_plot::version() {
 //! #     return;
 //! # }
 //! let (start, end): (f64, f64) = (1.1, 90_000.);
@@ -296,9 +297,9 @@
 //! use std::iter;
 //!
 //! use itertools_num::linspace;
-//! use criterion_plot::prelude::*;
+//! use criterion2::criterion_plot::prelude::*;
 //!
-//! # if let Err(_) = criterion_plot::version() {
+//! # if let Err(_) = criterion2::criterion_plot::version() {
 //! #     return;
 //! # }
 //! let (start, end) = (-5., 5.);
@@ -380,8 +381,8 @@ use std::path::Path;
 use std::process::{Child, Command};
 use std::str;
 
-use crate::data::Matrix;
-use crate::traits::{Configure, Set};
+use self::data::Matrix;
+use self::traits::{Configure, Set};
 
 mod data;
 mod display;
@@ -767,7 +768,7 @@ pub enum Axis {
 
 impl Axis {
     fn next(self) -> Option<Axis> {
-        use crate::Axis::*;
+        use self::Axis::*;
 
         match self {
             BottomX => Some(LeftY),
@@ -809,7 +810,7 @@ pub enum Grid {
 
 impl Grid {
     fn next(self) -> Option<Grid> {
-        use crate::Grid::*;
+        use self::Grid::*;
 
         match self {
             Major => Some(Minor),
@@ -956,7 +957,7 @@ impl ::std::error::Error for VersionError {
         }
     }
 
-    fn cause(&self) -> Option<&dyn ::std::error::Error> {
+    fn cause(&self) -> Option<&dyn::std::error::Error> {
         match self {
             VersionError::Exec(err) => Some(err),
             _ => None,
@@ -1000,8 +1001,8 @@ fn parse_version(version_str: &str) -> Result<Version, Option<ParseIntError>> {
 }
 
 fn scale_factor(map: &map::axis::Map<axis::Properties>, axes: Axes) -> (f64, f64) {
-    use crate::Axes::*;
-    use crate::Axis::*;
+    use self::Axes::*;
+    use self::Axis::*;
 
     match axes {
         BottomXLeftY => (

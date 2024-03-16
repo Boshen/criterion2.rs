@@ -49,6 +49,7 @@ pub mod async_executor;
 mod bencher;
 mod connection;
 mod criterion;
+pub mod criterion_plot;
 #[cfg(feature = "csv_output")]
 mod csv_report;
 mod error;
@@ -79,7 +80,7 @@ use std::process::Command;
 use std::sync::Mutex;
 use std::time::Duration;
 
-use criterion_plot::{Version, VersionError};
+use crate::criterion_plot::{Version, VersionError};
 use once_cell::sync::Lazy;
 
 use crate::benchmark::BenchmarkConfig;
@@ -116,7 +117,8 @@ pub use crate::codspeed::criterion::Criterion;
 pub use crate::criterion::Criterion;
 
 static DEBUG_ENABLED: Lazy<bool> = Lazy::new(|| std::env::var_os("CRITERION_DEBUG").is_some());
-static GNUPLOT_VERSION: Lazy<Result<Version, VersionError>> = Lazy::new(criterion_plot::version);
+static GNUPLOT_VERSION: Lazy<Result<Version, VersionError>> =
+    Lazy::new(crate::criterion_plot::version);
 static DEFAULT_PLOTTING_BACKEND: Lazy<PlottingBackend> = Lazy::new(|| match &*GNUPLOT_VERSION {
     Ok(_) => PlottingBackend::Gnuplot,
     #[cfg(feature = "plotters")]

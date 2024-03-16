@@ -1,6 +1,6 @@
 //! Gridline
 
-use crate::{Axis, Default, Display, Grid, Script};
+use super::{Axis, Default, Display, Grid, Script};
 
 /// Gridline properties
 #[derive(Clone, Copy)]

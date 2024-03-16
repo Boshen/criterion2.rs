@@ -1,11 +1,11 @@
 use super::{debug_script, gnuplot_escape};
 use super::{DARK_BLUE, DEFAULT_FONT, KDE_POINTS, LINEWIDTH, POINT_SIZE, SIZE};
+use crate::criterion_plot::prelude::*;
 use crate::kde;
 use crate::measurement::ValueFormatter;
 use crate::report::{BenchmarkId, ValueType};
 use crate::stats::univariate::Sample;
 use crate::AxisScale;
-use criterion_plot::prelude::*;
 use itertools::Itertools;
 use std::cmp::Ordering;
 use std::path::{Path, PathBuf};

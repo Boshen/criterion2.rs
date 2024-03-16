@@ -1,7 +1,7 @@
 use std::process::Child;
 
+use crate::criterion_plot::prelude::*;
 use crate::stats::bivariate::regression::Slope;
-use criterion_plot::prelude::*;
 
 use super::*;
 use crate::report::{BenchmarkId, ComparisonData, MeasurementData, ReportContext};

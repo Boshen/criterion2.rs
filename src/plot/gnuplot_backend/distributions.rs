@@ -1,9 +1,9 @@
 use std::iter;
 use std::process::Child;
 
+use crate::criterion_plot::prelude::*;
 use crate::stats::univariate::Sample;
 use crate::stats::Distribution;
-use criterion_plot::prelude::*;
 
 use super::*;
 use crate::estimate::Estimate;

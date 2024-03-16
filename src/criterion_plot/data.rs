@@ -2,7 +2,7 @@ use std::mem;
 
 use cast::From as _0;
 
-use crate::traits::Data;
+use super::traits::Data;
 
 macro_rules! impl_data {
     ($($ty:ty),+) => {
