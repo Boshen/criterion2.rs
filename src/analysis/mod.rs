@@ -8,6 +8,7 @@ use crate::stats::{Distribution, Tails};
 
 use crate::benchmark::BenchmarkConfig;
 use crate::connection::OutgoingMessage;
+use crate::criterion::Criterion;
 use crate::estimate::{
     build_estimates, ConfidenceInterval, Distributions, Estimate, Estimates, PointEstimates,
 };
@@ -15,7 +16,7 @@ use crate::fs;
 use crate::measurement::Measurement;
 use crate::report::{BenchmarkId, Report, ReportContext};
 use crate::routine::Routine;
-use crate::{Baseline, Criterion, SavedSample, Throughput};
+use crate::{Baseline, SavedSample, Throughput};
 
 macro_rules! elapsed {
     ($msg:expr, $block:expr) => {{

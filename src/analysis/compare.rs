@@ -3,13 +3,14 @@ use crate::stats::univariate::{self, mixed};
 use crate::stats::Distribution;
 
 use crate::benchmark::BenchmarkConfig;
+use crate::criterion::Criterion;
 use crate::error::Result;
 use crate::estimate::{
     build_change_estimates, ChangeDistributions, ChangeEstimates, ChangePointEstimates, Estimates,
 };
 use crate::measurement::Measurement;
 use crate::report::BenchmarkId;
-use crate::{fs, Criterion, SavedSample};
+use crate::{fs, SavedSample};
 
 // Common comparison procedure
 #[cfg_attr(feature = "cargo-clippy", allow(clippy::type_complexity))]

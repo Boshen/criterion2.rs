@@ -49,6 +49,9 @@ jobs:
       - name: Test with minimal features
         run: cargo test --no-default-features
 
+      - name: Check codspeed
+        run: cargo check --features codspeed
+
       - name: Check for non-standard formatting
         if: ${{ matrix.rust == 'stable' }}
         run: cargo fmt --all -- --check

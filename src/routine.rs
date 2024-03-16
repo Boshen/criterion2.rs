@@ -1,10 +1,13 @@
-use crate::benchmark::BenchmarkConfig;
-use crate::connection::OutgoingMessage;
-use crate::measurement::Measurement;
-use crate::report::{BenchmarkId, Report, ReportContext};
-use crate::{black_box, ActualSamplingMode, Bencher, Criterion};
 use std::marker::PhantomData;
 use std::time::Duration;
+
+use crate::bencher::Bencher;
+use crate::benchmark::BenchmarkConfig;
+use crate::connection::OutgoingMessage;
+use crate::criterion::Criterion;
+use crate::measurement::Measurement;
+use crate::report::{BenchmarkId, Report, ReportContext};
+use crate::{black_box, ActualSamplingMode};
 
 /// PRIVATE
 pub(crate) trait Routine<M: Measurement, T: ?Sized> {

@@ -1,13 +1,16 @@
+use std::time::Duration;
+
 use crate::analysis;
+use crate::bencher::Bencher;
 use crate::benchmark::PartialBenchmarkConfig;
 use crate::connection::OutgoingMessage;
+use crate::criterion::Criterion;
 use crate::measurement::Measurement;
 use crate::report::BenchmarkId as InternalBenchmarkId;
 use crate::report::Report;
 use crate::report::ReportContext;
 use crate::routine::{Function, Routine};
-use crate::{Bencher, Criterion, Mode, PlotConfiguration, SamplingMode, Throughput};
-use std::time::Duration;
+use crate::{Mode, PlotConfiguration, SamplingMode, Throughput};
 
 /// Structure used to group together a set of related benchmarks, along with custom configuration
 /// settings for groups of benchmarks. All benchmarks performed using a benchmark group will be
