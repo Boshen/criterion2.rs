@@ -86,9 +86,6 @@ stable = [
 default = ["rayon", "plotters", "cargo_bench_support"]
 codspeed = ["dep:codspeed", "dep:colored"]
 
-# Enable use of the nightly-only test::black_box function to discourage compiler optimizations.
-real_blackbox = []
-
 # Enable async/await support
 async = []
 

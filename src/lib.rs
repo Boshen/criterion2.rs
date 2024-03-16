@@ -178,21 +178,8 @@ fn debug_enabled() -> bool {
     *DEBUG_ENABLED.get_or_init(|| std::env::var_os("CRITERION_DEBUG").is_some())
 }
 
-/// A function that is opaque to the optimizer, used to prevent the compiler from
-/// optimizing away computations in a benchmark.
-///
-/// This variant is backed by the (unstable) test::black_box function.
-#[cfg(feature = "real_blackbox")]
-pub fn black_box<T>(dummy: T) -> T {
-    std::hint::black_box(dummy)
-}
-
-/// A function that is opaque to the optimizer, used to prevent the compiler from
-/// optimizing away computations in a benchmark.
-///
-/// This variant is stable-compatible, but it may cause some performance overhead
-/// or fail to prevent code from being eliminated.
-#[cfg(not(feature = "real_blackbox"))]
+/// Reexport of [std::hint::black_box].
+#[inline]
 pub fn black_box<T>(dummy: T) -> T {
     std::hint::black_box(dummy)
 }
