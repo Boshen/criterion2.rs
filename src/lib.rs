@@ -15,15 +15,8 @@
 //! * Produces detailed charts, providing thorough understanding of your code's
 //!   performance behavior.
 
+#![allow(clippy::style, clippy::complexity)]
 #![warn(bare_trait_objects)]
-#![cfg_attr(
-    feature = "cargo-clippy",
-    allow(
-        clippy::just_underscores_and_digits, // Used in the stats code
-        clippy::transmute_ptr_to_ptr, // Used in the stats code
-        clippy::manual_non_exhaustive, // Remove when MSRV bumped above 1.40
-    )
-)]
 #![cfg_attr(feature = "codspeed", allow(unused))]
 
 #[cfg(all(feature = "rayon", target_arch = "wasm32"))]

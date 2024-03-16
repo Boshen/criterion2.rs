@@ -401,7 +401,6 @@ impl<M: Measurement> Criterion<M> {
     /// Configure this criterion struct based on the command-line arguments to
     /// this process.
     #[must_use]
-    #[cfg_attr(feature = "cargo-clippy", allow(clippy::cognitive_complexity))]
     pub fn configure_from_args(mut self) -> Criterion<M> {
         use clap::{value_parser, Arg, Command};
         let matches = Command::new("Criterion Benchmark")

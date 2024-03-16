@@ -365,12 +365,6 @@
 #![deny(missing_docs)]
 #![deny(warnings)]
 #![deny(bare_trait_objects)]
-// This lint has lots of false positives ATM, see
-// https://github.com/Manishearth/rust-clippy/issues/761
-#![cfg_attr(feature = "cargo-clippy", allow(clippy::new_without_default))]
-// False positives with images
-#![cfg_attr(feature = "cargo-clippy", allow(clippy::doc_markdown))]
-#![cfg_attr(feature = "cargo-clippy", allow(clippy::many_single_char_names))]
 
 use std::borrow::Cow;
 use std::fmt;

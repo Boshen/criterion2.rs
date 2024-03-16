@@ -32,7 +32,6 @@ impl AxisScale {
     }
 }
 
-#[cfg_attr(feature = "cargo-clippy", allow(clippy::explicit_counter_loop))]
 pub fn line_comparison(
     formatter: &dyn ValueFormatter,
     title: &str,

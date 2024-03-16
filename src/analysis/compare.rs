@@ -13,7 +13,6 @@ use crate::report::BenchmarkId;
 use crate::{fs, SavedSample};
 
 // Common comparison procedure
-#[cfg_attr(feature = "cargo-clippy", allow(clippy::type_complexity))]
 pub(crate) fn common<M: Measurement>(
     id: &BenchmarkId,
     avg_times: &Sample<f64>,
