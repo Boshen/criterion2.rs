@@ -10,11 +10,11 @@ use regex::Regex;
 use crate::bencher::Bencher;
 use crate::benchmark_group::{BenchmarkGroup, BenchmarkId};
 use crate::{
-    debug_enabled, Baseline, BencherReport, BenchmarkConfig, BenchmarkFilter, CliReport,
+    cargo_criterion_connection, debug_enabled, default_output_directory, default_plotting_backend,
+    gnuplot_version, Baseline, BencherReport, BenchmarkConfig, BenchmarkFilter, CliReport,
     CliVerbosity, Connection, ExternalProfiler, Html, ListFormat, Measurement, Mode,
     OutgoingMessage, PlotConfiguration, PlottingBackend, Profiler, Report, ReportContext, Reports,
-    SamplingMode, WallTime, CARGO_CRITERION_CONNECTION, DEFAULT_OUTPUT_DIRECTORY,
-    DEFAULT_PLOTTING_BACKEND, GNUPLOT_VERSION,
+    SamplingMode, WallTime,
 };
 
 /// The benchmark manager
@@ -65,7 +65,7 @@ impl Default for Criterion {
             cli: CliReport::new(false, false, CliVerbosity::Normal),
             bencher_enabled: false,
             bencher: BencherReport,
-            html: DEFAULT_PLOTTING_BACKEND.create_plotter().map(Html::new),
+            html: default_plotting_backend().create_plotter().map(Html::new),
             csv_enabled: cfg!(feature = "csv_output"),
         };
 
@@ -86,12 +86,12 @@ impl Default for Criterion {
             baseline_directory: "base".to_owned(),
             baseline: Baseline::Save,
             load_baseline: None,
-            output_directory: DEFAULT_OUTPUT_DIRECTORY.clone(),
+            output_directory: default_output_directory().clone(),
             all_directories: HashSet::new(),
             all_titles: HashSet::new(),
             measurement: WallTime,
             profiler: Box::new(RefCell::new(ExternalProfiler)),
-            connection: CARGO_CRITERION_CONNECTION.as_ref().map(|mtx| mtx.lock().unwrap()),
+            connection: cargo_criterion_connection().as_ref().map(|mtx| mtx.lock().unwrap()),
             mode: Mode::Benchmark,
         };
 
@@ -143,7 +143,7 @@ impl<M: Measurement> Criterion<M> {
     pub fn plotting_backend(mut self, backend: PlottingBackend) -> Criterion<M> {
         if let PlottingBackend::Gnuplot = backend {
             assert!(
-                !GNUPLOT_VERSION.is_err(),
+                !gnuplot_version().is_err(),
                 "Gnuplot plotting backend was requested, but gnuplot is not available. \
                 To continue, either install Gnuplot or allow Criterion.rs to fall back \
                 to using plotters."
@@ -297,7 +297,7 @@ impl<M: Measurement> Criterion<M> {
     pub fn with_plots(mut self) -> Criterion<M> {
         // If running under cargo-criterion then don't re-enable the reports; let it do the reporting.
         if self.connection.is_none() && self.report.html.is_none() {
-            let default_backend = DEFAULT_PLOTTING_BACKEND.create_plotter();
+            let default_backend = default_plotting_backend().create_plotter();
             if let Some(backend) = default_backend {
                 self.report.html = Some(Html::new(backend));
             } else {
