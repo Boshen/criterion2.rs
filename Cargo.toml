@@ -1,14 +1,11 @@
 [package]
+name = "criterion2"
+version = "0.6.0" # When bumping: * Update version numbers in the book;
 authors = [
   "Boshen <boshenc@gmail.com>",
   "Jorge Aparicio <japaricious@gmail.com>",
   "Brook Heisler <brookheisler@gmail.com>",
 ]
-name = "criterion2"
-# When bumping:
-#
-# * Update version numbers in the book;
-version = "0.5.1"
 edition = "2021"
 
 description = "Statistics-driven micro-benchmarking library"
