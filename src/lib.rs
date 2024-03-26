@@ -40,6 +40,7 @@ mod benchmark_group;
 pub mod codspeed;
 pub mod async_executor;
 mod bencher;
+mod cli;
 mod connection;
 mod criterion;
 pub mod criterion_plot;
@@ -302,6 +303,28 @@ impl PlottingBackend {
         }
     }
 }
+impl std::str::FromStr for PlottingBackend {
+    type Err = &'static str;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        Ok(match s {
+            "gnuplot" => Self::Gnuplot,
+            "plotters" => Self::Plotters,
+            "none" => Self::None,
+            _ => return Err("Valid values are gnuplot, plotters and none"),
+        })
+    }
+}
+
+impl std::fmt::Display for PlottingBackend {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(match self {
+            PlottingBackend::Gnuplot => "gnuplot",
+            PlottingBackend::Plotters => "plotters",
+            PlottingBackend::None => "none",
+        })
+    }
+}
 
 #[derive(Debug, Clone)]
 /// Enum representing the execution mode.
@@ -325,7 +348,7 @@ impl Mode {
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Copy)]
 /// Enum representing the list format.
 pub(crate) enum ListFormat {
     /// The regular, default format.

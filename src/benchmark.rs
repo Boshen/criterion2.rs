@@ -16,6 +16,22 @@ pub struct BenchmarkConfig {
     pub quick_mode: bool,
 }
 
+impl Default for BenchmarkConfig {
+    fn default() -> Self {
+        Self {
+            confidence_level: 0.95,
+            measurement_time: Duration::from_secs(5),
+            noise_threshold: 0.01,
+            nresamples: 100_000,
+            sample_size: 100,
+            significance_level: 0.05,
+            warm_up_time: Duration::from_secs(3),
+            sampling_mode: SamplingMode::Auto,
+            quick_mode: false,
+        }
+    }
+}
+
 /// Struct representing a partially-complete per-benchmark configuration.
 #[derive(Clone, Default)]
 pub(crate) struct PartialBenchmarkConfig {
