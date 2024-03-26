@@ -183,6 +183,7 @@ fn op() -> impl Parser<Op> {
     let list = long("list").help("List all benchmarks").req_flag(Op::List);
     let profile = long("profile-time")
         .argument::<f64>("DUR")
+        .guard(|d| *d > 1.0, "Profile time must be at least one second.")
         .map(|s| Op::ProfileTime(Duration::from_secs_f64(s)));
     let test = long("test")
         .help(
@@ -194,8 +195,10 @@ fn op() -> impl Parser<Op> {
         .help("Load a previous baseline instead of sampling new data.")
         .argument::<String>("BASE")
         .map(Op::LoadBaseline);
-    let bench = long("bench").req_flag(Op::Benchmark).hide();
-    construct!([list, profile, load_baseline, test, bench]).fallback(Op::Benchmark)
+    let bench = long("bench").help("Run the benchmarks (default)").req_flag(Op::Benchmark);
+    construct!([list, profile, load_baseline, test, bench])
+        .fallback(Op::Benchmark)
+        .group_help("Operation to perform")
 }
 
 pub fn options(config: &BenchmarkConfig) -> OptionParser<Opts> {
@@ -309,4 +312,12 @@ This executable is a Criterion.rs benchmark.
   NOTE: If you see an 'unrecognized option' error using any of the options above, see:
   https://bheisler.github.io/criterion.rs/book/faq.html",
     )
+}
+
+#[test]
+fn check_invariants() {
+    let cfg = BenchmarkConfig::default();
+    let parser = options(&cfg);
+
+    parser.check_invariants(true);
 }

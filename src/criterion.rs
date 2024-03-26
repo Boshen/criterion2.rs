@@ -13,8 +13,7 @@ use crate::{
     cargo_criterion_connection, debug_enabled, default_output_directory, default_plotting_backend,
     gnuplot_version, Baseline, BencherReport, BenchmarkConfig, BenchmarkFilter, CliReport,
     CliVerbosity, Connection, ExternalProfiler, Html, Measurement, Mode, OutgoingMessage,
-    PlotConfiguration, PlottingBackend, Profiler, Report, ReportContext, Reports, SamplingMode,
-    WallTime,
+    PlotConfiguration, PlottingBackend, Profiler, Report, ReportContext, Reports, WallTime,
 };
 
 /// The benchmark manager
@@ -70,17 +69,7 @@ impl Default for Criterion {
         };
 
         let mut criterion = Criterion {
-            config: BenchmarkConfig {
-                confidence_level: 0.95,
-                measurement_time: Duration::from_secs(5),
-                noise_threshold: 0.01,
-                nresamples: 100_000,
-                sample_size: 100,
-                significance_level: 0.05,
-                warm_up_time: Duration::from_secs(3),
-                sampling_mode: SamplingMode::Auto,
-                quick_mode: false,
-            },
+            config: BenchmarkConfig::default(),
             filter: BenchmarkFilter::AcceptAll,
             report: reports,
             baseline_directory: "base".to_owned(),
@@ -432,39 +421,15 @@ impl<M: Measurement> Criterion<M> {
             }
         }
 
-        let bench = opts.op == Op::Benchmark;
-        let test = opts.op == Op::Test;
-
-        // This doesn't really make much sense now. They are mutually exclusive
-        let test_mode = match (bench, test) {
-            (true, true) => true,   // cargo bench -- --test should run tests
-            (true, false) => false, // cargo bench should run benchmarks
-            (false, _) => true,     // cargo test --benches should run tests
-        };
-
         self.mode = match opts.op {
             Op::List => Mode::List(opts.format),
             Op::LoadBaseline(ref dir) => {
                 self.load_baseline = Some(dir.to_owned());
                 Mode::Benchmark
             }
-            Op::ProfileTime(_) => todo!(),
-            Op::Test => todo!(),
-            Op::Benchmark => todo!(),
-        };
-
-        self.mode = if opts.op == Op::List {
-            Mode::List(opts.format)
-        } else if test_mode {
-            Mode::Test
-        } else if let Op::ProfileTime(num_seconds) = opts.op {
-            if num_seconds < Duration::from_secs(1) {
-                eprintln!("Profile time must be at least one second.");
-                std::process::exit(1);
-            }
-            Mode::Profile(num_seconds)
-        } else {
-            Mode::Benchmark
+            Op::ProfileTime(t) => Mode::Profile(t),
+            Op::Test => Mode::Test,
+            Op::Benchmark => Mode::Benchmark,
         };
 
         // This is kind of a hack, but disable the connection to the runner if we're not benchmarking.
