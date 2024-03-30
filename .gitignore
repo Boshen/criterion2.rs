@@ -1,5 +1,2 @@
 .criterion
-Cargo.lock
 target
-
-**/.*.sw*
