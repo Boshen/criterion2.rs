@@ -17,9 +17,6 @@ categories = ["development-tools::profiling"]
 license = "Apache-2.0 OR MIT"
 exclude = ["book/*"]
 
-[workspace]
-exclude = ["cargo-criterion"]
-
 [[bench]]
 name = "bench_main"
 harness = false
