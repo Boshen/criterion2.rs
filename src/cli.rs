@@ -131,7 +131,7 @@ fn baseline() -> impl Parser<Baseline_> {
                         .map(Baseline_::Lenient);
 
     construct!([save_baseline, discard_baseline, use_baseline, baseline_lenient])
-        .fallback(Baseline_::Strict("baseline".to_owned()))
+        .fallback(Baseline_::Save("baseline".to_owned()))
 }
 
 #[derive(Debug, Clone, PartialEq)]
