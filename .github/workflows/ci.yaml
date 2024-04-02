@@ -69,7 +69,7 @@ jobs:
           source ~/.bashrc
           export PATH=$HOME/.wasmtime/bin/:$PATH
           cargo install cargo-wasi
-          cargo wasi bench --no-default-features -- --test
+          cargo wasi bench --no-default-features -- --test -- # hack to eliminate the `--bench` argument pass in from `cargo wasi`
 
   nextest-compat:
     name: Check compatibility with nextest
