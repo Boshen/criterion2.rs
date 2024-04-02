@@ -1,6 +1,6 @@
 [package]
 name = "criterion2"
-version = "0.6.0" # When bumping: * Update version numbers in the book;
+version = "0.7.0" # When bumping: * Update version numbers in the book;
 authors = [
   "Boshen <boshenc@gmail.com>",
   "Jorge Aparicio <japaricious@gmail.com>",
