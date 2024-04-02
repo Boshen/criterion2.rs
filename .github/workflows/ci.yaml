@@ -2,6 +2,7 @@ on:
   push:
     branches:
       - main
+      - test-ci
   pull_request:
     branches:
       - main
@@ -69,7 +70,7 @@ jobs:
           source ~/.bashrc
           export PATH=$HOME/.wasmtime/bin/:$PATH
           cargo install cargo-wasi
-          cargo wasi bench --no-default-features -- --test
+          cargo wasi bench --no-default-features -- --test --
 
   nextest-compat:
     name: Check compatibility with nextest
