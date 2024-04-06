@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [0.7.1](https://github.com/Boshen/criterion2.rs/compare/v0.7.0...v0.7.1) - 2024-04-06
+
+### Added
+- allow async setup for async bencher ([#6](https://github.com/Boshen/criterion2.rs/pull/6))
 - MSRV bumped to 1.70
 
 ## [0.5.1] - 2023-05-26
