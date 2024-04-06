@@ -550,6 +550,67 @@ impl<'a, 'b, A: AsyncExecutor, M: Measurement> AsyncBencher<'a, 'b, A, M> {
         self.iter_batched(setup, routine, BatchSize::NumBatches(1));
     }
 
+    #[doc(hidden)]
+    pub fn iter_batched_async_setup<FI, I, O, S, R, FO>(
+        &mut self,
+        mut setup: S,
+        mut routine: R,
+        size: BatchSize,
+    ) where
+        S: FnMut() -> FI,
+        FI: Future<Output = I>,
+        R: FnMut(I) -> FO,
+        FO: Future<Output = O>,
+    {
+        let AsyncBencher { b, runner } = self;
+        runner.block_on(async {
+            b.iterated = true;
+            let batch_size = size.iters_per_batch(b.iters);
+            assert!(batch_size != 0, "Batch size must not be zero.");
+            let time_start = Instant::now();
+            b.value = b.measurement.zero();
+
+            if batch_size == 1 {
+                for _ in 0..b.iters {
+                    let input = black_box(setup().await);
+
+                    let start = b.measurement.start();
+                    let output = routine(input).await;
+                    let end = b.measurement.end(start);
+                    b.value = b.measurement.add(&b.value, &end);
+
+                    drop(black_box(output));
+                }
+            } else {
+                let mut iteration_counter = 0;
+
+                while iteration_counter < b.iters {
+                    let batch_size = ::std::cmp::min(batch_size, b.iters - iteration_counter);
+
+                    let mut inputs = Vec::with_capacity(batch_size as usize);
+                    for _ in 0..batch_size {
+                        black_box(inputs.push(setup().await));
+                    }
+                    let mut outputs = Vec::with_capacity(batch_size as usize);
+
+                    let start = b.measurement.start();
+                    // Can't use .extend here like the sync version does
+                    for input in inputs {
+                        outputs.push(routine(input).await);
+                    }
+                    let end = b.measurement.end(start);
+                    b.value = b.measurement.add(&b.value, &end);
+
+                    black_box(outputs);
+
+                    iteration_counter += batch_size;
+                }
+            }
+
+            b.elapsed_time = time_start.elapsed();
+        })
+    }
+
     /// Times a `routine` that requires some input by generating a batch of input, then timing the
     /// iteration of the benchmark over the input. See [`BatchSize`](enum.BatchSize.html) for
     /// details on choosing the batch size. Use this when the routine must consume its input.
