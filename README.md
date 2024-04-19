@@ -26,6 +26,17 @@
 
 Criterion.<span></span>rs helps you write fast code by detecting and measuring performance improvements or regressions, even small ones, quickly and accurately. You can optimize with confidence, knowing how each change affects the performance of your code.
 
+## Reason for this fork
+
+[criterion] is [passively-maintained](https://github.com/bheisler/criterion.rs/blob/f1ea31a92ff919a455f36b13c9a45fd74559d0fe/Cargo.toml#L63C27-L63C48) with outdated dependencies.
+
+This is fork is updated with:
+
+* renovate bot dependency update
+* builtin [codspeed](https://codspeed.io) feature
+* `clap` replaced with [`bpaf`](https://github.com/pacak/bpaf) to reduce binary size and compilation time
+* merged the `criterion-plot` crate into `criterion2`
+
 ## Table of Contents
 
 - [Table of Contents](#table-of-contents)
