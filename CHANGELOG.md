@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [0.7.2](https://github.com/Boshen/criterion2.rs/compare/v0.7.1...v0.7.2) - 2024-04-19
+
+### Other
+- document features
+- update README
+- *(deps)* update rust crate codspeed to 2.4.1 ([#9](https://github.com/Boshen/criterion2.rs/pull/9))
+
 ## [0.7.1](https://github.com/Boshen/criterion2.rs/compare/v0.7.0...v0.7.1) - 2024-04-06
 
 ### Added
