@@ -14,6 +14,11 @@
 //!   to performance are real, not measurement noise.
 //! * Produces detailed charts, providing thorough understanding of your code's
 //!   performance behavior.
+//!
+//! ## Feature flags
+#![cfg_attr(feature = "document-features", doc = document_features::document_features!())]
+#![cfg_attr(docsrs, feature(doc_auto_cfg))]
+//!
 
 #![allow(clippy::style, clippy::complexity)]
 #![warn(bare_trait_objects)]
