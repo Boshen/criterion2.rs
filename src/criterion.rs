@@ -5,8 +5,6 @@ use std::path::{Path, PathBuf};
 use std::sync::MutexGuard;
 use std::time::Duration;
 
-use regex::Regex;
-
 use crate::bencher::Bencher;
 use crate::benchmark_group::{BenchmarkGroup, BenchmarkId};
 use crate::{
@@ -319,21 +317,6 @@ impl<M: Measurement> Criterion<M> {
         self
     }
 
-    #[must_use]
-    /// Filters the benchmarks. Only benchmarks with names that contain the
-    /// given string will be executed.
-    ///
-    /// This overwrites [`Self::with_benchmark_filter`].
-    pub fn with_filter<S: Into<String>>(mut self, filter: S) -> Criterion<M> {
-        let filter_text = filter.into();
-        let filter = Regex::new(&filter_text).unwrap_or_else(|err| {
-            panic!("Unable to parse '{}' as a regular expression: {}", filter_text, err)
-        });
-        self.filter = BenchmarkFilter::Regex(filter);
-
-        self
-    }
-
     /// Only run benchmarks specified by the given filter.
     ///
     /// This overwrites [`Self::with_filter`].
@@ -441,14 +424,9 @@ impl<M: Measurement> Criterion<M> {
             // --ignored overwrites any name-based filters passed in.
             BenchmarkFilter::RejectAll
         } else if let Some(filter) = opts.filter.as_ref() {
-            if opts.exact {
-                BenchmarkFilter::Exact(filter.to_owned())
-            } else {
-                let regex = Regex::new(filter).unwrap_or_else(|err| {
-                    panic!("Unable to parse '{}' as a regular expression: {}", filter, err)
-                });
-                BenchmarkFilter::Regex(regex)
-            }
+            // if opts.exact {
+            BenchmarkFilter::Exact(filter.to_owned())
+            // }
         } else {
             BenchmarkFilter::AcceptAll
         };
@@ -550,7 +528,6 @@ impl<M: Measurement> Criterion<M> {
     pub(crate) fn filter_matches(&self, id: &str) -> bool {
         match &self.filter {
             BenchmarkFilter::AcceptAll => true,
-            BenchmarkFilter::Regex(regex) => regex.is_match(id),
             BenchmarkFilter::Exact(exact) => id == exact,
             BenchmarkFilter::RejectAll => false,
         }
