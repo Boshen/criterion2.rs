@@ -1,7 +1,8 @@
 #[cfg(feature = "plotters")]
 use criterion2::SamplingMode;
 use criterion2::{
-    criterion_group, criterion_main, profiler::Profiler, BatchSize, BenchmarkId, Criterion,
+    criterion_group, criterion_main, profiler::Profiler, BatchSize, BenchmarkFilter, BenchmarkId,
+    Criterion,
 };
 use serde_json::value::Value;
 use std::cell::{Cell, RefCell};
@@ -254,7 +255,7 @@ fn test_filtering() {
     let clone = counter.clone();
 
     short_benchmark(&dir)
-        .with_filter("Foo")
+        .with_benchmark_filter(BenchmarkFilter::Exact("Foo".into()))
         .bench_function("test_filtering", move |b| b.iter(|| clone.count()));
 
     assert_eq!(counter.read(), 0);

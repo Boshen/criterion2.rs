@@ -27,8 +27,6 @@
 #[cfg(all(feature = "rayon", target_arch = "wasm32"))]
 compile_error!("Rayon cannot be used when targeting wasi32. Try disabling default features.");
 
-use regex::Regex;
-
 use serde::{Deserialize, Serialize};
 
 // Needs to be declared before other modules
@@ -374,8 +372,6 @@ impl Default for ListFormat {
 pub enum BenchmarkFilter {
     /// Run all benchmarks.
     AcceptAll,
-    /// Run benchmarks matching this regex.
-    Regex(Regex),
     /// Run the benchmark matching this string exactly.
     Exact(String),
     /// Do not run any benchmarks.

@@ -28,7 +28,7 @@ Criterion.<span></span>rs helps you write fast code by detecting and measuring p
 
 ## Reason for this fork
 
-[criterion] is [passively-maintained](https://github.com/bheisler/criterion.rs/blob/f1ea31a92ff919a455f36b13c9a45fd74559d0fe/Cargo.toml#L63C27-L63C48) with outdated dependencies.
+criterion is [passively-maintained](https://github.com/bheisler/criterion.rs/blob/f1ea31a92ff919a455f36b13c9a45fd74559d0fe/Cargo.toml#L63C27-L63C48) with outdated dependencies.
 
 This is fork is updated with:
 
@@ -36,6 +36,7 @@ This is fork is updated with:
 * builtin [codspeed](https://codspeed.io) feature
 * `clap` replaced with [`bpaf`](https://github.com/pacak/bpaf) to reduce binary size and compilation time
 * merged the `criterion-plot` crate into `criterion2`
+* remove regex filter support to reduce compilation speed
 
 ## Table of Contents
 
