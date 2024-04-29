@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [0.8.0](https://github.com/Boshen/criterion2.rs/compare/v0.7.2...v0.8.0) - 2024-04-29
+
+### Added
+- remove regex filter support to reduce compilation speed ([#15](https://github.com/Boshen/criterion2.rs/pull/15))
+
+### Other
+- add justfile
+- *(deps)* update rust crate codspeed to 2.6.0 ([#14](https://github.com/Boshen/criterion2.rs/pull/14))
+- *(deps)* update rust crate codspeed to 2.5.1 ([#13](https://github.com/Boshen/criterion2.rs/pull/13))
+- *(deps)* update rust crate codspeed to 2.5.0 ([#11](https://github.com/Boshen/criterion2.rs/pull/11))
+
 ## [0.7.2](https://github.com/Boshen/criterion2.rs/compare/v0.7.1...v0.7.2) - 2024-04-19
 
 ### Other
