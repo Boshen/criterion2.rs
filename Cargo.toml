@@ -27,9 +27,9 @@ bench = false
 [dependencies]
 anes = "0.2.0"
 itertools = "0.12.1"
-serde = "1.0.199"
+serde = "1.0.200"
 serde_json = "1.0.116"
-serde_derive = "1.0.199"
+serde_derive = "1.0.200"
 ciborium = "0.2.2"
 bpaf = { version = "0.9.12", default-features = false }
 walkdir = "2.5"
