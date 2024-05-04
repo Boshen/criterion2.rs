@@ -338,7 +338,7 @@ impl<M: Measurement> Criterion<M> {
     #[must_use]
     #[doc(hidden)]
     pub fn output_directory(mut self, path: &Path) -> Criterion<M> {
-        self.output_directory = path.to_owned();
+        path.clone_into(&mut self.output_directory);
 
         self
     }
@@ -443,18 +443,18 @@ impl<M: Measurement> Criterion<M> {
         match opts.baseline {
             Baseline_::Save(ref dir) => {
                 self.baseline = Baseline::Save;
-                self.baseline_directory = dir.to_owned()
+                dir.clone_into(&mut self.baseline_directory)
             }
             Baseline_::Discard => {
                 self.baseline = Baseline::Discard;
             }
             Baseline_::Lenient(ref dir) => {
                 self.baseline = Baseline::CompareLenient;
-                self.baseline_directory = dir.to_owned();
+                dir.clone_into(&mut self.baseline_directory);
             }
             Baseline_::Strict(ref dir) => {
                 self.baseline = Baseline::CompareStrict;
-                self.baseline_directory = dir.to_owned();
+                dir.clone_into(&mut self.baseline_directory);
             }
         }
 
