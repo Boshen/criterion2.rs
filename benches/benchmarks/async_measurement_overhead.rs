@@ -1,4 +1,4 @@
-use criterion2::{async_executor::FuturesExecutor, criterion_group, BatchSize, Criterion};
+use criterion::{async_executor::FuturesExecutor, criterion_group, BatchSize, Criterion};
 
 fn some_benchmark(c: &mut Criterion) {
     let mut group = c.benchmark_group("async overhead");

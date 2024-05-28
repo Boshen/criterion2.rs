@@ -1,6 +1,6 @@
 #[cfg(feature = "plotters")]
-use criterion2::SamplingMode;
-use criterion2::{
+use criterion::SamplingMode;
+use criterion::{
     criterion_group, criterion_main, profiler::Profiler, BatchSize, BenchmarkFilter, BenchmarkId,
     Criterion,
 };

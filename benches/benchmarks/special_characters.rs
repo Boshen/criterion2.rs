@@ -1,4 +1,4 @@
-use criterion2::{criterion_group, Criterion};
+use criterion::{criterion_group, Criterion};
 
 fn some_benchmark(c: &mut Criterion) {
     let mut group = c.benchmark_group("\"*group/\"");

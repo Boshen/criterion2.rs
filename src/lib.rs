@@ -433,7 +433,7 @@ pub enum AxisScale {
 /// or benchmark group.
 ///
 /// ```rust
-/// use self::criterion2::{Bencher, Criterion, PlotConfiguration, AxisScale};
+/// use self::criterion::{Bencher, Criterion, PlotConfiguration, AxisScale};
 ///
 /// let plot_config = PlotConfiguration::default()
 ///     .summary_scale(AxisScale::Logarithmic);

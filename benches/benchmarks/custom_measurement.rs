@@ -1,4 +1,4 @@
-use criterion2::{
+use criterion::{
     black_box, criterion_group,
     measurement::{Measurement, ValueFormatter},
     Criterion, Throughput,

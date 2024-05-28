@@ -1,4 +1,4 @@
-use criterion2::{criterion_group, Criterion, SamplingMode};
+use criterion::{criterion_group, Criterion, SamplingMode};
 use std::thread::sleep;
 use std::time::Duration;
 

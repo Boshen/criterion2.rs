@@ -16,9 +16,9 @@
 //! # use std::fs;
 //! # use std::path::Path;
 //! use itertools_num::linspace;
-//! use criterion2::criterion_plot::prelude::*;
+//! use criterion::criterion_plot::prelude::*;
 //!
-//! # if let Err(_) = criterion2::criterion_plot::version() {
+//! # if let Err(_) = criterion::criterion_plot::version() {
 //! #     return;
 //! # }
 //! let ref xs = linspace::<f64>(-10., 10., 51).collect::<Vec<_>>();
@@ -81,7 +81,7 @@
 //!
 //! use itertools_num::linspace;
 //! use rand::Rng;
-//! use criterion2::criterion_plot::prelude::*;
+//! use criterion::criterion_plot::prelude::*;
 //!
 //! fn sinc(mut x: f64) -> f64 {
 //!     if x == 0. {
@@ -92,7 +92,7 @@
 //!     }
 //! }
 //!
-//! # if let Err(_) = criterion2::criterion_plot::version() {
+//! # if let Err(_) = criterion::criterion_plot::version() {
 //! #     return;
 //! # }
 //! let ref xs_ = linspace::<f64>(-4., 4., 101).collect::<Vec<_>>();
@@ -157,10 +157,10 @@
 //! ```
 //! # use std::fs;
 //! # use std::path::Path;
-//! use criterion2::criterion_plot::prelude::*;
+//! use criterion::criterion_plot::prelude::*;
 //! use rand::Rng;
 //!
-//! # if let Err(_) = criterion2::criterion_plot::version() {
+//! # if let Err(_) = criterion::criterion_plot::version() {
 //! #     return;
 //! # }
 //! let xs = 1..11;
@@ -225,13 +225,13 @@
 //!
 //! use itertools_num::linspace;
 //! use num_complex::Complex;
-//! use criterion2::criterion_plot::prelude::*;
+//! use criterion::criterion_plot::prelude::*;
 //!
 //! fn tf(x: f64) -> Complex<f64> {
 //!     Complex::new(0., x) / Complex::new(10., x) / Complex::new(1., x / 10_000.)
 //! }
 //!
-//! # if let Err(_) = criterion2::criterion_plot::version() {
+//! # if let Err(_) = criterion::criterion_plot::version() {
 //! #     return;
 //! # }
 //! let (start, end): (f64, f64) = (1.1, 90_000.);
@@ -297,9 +297,9 @@
 //! use std::iter;
 //!
 //! use itertools_num::linspace;
-//! use criterion2::criterion_plot::prelude::*;
+//! use criterion::criterion_plot::prelude::*;
 //!
-//! # if let Err(_) = criterion2::criterion_plot::version() {
+//! # if let Err(_) = criterion::criterion_plot::version() {
 //! #     return;
 //! # }
 //! let (start, end) = (-5., 5.);

@@ -1,4 +1,4 @@
-use criterion2::{criterion_group, Criterion};
+use criterion::{criterion_group, Criterion};
 use std::{
     io::{BufRead, BufReader, Write},
     process::{Command, Stdio},

@@ -19,7 +19,7 @@ use crate::{Mode, PlotConfiguration, SamplingMode, Throughput};
 /// # Examples:
 ///
 /// ```no_run
-/// use self::criterion2::*;
+/// use self::criterion::*;
 /// use std::time::Duration;
 ///
 /// fn bench_simple(c: &mut Criterion) {
@@ -412,7 +412,7 @@ impl BenchmarkId {
     ///
     /// # Examples
     /// ```
-    /// # use criterion2::{BenchmarkId, Criterion};
+    /// # use criterion::{BenchmarkId, Criterion};
     /// // A basic benchmark ID is typically constructed from a constant string and a simple
     /// // parameter
     /// let basic_id = BenchmarkId::new("my_id", 5);

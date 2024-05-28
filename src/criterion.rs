@@ -547,7 +547,7 @@ impl<M: Measurement> Criterion<M> {
     /// # Examples:
     ///
     /// ```rust
-    /// use self::criterion2::*;
+    /// use self::criterion::*;
     ///
     /// fn bench_simple(c: &mut Criterion) {
     ///     let mut group = c.benchmark_group("My Group");
@@ -583,7 +583,7 @@ where
     /// # Example
     ///
     /// ```rust
-    /// use self::criterion2::*;
+    /// use self::criterion::*;
     ///
     /// fn bench(c: &mut Criterion) {
     ///     // Setup (construct data, allocate memory, etc)
@@ -612,7 +612,7 @@ where
     /// # Example
     ///
     /// ```rust
-    /// use self::criterion2::*;
+    /// use self::criterion::*;
     ///
     /// fn bench(c: &mut Criterion) {
     ///     // Setup (construct data, allocate memory, etc)
