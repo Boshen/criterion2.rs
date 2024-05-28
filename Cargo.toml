@@ -1,6 +1,6 @@
 [package]
 name = "criterion2"
-version = "0.8.0"
+version = "0.9.0"
 authors = [
   "Boshen <boshenc@gmail.com>",
   "Jorge Aparicio <japaricious@gmail.com>",

@@ -7,6 +7,25 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [0.9.0](https://github.com/Boshen/criterion2.rs/compare/v0.8.0...v0.9.0) - 2024-05-28
+
+### Fixed
+- change deprecated method `group_by` -> `chunk_by`
+- fix v1.78.0 clippy warnings ([#21](https://github.com/Boshen/criterion2.rs/pull/21))
+
+### Other
+- lib name alias to `criterion`
+- *(deps)* lock file maintenance rust crates ([#25](https://github.com/Boshen/criterion2.rs/pull/25))
+- allow branch `renovate/**`
+- *(deps)* lock file maintenance rust crates ([#23](https://github.com/Boshen/criterion2.rs/pull/23))
+- *(deps)* lock file maintenance rust crates ([#22](https://github.com/Boshen/criterion2.rs/pull/22))
+- update renovate.json
+- *(deps)* update rust crate num-traits to 0.2.19 ([#20](https://github.com/Boshen/criterion2.rs/pull/20))
+- *(deps)* update dependency rust to v1.78.0 ([#19](https://github.com/Boshen/criterion2.rs/pull/19))
+- *(renovate)* add rust-toolchain
+- *(deps)* update rust crates to 1.0.200 ([#18](https://github.com/Boshen/criterion2.rs/pull/18))
+- *(deps)* update rust crates ([#16](https://github.com/Boshen/criterion2.rs/pull/16))
+
 ## [0.8.0](https://github.com/Boshen/criterion2.rs/compare/v0.7.2...v0.8.0) - 2024-04-29
 
 ### Added
