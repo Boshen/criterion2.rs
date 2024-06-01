@@ -95,3 +95,15 @@ jobs:
       - uses: taiki-e/install-action@nextest
 
       - run: ci/nextest-compat.sh
+
+  unused-deps:
+    name: Check Unused Dependencies
+    runs-on: ubuntu-latest
+    steps:
+      - uses: taiki-e/checkout-action@v1
+      - uses: Boshen/setup-rust@main
+        with:
+          restore-cache: false
+      - uses: cargo-bins/cargo-binstall@main
+      - run: cargo binstall --no-confirm cargo-shear
+      - run: cargo shear
