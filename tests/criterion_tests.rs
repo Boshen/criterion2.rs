@@ -1,3 +1,12 @@
+use std::{
+    cell::{Cell, RefCell},
+    cmp::max,
+    fs::File,
+    path::{Path, PathBuf},
+    rc::Rc,
+    time::{Duration, SystemTime},
+};
+
 #[cfg(feature = "plotters")]
 use criterion::SamplingMode;
 use criterion::{
@@ -5,12 +14,6 @@ use criterion::{
     Criterion,
 };
 use serde_json::value::Value;
-use std::cell::{Cell, RefCell};
-use std::cmp::max;
-use std::fs::File;
-use std::path::{Path, PathBuf};
-use std::rc::Rc;
-use std::time::{Duration, SystemTime};
 use tempfile::{tempdir, TempDir};
 use walkdir::WalkDir;
 
@@ -521,6 +524,7 @@ impl Profiler for TestProfiler {
         assert!(benchmark_id.contains("profile_test"));
         self.started.set(self.started.get() + 1);
     }
+
     fn stop_profiling(&mut self, benchmark_id: &str, _benchmark_path: &Path) {
         assert!(benchmark_id.contains("profile_test"));
         self.stopped.set(self.stopped.get() + 1);

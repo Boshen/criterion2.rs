@@ -1,5 +1,6 @@
-use serde::{Deserialize, Serialize};
 use std::fmt;
+
+use serde::{Deserialize, Serialize};
 
 use crate::stats::Distribution;
 
@@ -114,6 +115,7 @@ impl Estimates {
     pub fn typical(&self) -> &Estimate {
         self.slope.as_ref().unwrap_or(&self.mean)
     }
+
     pub fn get(&self, stat: Statistic) -> Option<&Estimate> {
         match stat {
             Statistic::Mean => Some(&self.mean),
@@ -137,6 +139,7 @@ impl Distributions {
     pub fn typical(&self) -> &Distribution<f64> {
         self.slope.as_ref().unwrap_or(&self.mean)
     }
+
     pub fn get(&self, stat: Statistic) -> Option<&Distribution<f64>> {
         match stat {
             Statistic::Mean => Some(&self.mean),

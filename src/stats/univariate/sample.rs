@@ -1,11 +1,13 @@
 use std::{mem, ops};
 
-use crate::stats::float::Float;
-use crate::stats::tuple::{Tuple, TupledDistributionsBuilder};
-use crate::stats::univariate::Percentiles;
-use crate::stats::univariate::Resamples;
 #[cfg(feature = "rayon")]
 use rayon::prelude::*;
+
+use crate::stats::{
+    float::Float,
+    tuple::{Tuple, TupledDistributionsBuilder},
+    univariate::{Percentiles, Resamples},
+};
 
 /// A collection of data points drawn from a population
 ///

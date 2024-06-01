@@ -1,13 +1,15 @@
-use std::cell::RefCell;
-use std::collections::HashSet;
-use std::io::{stdout, IsTerminal};
-use std::path::{Path, PathBuf};
-use std::sync::MutexGuard;
-use std::time::Duration;
+use std::{
+    cell::RefCell,
+    collections::HashSet,
+    io::{stdout, IsTerminal},
+    path::{Path, PathBuf},
+    sync::MutexGuard,
+    time::Duration,
+};
 
-use crate::bencher::Bencher;
-use crate::benchmark_group::{BenchmarkGroup, BenchmarkId};
 use crate::{
+    bencher::Bencher,
+    benchmark_group::{BenchmarkGroup, BenchmarkId},
     cargo_criterion_connection, debug_enabled, default_output_directory, Baseline, BencherReport,
     BenchmarkConfig, BenchmarkFilter, CliReport, CliVerbosity, Connection, ExternalProfiler,
     Measurement, Mode, OutgoingMessage, Profiler, Report, ReportContext, Reports, WallTime,
@@ -333,15 +335,23 @@ impl<M: Measurement> Criterion<M> {
 
         if self.connection.is_some() {
             if opts.color != Color::Auto {
-                eprintln!("Warning: --color will be ignored when running with cargo-criterion. Use `cargo criterion --color {} -- <args>` instead.", opts.color);
+                eprintln!(
+                    "Warning: --color will be ignored when running with cargo-criterion. Use `cargo criterion --color {} -- <args>` instead.",
+                    opts.color
+                );
             }
 
             // What about quiet?
             if opts.verbosity == CliVerbosity::Verbose {
-                eprintln!("Warning: --verbose will be ignored when running with cargo-criterion. Use `cargo criterion --output-format verbose -- <args>` instead.");
+                eprintln!(
+                    "Warning: --verbose will be ignored when running with cargo-criterion. Use `cargo criterion --output-format verbose -- <args>` instead."
+                );
             }
             if opts.output_format != OutputFormat::Criterion {
-                eprintln!("Warning: --output-format will be ignored when running with cargo-criterion. Use `cargo criterion --output-format {} -- <args>` instead.", opts.output_format);
+                eprintln!(
+                    "Warning: --output-format will be ignored when running with cargo-criterion. Use `cargo criterion --output-format {} -- <args>` instead.",
+                    opts.output_format
+                );
             }
 
             // TODO - currently baseline stuff seem to be partially coupled with operations

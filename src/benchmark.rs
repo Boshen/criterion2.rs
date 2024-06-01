@@ -1,5 +1,6 @@
-use crate::SamplingMode;
 use std::time::Duration;
+
+use crate::SamplingMode;
 
 // TODO: Move the benchmark config stuff to a separate module for easier use.
 

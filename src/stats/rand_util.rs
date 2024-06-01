@@ -1,6 +1,9 @@
+use std::{
+    cell::RefCell,
+    time::{SystemTime, UNIX_EPOCH},
+};
+
 use oorandom::Rand64;
-use std::cell::RefCell;
-use std::time::{SystemTime, UNIX_EPOCH};
 
 pub type Rng = Rand64;
 

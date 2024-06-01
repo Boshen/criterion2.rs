@@ -1,6 +1,8 @@
-use crate::{report::CliVerbosity, BenchmarkConfig, ListFormat};
-use bpaf::*;
 use std::{str::FromStr, time::Duration};
+
+use bpaf::*;
+
+use crate::{report::CliVerbosity, BenchmarkConfig, ListFormat};
 
 #[derive(Debug, Clone)]
 pub struct Opts {
@@ -35,6 +37,7 @@ pub enum OutputFormat {
 }
 impl FromStr for OutputFormat {
     type Err = &'static str;
+
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         Ok(match s {
             "criterion" => Self::Criterion,

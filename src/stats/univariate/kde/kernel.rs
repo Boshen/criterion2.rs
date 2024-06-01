@@ -32,8 +32,7 @@ macro_rules! test {
         mod $ty {
             mod gaussian {
                 use approx::relative_eq;
-                use quickcheck::quickcheck;
-                use quickcheck::TestResult;
+                use quickcheck::{quickcheck, TestResult};
 
                 use crate::stats::univariate::kde::kernel::{Gaussian, Kernel};
 

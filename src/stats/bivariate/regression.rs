@@ -1,7 +1,6 @@
 //! Regression analysis
 
-use crate::stats::bivariate::Data;
-use crate::stats::float::Float;
+use crate::stats::{bivariate::Data, float::Float};
 
 /// A straight line that passes through the origin `y = m * x`
 #[derive(Clone, Copy)]

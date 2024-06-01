@@ -1,13 +1,12 @@
-use std::marker::PhantomData;
-use std::{cell::RefCell, rc::Rc, time::Duration};
+use std::{cell::RefCell, marker::PhantomData, rc::Rc, time::Duration};
 
 use codspeed::{codspeed::CodSpeed, utils::get_git_relative_path};
 
-use crate::measurement::WallTime;
-use crate::{measurement::Measurement, SamplingMode, Throughput};
-
-use super::bencher::Bencher;
-use super::criterion::Criterion;
+use super::{bencher::Bencher, criterion::Criterion};
+use crate::{
+    measurement::{Measurement, WallTime},
+    SamplingMode, Throughput,
+};
 
 /// Deprecated: using the default measurement will be removed in the next major version.
 /// Defaulting to WallTime differs from the original BenchmarkGroup implementation but avoids creating a breaking change
@@ -85,30 +84,39 @@ impl<'a, M: Measurement> BenchmarkGroup<'a, M> {
     pub fn sample_size(&mut self, n: usize) -> &mut Self {
         self
     }
+
     pub fn warm_up_time(&mut self, dur: Duration) -> &mut Self {
         self
     }
+
     pub fn measurement_time(&mut self, dur: Duration) -> &mut Self {
         self
     }
+
     pub fn nresamples(&mut self, n: usize) -> &mut Self {
         self
     }
+
     pub fn noise_threshold(&mut self, threshold: f64) -> &mut Self {
         self
     }
+
     pub fn confidence_level(&mut self, cl: f64) -> &mut Self {
         self
     }
+
     pub fn significance_level(&mut self, sl: f64) -> &mut Self {
         self
     }
+
     pub fn throughput(&mut self, throughput: Throughput) -> &mut Self {
         self
     }
+
     pub fn sampling_mode(&mut self, new_mode: SamplingMode) -> &mut Self {
         self
     }
+
     pub fn finish(self) {}
 }
 

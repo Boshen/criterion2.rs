@@ -67,43 +67,41 @@ mod macros;
 #[macro_use]
 mod macros_codspeed;
 
-use std::default::Default;
-use std::env;
-use std::net::TcpStream;
-use std::path::PathBuf;
-use std::process::Command;
-use std::sync::Mutex;
-use std::sync::OnceLock;
-use std::time::Duration;
-
-use crate::benchmark::BenchmarkConfig;
-use crate::connection::Connection;
-use crate::connection::OutgoingMessage;
-use crate::measurement::{Measurement, WallTime};
-use crate::profiler::{ExternalProfiler, Profiler};
-use crate::report::{BencherReport, CliReport, CliVerbosity, Report, ReportContext, Reports};
+use std::{
+    default::Default,
+    env,
+    net::TcpStream,
+    path::PathBuf,
+    process::Command,
+    sync::{Mutex, OnceLock},
+    time::Duration,
+};
 
 #[cfg(feature = "async")]
 #[cfg(not(feature = "codspeed"))]
 pub use crate::bencher::AsyncBencher;
+#[cfg(not(feature = "codspeed"))]
+pub use crate::bencher::Bencher;
+#[cfg(not(feature = "codspeed"))]
+pub use crate::benchmark_group::{BenchmarkGroup, BenchmarkId};
 #[cfg(feature = "async")]
 #[cfg(feature = "codspeed")]
 pub use crate::codspeed::bencher::AsyncBencher;
-
-#[cfg(not(feature = "codspeed"))]
-pub use crate::bencher::Bencher;
 #[cfg(feature = "codspeed")]
 pub use crate::codspeed::bencher::Bencher;
-
-#[cfg(not(feature = "codspeed"))]
-pub use crate::benchmark_group::{BenchmarkGroup, BenchmarkId};
 #[cfg(feature = "codspeed")]
 pub use crate::codspeed::benchmark_group::{BenchmarkGroup, BenchmarkId};
-
 #[cfg(feature = "codspeed")]
 pub use crate::codspeed::criterion::Criterion;
 #[cfg(not(feature = "codspeed"))]
 pub use crate::criterion::Criterion;
+use crate::{
+    benchmark::BenchmarkConfig,
+    connection::{Connection, OutgoingMessage},
+    measurement::{Measurement, WallTime},
+    profiler::{ExternalProfiler, Profiler},
+    report::{BencherReport, CliReport, CliVerbosity, Report, ReportContext, Reports},
+};
 
 fn cargo_criterion_connection() -> &'static Option<Mutex<Connection>> {
     static CARGO_CRITERION_CONNECTION: OnceLock<Option<Mutex<Connection>>> = OnceLock::new();
@@ -423,8 +421,10 @@ impl ActualSamplingMode {
                     let recommended_sample_size =
                         ActualSamplingMode::recommend_linear_sample_size(m_ns as f64, met);
                     let actual_time = Duration::from_nanos(expected_ns as u64);
-                    eprint!("\nWarning: Unable to complete {} samples in {:.1?}. You may wish to increase target time to {:.1?}",
-                            n, target_time, actual_time);
+                    eprint!(
+                        "\nWarning: Unable to complete {} samples in {:.1?}. You may wish to increase target time to {:.1?}",
+                        n, target_time, actual_time
+                    );
 
                     if recommended_sample_size != n {
                         eprintln!(
@@ -452,8 +452,10 @@ impl ActualSamplingMode {
                     let recommended_sample_size =
                         ActualSamplingMode::recommend_flat_sample_size(m_ns, met);
                     let actual_time = Duration::from_nanos(expected_ns as u64);
-                    eprint!("\nWarning: Unable to complete {} samples in {:.1?}. You may wish to increase target time to {:.1?}",
-                            n, target_time, actual_time);
+                    eprint!(
+                        "\nWarning: Unable to complete {} samples in {:.1?}. You may wish to increase target time to {:.1?}",
+                        n, target_time, actual_time
+                    );
 
                     if recommended_sample_size != n {
                         eprintln!(", or reduce sample count to {}.", recommended_sample_size);

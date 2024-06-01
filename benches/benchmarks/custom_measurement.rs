@@ -1,9 +1,10 @@
+use std::time::{Duration, Instant};
+
 use criterion::{
     black_box, criterion_group,
     measurement::{Measurement, ValueFormatter},
     Criterion, Throughput,
 };
-use std::time::{Duration, Instant};
 
 struct HalfSecFormatter;
 impl ValueFormatter for HalfSecFormatter {
@@ -75,19 +76,24 @@ impl Measurement for HalfSeconds {
     fn start(&self) -> Self::Intermediate {
         Instant::now()
     }
+
     fn end(&self, i: Self::Intermediate) -> Self::Value {
         i.elapsed()
     }
+
     fn add(&self, v1: &Self::Value, v2: &Self::Value) -> Self::Value {
         *v1 + *v2
     }
+
     fn zero(&self) -> Self::Value {
         Duration::from_secs(0)
     }
+
     fn to_f64(&self, val: &Self::Value) -> f64 {
         let nanos = val.as_secs() * NANOS_PER_SEC + u64::from(val.subsec_nanos());
         nanos as f64
     }
+
     fn formatter(&self) -> &dyn ValueFormatter {
         &HalfSecFormatter
     }

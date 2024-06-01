@@ -4,12 +4,15 @@ mod bootstrap;
 pub mod regression;
 mod resamples;
 
-use crate::stats::bivariate::resamples::Resamples;
-use crate::stats::float::Float;
-use crate::stats::tuple::{Tuple, TupledDistributionsBuilder};
-use crate::stats::univariate::Sample;
 #[cfg(feature = "rayon")]
 use rayon::iter::{IntoParallelIterator, ParallelIterator};
+
+use crate::stats::{
+    bivariate::resamples::Resamples,
+    float::Float,
+    tuple::{Tuple, TupledDistributionsBuilder},
+    univariate::Sample,
+};
 
 /// Bivariate `(X, Y)` data
 ///

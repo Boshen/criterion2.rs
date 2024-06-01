@@ -1,10 +1,8 @@
+use std::{error::Error as StdError, fmt, io, path::PathBuf};
+
 #[cfg(feature = "csv_output")]
 use csv::Error as CsvError;
 use serde_json::Error as SerdeError;
-use std::error::Error as StdError;
-use std::fmt;
-use std::io;
-use std::path::PathBuf;
 
 #[allow(clippy::enum_variant_names)]
 #[derive(Debug)]

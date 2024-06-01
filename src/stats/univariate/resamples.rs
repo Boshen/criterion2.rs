@@ -1,8 +1,10 @@
 use std::mem;
 
-use crate::stats::float::Float;
-use crate::stats::rand_util::{new_rng, Rng};
-use crate::stats::univariate::Sample;
+use crate::stats::{
+    float::Float,
+    rand_util::{new_rng, Rng},
+    univariate::Sample,
+};
 
 pub struct Resamples<'a, A>
 where
@@ -56,12 +58,11 @@ where
 
 #[cfg(test)]
 mod test {
-    use quickcheck::quickcheck;
-    use quickcheck::TestResult;
     use std::collections::HashSet;
 
-    use crate::stats::univariate::resamples::Resamples;
-    use crate::stats::univariate::Sample;
+    use quickcheck::{quickcheck, TestResult};
+
+    use crate::stats::univariate::{resamples::Resamples, Sample};
 
     // Check that the resample is a subset of the sample
     quickcheck! {

@@ -1,6 +1,8 @@
-use crate::stats::bivariate::Data;
-use crate::stats::float::Float;
-use crate::stats::rand_util::{new_rng, Rng};
+use crate::stats::{
+    bivariate::Data,
+    float::Float,
+    rand_util::{new_rng, Rng},
+};
 
 pub struct Resamples<'a, X, Y>
 where

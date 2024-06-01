@@ -1,16 +1,17 @@
-use std::iter::IntoIterator;
-use std::time::Duration;
-use std::time::Instant;
-
-use crate::black_box;
-use crate::measurement::{Measurement, WallTime};
-use crate::BatchSize;
-
 #[cfg(feature = "async")]
 use std::future::Future;
+use std::{
+    iter::IntoIterator,
+    time::{Duration, Instant},
+};
 
 #[cfg(feature = "async")]
 use crate::async_executor::AsyncExecutor;
+use crate::{
+    black_box,
+    measurement::{Measurement, WallTime},
+    BatchSize,
+};
 
 // ================================== MAINTENANCE NOTE =============================================
 // Any changes made to either Bencher or AsyncBencher will have to be replicated to the other!

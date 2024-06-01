@@ -1,16 +1,20 @@
-use crate::stats::univariate::Sample;
-use crate::stats::univariate::{self, mixed};
-use crate::stats::Distribution;
-
-use crate::benchmark::BenchmarkConfig;
-use crate::criterion::Criterion;
-use crate::error::Result;
-use crate::estimate::{
-    build_change_estimates, ChangeDistributions, ChangeEstimates, ChangePointEstimates, Estimates,
+use crate::{
+    benchmark::BenchmarkConfig,
+    criterion::Criterion,
+    error::Result,
+    estimate::{
+        build_change_estimates, ChangeDistributions, ChangeEstimates, ChangePointEstimates,
+        Estimates,
+    },
+    fs,
+    measurement::Measurement,
+    report::BenchmarkId,
+    stats::{
+        univariate::{self, mixed, Sample},
+        Distribution,
+    },
+    SavedSample,
 };
-use crate::measurement::Measurement;
-use crate::report::BenchmarkId;
-use crate::{fs, SavedSample};
 
 // Common comparison procedure
 pub(crate) fn common<M: Measurement>(

@@ -37,14 +37,14 @@
 //! x: "severe" outlier
 //! ```
 
-use std::iter::IntoIterator;
-use std::ops::{Deref, Index};
-use std::slice;
-
-use crate::stats::float::Float;
-use crate::stats::univariate::Sample;
+use std::{
+    iter::IntoIterator,
+    ops::{Deref, Index},
+    slice,
+};
 
 use self::Label::*;
+use crate::stats::{float::Float, univariate::Sample};
 
 /// A classified/labeled sample.
 ///
@@ -153,8 +153,8 @@ impl<'a, 'b, A> IntoIterator for &'b LabeledSample<'a, A>
 where
     A: Float,
 {
-    type Item = (A, Label);
     type IntoIter = Iter<'a, A>;
+    type Item = (A, Label);
 
     fn into_iter(self) -> Iter<'a, A> {
         self.iter()

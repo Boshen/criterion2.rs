@@ -1,5 +1,6 @@
-use criterion::{criterion_group, BatchSize, Criterion, Throughput};
 use std::time::Duration;
+
+use criterion::{criterion_group, BatchSize, Criterion, Throughput};
 
 const SIZE: usize = 1024 * 1024;
 

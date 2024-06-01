@@ -1,22 +1,23 @@
 use std::path::Path;
 
-use crate::stats::bivariate::regression::Slope;
-use crate::stats::bivariate::Data;
-use crate::stats::univariate::outliers::tukey;
-use crate::stats::univariate::Sample;
-use crate::stats::{Distribution, Tails};
-
-use crate::benchmark::BenchmarkConfig;
-use crate::connection::OutgoingMessage;
-use crate::criterion::Criterion;
-use crate::estimate::{
-    build_estimates, ConfidenceInterval, Distributions, Estimate, Estimates, PointEstimates,
+use crate::{
+    benchmark::BenchmarkConfig,
+    connection::OutgoingMessage,
+    criterion::Criterion,
+    estimate::{
+        build_estimates, ConfidenceInterval, Distributions, Estimate, Estimates, PointEstimates,
+    },
+    fs,
+    measurement::Measurement,
+    report::{BenchmarkId, Report, ReportContext},
+    routine::Routine,
+    stats::{
+        bivariate::{regression::Slope, Data},
+        univariate::{outliers::tukey, Sample},
+        Distribution, Tails,
+    },
+    Baseline, SavedSample, Throughput,
 };
-use crate::fs;
-use crate::measurement::Measurement;
-use crate::report::{BenchmarkId, Report, ReportContext};
-use crate::routine::Routine;
-use crate::{Baseline, SavedSample, Throughput};
 
 macro_rules! elapsed {
     ($msg:expr, $block:expr) => {{
@@ -48,7 +49,7 @@ pub(crate) fn common<M: Measurement, T: ?Sized>(
         if !base_dir_exists(id, &criterion.baseline_directory, &criterion.output_directory) {
             panic!(
                 "Baseline '{base}' must exist before comparison is allowed; try --save-baseline {base}",
-                base=criterion.baseline_directory,
+                base = criterion.baseline_directory,
             );
         }
     }
@@ -64,7 +65,8 @@ pub(crate) fn common<M: Measurement, T: ?Sized>(
         match loaded {
             Err(err) => panic!(
                 "Baseline '{base}' must exist before it can be loaded; try --save-baseline {base}. Error: {err}",
-                base = baseline, err = err
+                base = baseline,
+                err = err
             ),
             Ok(samples) => {
                 sampling_mode = samples.sampling_mode;

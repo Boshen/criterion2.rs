@@ -2,9 +2,9 @@
 //! Unix's Processor Time, CPU or GPU performance counters, etc.) into Criterion.rs. It also
 //! includes the [`WallTime`] struct which defines the default wall-clock time measurement.
 
-use crate::format::short;
-use crate::Throughput;
 use std::time::{Duration, Instant};
+
+use crate::{format::short, Throughput};
 
 /// Trait providing functions to format measured values to string so that they can be displayed on
 /// the command line or in the reports. The functions of this trait take measured values in f64
@@ -219,18 +219,23 @@ impl Measurement for WallTime {
     fn start(&self) -> Self::Intermediate {
         Instant::now()
     }
+
     fn end(&self, i: Self::Intermediate) -> Self::Value {
         i.elapsed()
     }
+
     fn add(&self, v1: &Self::Value, v2: &Self::Value) -> Self::Value {
         *v1 + *v2
     }
+
     fn zero(&self) -> Self::Value {
         Duration::from_secs(0)
     }
+
     fn to_f64(&self, val: &Self::Value) -> f64 {
         val.as_nanos() as f64
     }
+
     fn formatter(&self) -> &dyn ValueFormatter {
         &DurationFormatter
     }

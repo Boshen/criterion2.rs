@@ -15,11 +15,9 @@ pub mod univariate;
 mod float;
 mod rand_util;
 
-use std::mem;
-use std::ops::Deref;
+use std::{mem, ops::Deref};
 
-use crate::stats::float::Float;
-use crate::stats::univariate::Sample;
+use crate::stats::{float::Float, univariate::Sample};
 
 /// The bootstrap distribution of some parameter
 #[derive(Clone)]

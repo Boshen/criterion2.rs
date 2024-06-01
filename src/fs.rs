@@ -1,13 +1,17 @@
-use serde::de::DeserializeOwned;
-use serde::Serialize;
-use std::ffi::OsStr;
-use std::fs::{self, File};
-use std::io::Read;
-use std::path::Path;
+use std::{
+    ffi::OsStr,
+    fs::{self, File},
+    io::Read,
+    path::Path,
+};
+
+use serde::{de::DeserializeOwned, Serialize};
 use walkdir::{DirEntry, WalkDir};
 
-use crate::error::{Error, Result};
-use crate::report::BenchmarkId;
+use crate::{
+    error::{Error, Result},
+    report::BenchmarkId,
+};
 
 pub fn load<A, P>(path: &P) -> Result<A>
 where

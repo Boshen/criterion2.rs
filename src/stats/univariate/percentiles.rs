@@ -1,5 +1,6 @@
-use crate::stats::float::Float;
 use cast::{self, usize};
+
+use crate::stats::float::Float;
 
 /// A "view" into the percentiles of a sample
 pub struct Percentiles<A>(Box<[A]>)

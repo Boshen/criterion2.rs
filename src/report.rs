@@ -1,23 +1,27 @@
-#[cfg(feature = "csv_output")]
-use crate::csv_report::FileCsvReport;
-use crate::stats::bivariate::regression::Slope;
-use crate::stats::bivariate::Data;
-use crate::stats::univariate::outliers::tukey::LabeledSample;
+use std::{
+    cmp,
+    collections::HashSet,
+    fmt,
+    io::{stderr, Write},
+    path::{Path, PathBuf},
+};
 
-use crate::estimate::{ChangeDistributions, ChangeEstimates, Distributions, Estimate, Estimates};
-use crate::format;
-use crate::measurement::ValueFormatter;
-use crate::stats::univariate::Sample;
-use crate::stats::Distribution;
-use crate::Throughput;
 use anes::{Attribute, ClearLine, Color, ResetAttributes, SetAttribute, SetForegroundColor};
 use serde::{Deserialize, Serialize};
-use std::cmp;
-use std::collections::HashSet;
-use std::fmt;
-use std::io::stderr;
-use std::io::Write;
-use std::path::{Path, PathBuf};
+
+#[cfg(feature = "csv_output")]
+use crate::csv_report::FileCsvReport;
+use crate::{
+    estimate::{ChangeDistributions, ChangeEstimates, Distributions, Estimate, Estimates},
+    format,
+    measurement::ValueFormatter,
+    stats::{
+        bivariate::{regression::Slope, Data},
+        univariate::{outliers::tukey::LabeledSample, Sample},
+        Distribution,
+    },
+    Throughput,
+};
 
 const MAX_DIRECTORY_NAME_LEN: usize = 64;
 const MAX_TITLE_LEN: usize = 100;
@@ -312,12 +316,19 @@ macro_rules! reports_impl {
 
 impl Report for Reports {
     reports_impl!(fn test_start(&self, id: &BenchmarkId, context: &ReportContext));
+
     reports_impl!(fn test_pass(&self, id: &BenchmarkId, context: &ReportContext));
+
     reports_impl!(fn benchmark_start(&self, id: &BenchmarkId, context: &ReportContext));
+
     reports_impl!(fn profile(&self, id: &BenchmarkId, context: &ReportContext, profile_ns: f64));
+
     reports_impl!(fn warmup(&self, id: &BenchmarkId, context: &ReportContext, warmup_ns: f64));
+
     reports_impl!(fn terminated(&self, id: &BenchmarkId, context: &ReportContext));
+
     reports_impl!(fn analysis(&self, id: &BenchmarkId, context: &ReportContext));
+
     reports_impl!(fn measurement_start(
         &self,
         id: &BenchmarkId,
@@ -326,6 +337,7 @@ impl Report for Reports {
         estimate_ns: f64,
         iter_count: u64
     ));
+
     reports_impl!(
     fn measurement_complete(
         &self,
@@ -334,6 +346,7 @@ impl Report for Reports {
         measurements: &MeasurementData<'_>,
         formatter: &dyn ValueFormatter
     ));
+
     reports_impl!(
     fn summarize(
         &self,
@@ -343,6 +356,7 @@ impl Report for Reports {
     ));
 
     reports_impl!(fn final_summary(&self, context: &ReportContext));
+
     reports_impl!(fn group_separator(&self, ));
 }
 
@@ -456,6 +470,7 @@ impl Report for CliReport {
     fn test_start(&self, id: &BenchmarkId, _: &ReportContext) {
         println!("Testing {}", id);
     }
+
     fn test_pass(&self, _: &BenchmarkId, _: &ReportContext) {
         println!("Success");
     }

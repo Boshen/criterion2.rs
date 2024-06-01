@@ -1,13 +1,14 @@
-use std::cell::RefCell;
-use std::convert::TryFrom;
-use std::io::{Read, Write};
-use std::mem::size_of;
-use std::net::TcpStream;
+use std::{
+    cell::RefCell,
+    convert::TryFrom,
+    io::{Read, Write},
+    mem::size_of,
+    net::TcpStream,
+};
 
 use serde::{Deserialize, Serialize};
 
-use crate::report::BenchmarkId as InternalBenchmarkId;
-use crate::Throughput;
+use crate::{report::BenchmarkId as InternalBenchmarkId, Throughput};
 
 #[derive(Debug)]
 pub enum MessageError {

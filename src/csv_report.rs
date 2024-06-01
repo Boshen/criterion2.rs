@@ -1,13 +1,14 @@
-use std::io::Write;
-use std::path::Path;
+use std::{io::Write, path::Path};
 
 use csv::Writer;
 use serde::Serialize;
 
-use crate::error::Result;
-use crate::measurement::ValueFormatter;
-use crate::report::{BenchmarkId, MeasurementData, Report, ReportContext};
-use crate::Throughput;
+use crate::{
+    error::Result,
+    measurement::ValueFormatter,
+    report::{BenchmarkId, MeasurementData, Report, ReportContext},
+    Throughput,
+};
 
 #[derive(Serialize)]
 struct CsvRow<'a> {

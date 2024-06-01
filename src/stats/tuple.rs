@@ -39,8 +39,8 @@ impl<A> Tuple for (A,)
 where
     A: Copy,
 {
-    type Distributions = (Distribution<A>,);
     type Builder = (Vec<A>,);
+    type Distributions = (Distribution<A>,);
 }
 
 impl<A> TupledDistributions for (Distribution<A>,)
@@ -77,8 +77,8 @@ where
     A: Copy,
     B: Copy,
 {
-    type Distributions = (Distribution<A>, Distribution<B>);
     type Builder = (Vec<A>, Vec<B>);
+    type Distributions = (Distribution<A>, Distribution<B>);
 }
 
 impl<A, B> TupledDistributions for (Distribution<A>, Distribution<B>)
@@ -120,8 +120,8 @@ where
     B: Copy,
     C: Copy,
 {
-    type Distributions = (Distribution<A>, Distribution<B>, Distribution<C>);
     type Builder = (Vec<A>, Vec<B>, Vec<C>);
+    type Distributions = (Distribution<A>, Distribution<B>, Distribution<C>);
 }
 
 impl<A, B, C> TupledDistributions for (Distribution<A>, Distribution<B>, Distribution<C>)
@@ -172,8 +172,8 @@ where
     C: Copy,
     D: Copy,
 {
-    type Distributions = (Distribution<A>, Distribution<B>, Distribution<C>, Distribution<D>);
     type Builder = (Vec<A>, Vec<B>, Vec<C>, Vec<D>);
+    type Distributions = (Distribution<A>, Distribution<B>, Distribution<C>, Distribution<D>);
 }
 
 impl<A, B, C, D> TupledDistributions

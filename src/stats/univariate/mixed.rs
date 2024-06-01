@@ -1,11 +1,13 @@
 //! Mixed bootstrap
 
-use crate::stats::float::Float;
-use crate::stats::tuple::{Tuple, TupledDistributionsBuilder};
-use crate::stats::univariate::Resamples;
-use crate::stats::univariate::Sample;
 #[cfg(feature = "rayon")]
 use rayon::prelude::*;
+
+use crate::stats::{
+    float::Float,
+    tuple::{Tuple, TupledDistributionsBuilder},
+    univariate::{Resamples, Sample},
+};
 
 /// Performs a *mixed* two-sample bootstrap
 pub fn bootstrap<A, T, S>(

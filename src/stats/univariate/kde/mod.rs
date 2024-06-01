@@ -2,11 +2,11 @@
 
 pub mod kernel;
 
-use self::kernel::Kernel;
-use crate::stats::float::Float;
-use crate::stats::univariate::Sample;
 #[cfg(feature = "rayon")]
 use rayon::prelude::*;
+
+use self::kernel::Kernel;
+use crate::stats::{float::Float, univariate::Sample};
 
 /// Univariate kernel density estimator
 pub struct Kde<'a, A, K>
@@ -87,12 +87,12 @@ macro_rules! test {
     ($ty:ident) => {
         mod $ty {
             use approx::relative_eq;
-            use quickcheck::quickcheck;
-            use quickcheck::TestResult;
+            use quickcheck::{quickcheck, TestResult};
 
-            use crate::stats::univariate::kde::kernel::Gaussian;
-            use crate::stats::univariate::kde::{Bandwidth, Kde};
-            use crate::stats::univariate::Sample;
+            use crate::stats::univariate::{
+                kde::{kernel::Gaussian, Bandwidth, Kde},
+                Sample,
+            };
 
             // The [-inf inf] integral of the estimated PDF should be one
             quickcheck! {

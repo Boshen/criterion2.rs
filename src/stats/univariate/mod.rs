@@ -9,16 +9,17 @@ pub mod kde;
 pub mod mixed;
 pub mod outliers;
 
-use crate::stats::float::Float;
-use crate::stats::tuple::{Tuple, TupledDistributionsBuilder};
-#[cfg(feature = "rayon")]
-use rayon::prelude::*;
 use std::cmp;
 
-use self::resamples::Resamples;
+#[cfg(feature = "rayon")]
+use rayon::prelude::*;
 
-pub use self::percentiles::Percentiles;
-pub use self::sample::Sample;
+use self::resamples::Resamples;
+pub use self::{percentiles::Percentiles, sample::Sample};
+use crate::stats::{
+    float::Float,
+    tuple::{Tuple, TupledDistributionsBuilder},
+};
 
 /// Performs a two-sample bootstrap
 ///

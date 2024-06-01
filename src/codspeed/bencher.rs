@@ -7,7 +7,6 @@ use colored::Colorize;
 
 #[cfg(feature = "async")]
 use crate::async_executor::AsyncExecutor;
-
 use crate::{BatchSize, Measurement, WallTime};
 
 pub struct Bencher<'a, M: Measurement = WallTime> {

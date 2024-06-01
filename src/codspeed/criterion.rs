@@ -1,12 +1,12 @@
 use std::{cell::RefCell, marker::PhantomData, rc::Rc, time::Duration};
 
+use codspeed::codspeed::CodSpeed;
+
 use crate::{
     measurement::{Measurement, WallTime},
     profiler::Profiler,
+    Bencher, BenchmarkGroup, BenchmarkId,
 };
-use codspeed::codspeed::CodSpeed;
-
-use crate::{Bencher, BenchmarkGroup, BenchmarkId};
 
 pub struct Criterion<M: Measurement = WallTime> {
     pub codspeed: Option<Rc<RefCell<CodSpeed>>>,
@@ -102,43 +102,56 @@ impl<M: Measurement> Criterion<M> {
             phantom: PhantomData::<*const M2>,
         }
     }
+
     pub fn with_profiler<P: Profiler + 'static>(self, p: P) -> Criterion<M> {
         self
     }
+
     pub fn sample_size(mut self, n: usize) -> Criterion<M> {
         self
     }
+
     pub fn warm_up_time(mut self, dur: Duration) -> Criterion<M> {
         self
     }
+
     pub fn measurement_time(mut self, dur: Duration) -> Criterion<M> {
         self
     }
+
     pub fn nresamples(mut self, n: usize) -> Criterion<M> {
         self
     }
+
     pub fn noise_threshold(mut self, threshold: f64) -> Criterion<M> {
         self
     }
+
     pub fn confidence_level(mut self, cl: f64) -> Criterion<M> {
         self
     }
+
     pub fn significance_level(mut self, sl: f64) -> Criterion<M> {
         self
     }
+
     pub fn save_baseline(mut self, baseline: String) -> Criterion<M> {
         self
     }
+
     pub fn retain_baseline(mut self, baseline: String) -> Criterion<M> {
         self
     }
+
     pub fn with_filter<S: Into<String>>(mut self, filter: S) -> Criterion<M> {
         //FIXME: Implement
         self
     }
+
     pub fn with_output_color(mut self, enabled: bool) -> Criterion<M> {
         self
     }
+
     pub fn configure_from_args(mut self) -> Criterion<M> {
         self
     }
