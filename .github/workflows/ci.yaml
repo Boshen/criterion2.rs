@@ -1,3 +1,5 @@
+name: CI
+
 on:
   pull_request:
     branches:
@@ -6,10 +8,6 @@ on:
     branches:
       - main
       - "renovate/**"
-
-name: tests
-env:
-  CARGO_TERM_COLOR: always
 
 jobs:
   ci:
@@ -23,7 +21,7 @@ jobs:
           - nightly
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: taiki-e/checkout-action@v1
 
       - uses: dtolnay/rust-toolchain@master
         name: Setup rust toolchain
@@ -32,7 +30,8 @@ jobs:
           components: rustfmt, clippy
 
       - uses: Swatinem/rust-cache@v2
-        name: Load dependencies from cache
+        with:
+          save-if: ${{ github.ref_name == 'main' }}
 
       - name: Build with stable features
         run: cargo build --features stable
@@ -81,7 +80,7 @@ jobs:
           - stable
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: taiki-e/checkout-action@v1
 
       - uses: dtolnay/rust-toolchain@master
         with:
@@ -89,6 +88,9 @@ jobs:
           components: rustfmt, clippy
 
       - uses: Swatinem/rust-cache@v2
+        with:
+          shared-key: test
+          save-if: ${{ github.ref_name == 'main' }}
 
       - uses: taiki-e/install-action@nextest
 

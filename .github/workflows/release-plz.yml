@@ -19,10 +19,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Install Rust
-        uses: moonrepo/setup-rust@v1
+      - uses: Boshen/setup-rust@main
         with:
-          cache-base: main
+          save-cache: ${{ github.ref_name == 'main' }}
+          cache-key: warm
 
       - name: Run release-plz
         uses: MarcoIeni/release-plz-action@v0.5
