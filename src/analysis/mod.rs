@@ -90,7 +90,6 @@ pub(crate) fn common<M: Measurement, T: ?Sized>(
                 id: id.into(),
                 iters: &iters,
                 times: &times,
-                plot_config: (&report_context.plot_config).into(),
                 sampling_method: sampling_mode.into(),
                 benchmark_config: config.into(),
             })

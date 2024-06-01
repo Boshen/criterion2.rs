@@ -4,7 +4,7 @@ use std::{cell::RefCell, rc::Rc, time::Duration};
 use codspeed::{codspeed::CodSpeed, utils::get_git_relative_path};
 
 use crate::measurement::WallTime;
-use crate::{measurement::Measurement, PlotConfiguration, SamplingMode, Throughput};
+use crate::{measurement::Measurement, SamplingMode, Throughput};
 
 use super::bencher::Bencher;
 use super::criterion::Criterion;
@@ -107,9 +107,6 @@ impl<'a, M: Measurement> BenchmarkGroup<'a, M> {
         self
     }
     pub fn sampling_mode(&mut self, new_mode: SamplingMode) -> &mut Self {
-        self
-    }
-    pub fn plot_config(&mut self, new_config: PlotConfiguration) -> &mut Self {
         self
     }
     pub fn finish(self) {}

@@ -8,10 +8,9 @@ use std::time::Duration;
 use crate::bencher::Bencher;
 use crate::benchmark_group::{BenchmarkGroup, BenchmarkId};
 use crate::{
-    cargo_criterion_connection, debug_enabled, default_output_directory, default_plotting_backend,
-    gnuplot_version, Baseline, BencherReport, BenchmarkConfig, BenchmarkFilter, CliReport,
-    CliVerbosity, Connection, ExternalProfiler, Html, Measurement, Mode, OutgoingMessage,
-    PlotConfiguration, PlottingBackend, Profiler, Report, ReportContext, Reports, WallTime,
+    cargo_criterion_connection, debug_enabled, default_output_directory, Baseline, BencherReport,
+    BenchmarkConfig, BenchmarkFilter, CliReport, CliVerbosity, Connection, ExternalProfiler,
+    Measurement, Mode, OutgoingMessage, Profiler, Report, ReportContext, Reports, WallTime,
 };
 
 /// The benchmark manager
@@ -62,7 +61,6 @@ impl Default for Criterion {
             cli: CliReport::new(false, false, CliVerbosity::Normal),
             bencher_enabled: false,
             bencher: BencherReport,
-            html: default_plotting_backend().create_plotter().map(Html::new),
             csv_enabled: cfg!(feature = "csv_output"),
         };
 
@@ -87,7 +85,6 @@ impl Default for Criterion {
             criterion.report.cli_enabled = false;
             criterion.report.bencher_enabled = false;
             criterion.report.csv_enabled = false;
-            criterion.report.html = None;
         }
         criterion
     }
@@ -120,25 +117,6 @@ impl<M: Measurement> Criterion<M> {
     /// the Profiler trait for more details.
     pub fn with_profiler<P: Profiler + 'static>(self, p: P) -> Criterion<M> {
         Criterion { profiler: Box::new(RefCell::new(p)), ..self }
-    }
-
-    #[must_use]
-    /// Set the plotting backend. By default, Criterion will use gnuplot if available, or plotters
-    /// if not.
-    ///
-    /// Panics if `backend` is `PlottingBackend::Gnuplot` and gnuplot is not available.
-    pub fn plotting_backend(mut self, backend: PlottingBackend) -> Criterion<M> {
-        if let PlottingBackend::Gnuplot = backend {
-            assert!(
-                !gnuplot_version().is_err(),
-                "Gnuplot plotting backend was requested, but gnuplot is not available. \
-                To continue, either install Gnuplot or allow Criterion.rs to fall back \
-                to using plotters."
-            );
-        }
-
-        self.report.html = backend.create_plotter().map(Html::new);
-        self
     }
 
     #[must_use]
@@ -280,28 +258,6 @@ impl<M: Measurement> Criterion<M> {
     }
 
     #[must_use]
-    /// Enables plotting
-    pub fn with_plots(mut self) -> Criterion<M> {
-        // If running under cargo-criterion then don't re-enable the reports; let it do the reporting.
-        if self.connection.is_none() && self.report.html.is_none() {
-            let default_backend = default_plotting_backend().create_plotter();
-            if let Some(backend) = default_backend {
-                self.report.html = Some(Html::new(backend));
-            } else {
-                panic!("Cannot find a default plotting backend!");
-            }
-        }
-        self
-    }
-
-    #[must_use]
-    /// Disables plotting
-    pub fn without_plots(mut self) -> Criterion<M> {
-        self.report.html = None;
-        self
-    }
-
-    #[must_use]
     /// Names an explicit baseline and enables overwriting the previous results.
     pub fn save_baseline(mut self, baseline: String) -> Criterion<M> {
         self.baseline_directory = baseline;
@@ -362,10 +318,7 @@ impl<M: Measurement> Criterion<M> {
             return;
         }
 
-        let report_context = ReportContext {
-            output_directory: self.output_directory.clone(),
-            plot_config: PlotConfiguration::default(),
-        };
+        let report_context = ReportContext { output_directory: self.output_directory.clone() };
 
         self.report.final_summary(&report_context);
     }
@@ -386,12 +339,6 @@ impl<M: Measurement> Criterion<M> {
             // What about quiet?
             if opts.verbosity == CliVerbosity::Verbose {
                 eprintln!("Warning: --verbose will be ignored when running with cargo-criterion. Use `cargo criterion --output-format verbose -- <args>` instead.");
-            }
-            if opts.noplot {
-                eprintln!("Warning: --noplot will be ignored when running with cargo-criterion. Use `cargo criterion --plotting-backend disabled -- <args>` instead.");
-            }
-            if let Some(backend) = opts.plotting_backend {
-                eprintln!("Warning: --plotting-backend will be ignored when running with cargo-criterion. Use `cargo criterion --plotting-backend {} -- <args>` instead.", backend);
             }
             if opts.output_format != OutputFormat::Criterion {
                 eprintln!("Warning: --output-format will be ignored when running with cargo-criterion. Use `cargo criterion --output-format {} -- <args>` instead.", opts.output_format);
@@ -432,14 +379,6 @@ impl<M: Measurement> Criterion<M> {
         };
         self = self.with_benchmark_filter(filter);
 
-        if let Some(backend) = opts.plotting_backend {
-            self = self.plotting_backend(backend)
-        };
-
-        if opts.noplot {
-            self = self.without_plots();
-        }
-
         match opts.baseline {
             Baseline_::Save(ref dir) => {
                 self.baseline = Baseline::Save;
@@ -463,7 +402,6 @@ impl<M: Measurement> Criterion<M> {
             self.report.cli_enabled = false;
             self.report.bencher_enabled = false;
             self.report.csv_enabled = false;
-            self.report.html = None;
         } else {
             match opts.output_format {
                 OutputFormat::Bencher => {

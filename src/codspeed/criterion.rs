@@ -3,7 +3,6 @@ use std::{cell::RefCell, marker::PhantomData, rc::Rc, time::Duration};
 use crate::{
     measurement::{Measurement, WallTime},
     profiler::Profiler,
-    PlottingBackend,
 };
 use codspeed::codspeed::CodSpeed;
 
@@ -106,9 +105,6 @@ impl<M: Measurement> Criterion<M> {
     pub fn with_profiler<P: Profiler + 'static>(self, p: P) -> Criterion<M> {
         self
     }
-    pub fn plotting_backend(mut self, backend: PlottingBackend) -> Criterion<M> {
-        self
-    }
     pub fn sample_size(mut self, n: usize) -> Criterion<M> {
         self
     }
@@ -129,15 +125,6 @@ impl<M: Measurement> Criterion<M> {
     }
     pub fn significance_level(mut self, sl: f64) -> Criterion<M> {
         self
-    }
-    pub fn with_plots(mut self) -> Criterion<M> {
-        self
-    }
-    pub fn without_plots(mut self) -> Criterion<M> {
-        self
-    }
-    pub fn can_plot(&self) -> bool {
-        true
     }
     pub fn save_baseline(mut self, baseline: String) -> Criterion<M> {
         self

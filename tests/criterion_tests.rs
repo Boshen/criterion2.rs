@@ -112,7 +112,7 @@ fn test_creates_directory() {
 #[test]
 fn test_without_plots() {
     let dir = temp_dir();
-    short_benchmark(&dir).without_plots().bench_function("test_without_plots", |b| b.iter(|| 10));
+    short_benchmark(&dir).bench_function("test_without_plots", |b| b.iter(|| 10));
 
     for entry in WalkDir::new(dir.path().join("test_without_plots")) {
         let entry = entry.ok();
