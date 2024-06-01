@@ -10,7 +10,7 @@ use crate::report::BenchmarkId as InternalBenchmarkId;
 use crate::report::Report;
 use crate::report::ReportContext;
 use crate::routine::{Function, Routine};
-use crate::{Mode, PlotConfiguration, SamplingMode, Throughput};
+use crate::{Mode, SamplingMode, Throughput};
 
 /// Structure used to group together a set of related benchmarks, along with custom configuration
 /// settings for groups of benchmarks. All benchmarks performed using a benchmark group will be
@@ -218,12 +218,6 @@ impl<'a, M: Measurement> BenchmarkGroup<'a, M> {
         self
     }
 
-    /// Changes the plot configuration for this benchmark group.
-    pub fn plot_config(&mut self, new_config: PlotConfiguration) -> &mut Self {
-        self.partial_config.plot_config = new_config;
-        self
-    }
-
     /// Set the input size for this benchmark group. Used for reporting the
     /// throughput.
     pub fn throughput(&mut self, throughput: Throughput) -> &mut Self {
@@ -278,10 +272,8 @@ impl<'a, M: Measurement> BenchmarkGroup<'a, M> {
         I: ?Sized,
     {
         let config = self.partial_config.to_complete(&self.criterion.config);
-        let report_context = ReportContext {
-            output_directory: self.criterion.output_directory.clone(),
-            plot_config: self.partial_config.plot_config.clone(),
-        };
+        let report_context =
+            ReportContext { output_directory: self.criterion.output_directory.clone() };
 
         let mut id = InternalBenchmarkId::new(
             self.group_name.clone(),
@@ -378,10 +370,8 @@ impl<'a, M: Measurement> Drop for BenchmarkGroup<'a, M> {
         }
 
         if self.all_ids.len() > 1 && self.any_matched && self.criterion.mode.is_benchmark() {
-            let report_context = ReportContext {
-                output_directory: self.criterion.output_directory.clone(),
-                plot_config: self.partial_config.plot_config.clone(),
-            };
+            let report_context =
+                ReportContext { output_directory: self.criterion.output_directory.clone() };
 
             self.criterion.report.summarize(
                 &report_context,

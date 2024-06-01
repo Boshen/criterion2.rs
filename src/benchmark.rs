@@ -1,4 +1,4 @@
-use crate::{PlotConfiguration, SamplingMode};
+use crate::SamplingMode;
 use std::time::Duration;
 
 // TODO: Move the benchmark config stuff to a separate module for easier use.
@@ -44,7 +44,6 @@ pub(crate) struct PartialBenchmarkConfig {
     pub(crate) warm_up_time: Option<Duration>,
     pub(crate) sampling_mode: Option<SamplingMode>,
     pub(crate) quick_mode: Option<bool>,
-    pub(crate) plot_config: PlotConfiguration,
 }
 
 impl PartialBenchmarkConfig {

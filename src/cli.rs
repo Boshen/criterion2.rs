@@ -1,4 +1,4 @@
-use crate::{report::CliVerbosity, BenchmarkConfig, ListFormat, PlottingBackend};
+use crate::{report::CliVerbosity, BenchmarkConfig, ListFormat};
 use bpaf::*;
 use std::{str::FromStr, time::Duration};
 
@@ -20,7 +20,6 @@ pub struct Opts {
     pub noise_threshold: f64,
     pub confidence_level: f64,
     pub significance_level: f64,
-    pub plotting_backend: Option<PlottingBackend>,
     pub output_format: OutputFormat,
 
     // ignored
@@ -274,13 +273,6 @@ pub fn options(config: &BenchmarkConfig) -> OptionParser<Opts> {
         .help("Ignored, but added for compatibility with libsets.")
         .switch()
         .hide();
-    let plotting_backend = long("plotting-backend")
-        .help(
-            "Set the plotting backend. By default, Criterion.rs will use the gnuplot backend \
-                             if gnuplot is available, or the plotters backend if it isn't.",
-        )
-        .argument("PLOT")
-        .optional();
 
     let output_format =
                         long("output-format")
@@ -294,7 +286,6 @@ pub fn options(config: &BenchmarkConfig) -> OptionParser<Opts> {
         warm_up_time, measurement_time,
         nresamples, noise_threshold, confidence_level, significance_level,
         nocapture, show_output, include_ignored,
-        plotting_backend,
         output_format,
         ignored, exact, filter})
     .to_options()

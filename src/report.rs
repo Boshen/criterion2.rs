@@ -1,15 +1,15 @@
 #[cfg(feature = "csv_output")]
 use crate::csv_report::FileCsvReport;
 use crate::stats::bivariate::regression::Slope;
+use crate::stats::bivariate::Data;
 use crate::stats::univariate::outliers::tukey::LabeledSample;
-use crate::{html::Html, stats::bivariate::Data};
 
 use crate::estimate::{ChangeDistributions, ChangeEstimates, Distributions, Estimate, Estimates};
 use crate::format;
 use crate::measurement::ValueFormatter;
 use crate::stats::univariate::Sample;
 use crate::stats::Distribution;
-use crate::{PlotConfiguration, Throughput};
+use crate::Throughput;
 use anes::{Attribute, ClearLine, Color, ResetAttributes, SetAttribute, SetForegroundColor};
 use serde::{Deserialize, Serialize};
 use std::cmp;
@@ -238,7 +238,6 @@ impl fmt::Debug for BenchmarkId {
 
 pub struct ReportContext {
     pub output_directory: PathBuf,
-    pub plot_config: PlotConfiguration,
 }
 impl ReportContext {
     pub fn report_path<P: AsRef<Path> + ?Sized>(&self, id: &BenchmarkId, file_name: &P) -> PathBuf {
@@ -293,7 +292,6 @@ pub(crate) struct Reports {
     pub(crate) bencher_enabled: bool,
     pub(crate) bencher: BencherReport,
     pub(crate) csv_enabled: bool,
-    pub(crate) html: Option<Html>,
 }
 macro_rules! reports_impl {
     (fn $name:ident(&self, $($argn:ident: $argt:ty),*)) => {
@@ -307,9 +305,6 @@ macro_rules! reports_impl {
             #[cfg(feature = "csv_output")]
             if self.csv_enabled {
                 FileCsvReport.$name($($argn),*);
-            }
-            if let Some(reporter) = &self.html {
-                reporter.$name($($argn),*);
             }
         }
     };

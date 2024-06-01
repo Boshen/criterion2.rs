@@ -234,7 +234,6 @@ pub enum OutgoingMessage<'a> {
         id: RawBenchmarkId,
         iters: &'a [f64],
         times: &'a [f64],
-        plot_config: PlotConfiguration,
         sampling_method: SamplingMethod,
         benchmark_config: BenchmarkConfig,
     },
@@ -288,12 +287,6 @@ impl From<crate::AxisScale> for AxisScale {
 pub struct PlotConfiguration {
     summary_scale: AxisScale,
 }
-impl From<&crate::PlotConfiguration> for PlotConfiguration {
-    fn from(other: &crate::PlotConfiguration) -> Self {
-        PlotConfiguration { summary_scale: other.summary_scale.into() }
-    }
-}
-
 #[derive(Debug, Serialize)]
 struct Duration {
     secs: u64,
