@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [0.10.0](https://github.com/Boshen/criterion2.rs/compare/v0.9.0...v0.10.0) - 2024-06-01
+
+### Added
+- [**breaking**] remove feature `html_reports`
+- [**breaking**] remove all plotting related functionalities ([#27](https://github.com/Boshen/criterion2.rs/pull/27))
+
+### Other
+- clean up ci
+- run fmt
+- remove unused dependencies
+
 ## [0.9.0](https://github.com/Boshen/criterion2.rs/compare/v0.8.0...v0.9.0) - 2024-05-28
 
 ### Fixed
