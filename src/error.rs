@@ -1,28 +1,13 @@
 use std::{error::Error as StdError, fmt, io, path::PathBuf};
 
-#[cfg(feature = "csv_output")]
-use csv::Error as CsvError;
 use serde_json::Error as SerdeError;
 
 #[allow(clippy::enum_variant_names)]
 #[derive(Debug)]
 pub enum Error {
-    AccessError {
-        path: PathBuf,
-        inner: io::Error,
-    },
-    CopyError {
-        from: PathBuf,
-        to: PathBuf,
-        inner: io::Error,
-    },
-    SerdeError {
-        path: PathBuf,
-        inner: SerdeError,
-    },
-    #[cfg(feature = "csv_output")]
-    /// This API requires the following crate features to be activated: csv_output
-    CsvError(CsvError),
+    AccessError { path: PathBuf, inner: io::Error },
+    CopyError { from: PathBuf, to: PathBuf, inner: io::Error },
+    SerdeError { path: PathBuf, inner: SerdeError },
 }
 impl fmt::Display for Error {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -38,8 +23,6 @@ impl fmt::Display for Error {
                 "Failed to read or write file {:?} due to serialization error: {}",
                 path, inner
             ),
-            #[cfg(feature = "csv_output")]
-            Error::CsvError(inner) => write!(f, "CSV error: {}", inner),
         }
     }
 }
@@ -49,8 +32,6 @@ impl StdError for Error {
             Error::AccessError { .. } => "AccessError",
             Error::CopyError { .. } => "CopyError",
             Error::SerdeError { .. } => "SerdeError",
-            #[cfg(feature = "csv_output")]
-            Error::CsvError(_) => "CsvError",
         }
     }
 
@@ -59,16 +40,7 @@ impl StdError for Error {
             Error::AccessError { inner, .. } => Some(inner),
             Error::CopyError { inner, .. } => Some(inner),
             Error::SerdeError { inner, .. } => Some(inner),
-            #[cfg(feature = "csv_output")]
-            Error::CsvError(inner) => Some(inner),
         }
-    }
-}
-
-#[cfg(feature = "csv_output")]
-impl From<CsvError> for Error {
-    fn from(other: CsvError) -> Error {
-        Error::CsvError(other)
     }
 }
 
