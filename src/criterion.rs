@@ -63,7 +63,6 @@ impl Default for Criterion {
             cli: CliReport::new(false, false, CliVerbosity::Normal),
             bencher_enabled: false,
             bencher: BencherReport,
-            csv_enabled: cfg!(feature = "csv_output"),
         };
 
         let mut criterion = Criterion {
@@ -86,7 +85,6 @@ impl Default for Criterion {
             // disable all reports when connected to cargo-criterion; it will do the reporting.
             criterion.report.cli_enabled = false;
             criterion.report.bencher_enabled = false;
-            criterion.report.csv_enabled = false;
         }
         criterion
     }
@@ -411,7 +409,6 @@ impl<M: Measurement> Criterion<M> {
             // disable all reports when connected to cargo-criterion; it will do the reporting.
             self.report.cli_enabled = false;
             self.report.bencher_enabled = false;
-            self.report.csv_enabled = false;
         } else {
             match opts.output_format {
                 OutputFormat::Bencher => {

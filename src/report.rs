@@ -9,8 +9,6 @@ use std::{
 use anes::{Attribute, ClearLine, Color, ResetAttributes, SetAttribute, SetForegroundColor};
 use serde::{Deserialize, Serialize};
 
-#[cfg(feature = "csv_output")]
-use crate::csv_report::FileCsvReport;
 use crate::{
     estimate::{ChangeDistributions, ChangeEstimates, Distributions, Estimate, Estimates},
     format,
@@ -51,11 +49,6 @@ pub(crate) struct MeasurementData<'a> {
 impl<'a> MeasurementData<'a> {
     pub fn iter_counts(&self) -> &Sample<f64> {
         self.data.x()
-    }
-
-    #[cfg(feature = "csv_output")]
-    pub fn sample_times(&self) -> &Sample<f64> {
-        self.data.y()
     }
 }
 
@@ -295,7 +288,6 @@ pub(crate) struct Reports {
     pub(crate) cli: CliReport,
     pub(crate) bencher_enabled: bool,
     pub(crate) bencher: BencherReport,
-    pub(crate) csv_enabled: bool,
 }
 macro_rules! reports_impl {
     (fn $name:ident(&self, $($argn:ident: $argt:ty),*)) => {
@@ -305,10 +297,6 @@ macro_rules! reports_impl {
             }
             if self.bencher_enabled {
                 self.bencher.$name($($argn),*);
-            }
-            #[cfg(feature = "csv_output")]
-            if self.csv_enabled {
-                FileCsvReport.$name($($argn),*);
             }
         }
     };
