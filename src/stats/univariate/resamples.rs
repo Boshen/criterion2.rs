@@ -49,7 +49,10 @@ where
         }
 
         if let Some(ref v) = self.stage {
-            unsafe { mem::transmute::<&[_], _>(v) }
+            #[allow(clippy::missing_transmute_annotations)]
+            unsafe {
+                mem::transmute::<&[_], _>(v)
+            }
         } else {
             unreachable!();
         }
