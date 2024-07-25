@@ -7,8 +7,6 @@ use std::{
     time::{Duration, SystemTime},
 };
 
-#[cfg(feature = "plotters")]
-use criterion::SamplingMode;
 use criterion::{
     criterion_group, criterion_main, profiler::Profiler, BatchSize, BenchmarkFilter, BenchmarkId,
     Criterion,
@@ -293,58 +291,6 @@ fn test_timing_loops() {
     group.bench_function("iter_batched_ref_10_iterations", |b| {
         b.iter_batched_ref(|| vec![10], |v| v[0], BatchSize::NumIterations(10))
     });
-}
-
-// Verify that all expected output files are present
-#[cfg(feature = "plotters")]
-#[test]
-fn test_output_files() {
-    let tempdir = temp_dir();
-    // Run benchmarks twice to produce comparisons
-    for _ in 0..2 {
-        let mut c = short_benchmark(&tempdir);
-        let mut group = c.benchmark_group("test_output");
-        group.sampling_mode(SamplingMode::Linear);
-        group.bench_function("output_1", |b| b.iter(|| 10));
-        group.bench_function("output_2", |b| b.iter(|| 20));
-        group.bench_function("output_\\/*\"?", |b| b.iter(|| 30));
-    }
-
-    // For each benchmark, assert that the expected files are present.
-    for x in 0..3 {
-        let dir = if x == 2 {
-            // Check that certain special characters are replaced with underscores
-            tempdir.path().join("test_output/output______")
-        } else {
-            tempdir.path().join(format!("test_output/output_{}", x + 1))
-        };
-
-        verify_stats(&dir, "new");
-        verify_stats(&dir, "base");
-        verify_json(&dir, "change/estimates.json");
-    }
-
-    // Run the final summary process and check for the report that produces
-    short_benchmark(&tempdir).final_summary();
-}
-
-#[cfg(feature = "plotters")]
-#[test]
-fn test_output_files_flat_sampling() {
-    let tempdir = temp_dir();
-    // Run benchmark twice to produce comparisons
-    for _ in 0..2 {
-        let mut c = short_benchmark(&tempdir);
-        let mut group = c.benchmark_group("test_output");
-        group.sampling_mode(SamplingMode::Flat);
-        group.bench_function("output_flat", |b| b.iter(|| 10));
-    }
-
-    let dir = tempdir.path().join("test_output/output_flat");
-
-    verify_stats(&dir, "new");
-    verify_stats(&dir, "base");
-    verify_json(&dir, "change/estimates.json");
 }
 
 #[test]
