@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [0.11.1](https://github.com/Boshen/criterion2.rs/compare/v0.11.0...v0.11.1) - 2024-08-07
+
+### Other
+- correct README ([#45](https://github.com/Boshen/criterion2.rs/pull/45))
+- *(deps)* update rust crates ([#44](https://github.com/Boshen/criterion2.rs/pull/44))
+- *(deps)* update rust crate serde_json to v1.0.121 ([#43](https://github.com/Boshen/criterion2.rs/pull/43))
+- *(deps)* update rust crate tokio to v1.39.2 ([#42](https://github.com/Boshen/criterion2.rs/pull/42))
+- *(deps)* update dependency rust to v1.80.0 ([#40](https://github.com/Boshen/criterion2.rs/pull/40))
+
 ## [0.11.0](https://github.com/Boshen/criterion2.rs/compare/v0.10.0...v0.11.0) - 2024-06-14
 
 ### Added
