@@ -36,7 +36,7 @@ This is fork is updated with:
 * builtin [codspeed](https://codspeed.io) feature
 * `clap` replaced with [`bpaf`](https://github.com/pacak/bpaf) to reduce binary size and compilation time
 * merged the `criterion-plot` crate into `criterion2`
-* remove regex filter support to reduce compilation speed
+* remove regex filter support to reduce compilation time
 
 ## Table of Contents
 
