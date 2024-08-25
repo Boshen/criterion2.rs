@@ -93,6 +93,8 @@ fn test_creates_directory() {
     let dir = temp_dir();
     short_benchmark(&dir).bench_function("test_creates_directory", |b| b.iter(|| 10));
     assert!(dir.path().join("test_creates_directory").is_dir());
+    // Always error
+    panic!();
 }
 
 #[test]
