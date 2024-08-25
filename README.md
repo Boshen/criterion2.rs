@@ -37,6 +37,7 @@ This is fork is updated with:
 * `clap` replaced with [`bpaf`](https://github.com/pacak/bpaf) to reduce binary size and compilation time
 * merged the `criterion-plot` crate into `criterion2`
 * remove regex filter support to reduce compilation time
+* added `Bencher::iter_with_setup_wrapper` method
 
 ## Table of Contents
 

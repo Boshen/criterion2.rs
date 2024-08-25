@@ -288,6 +288,19 @@ fn test_timing_loops() {
     group.bench_function("iter_batched_ref_10_iterations", |b| {
         b.iter_batched_ref(|| vec![10], |v| v[0], BatchSize::NumIterations(10))
     });
+    let mut global_data: Vec<u8> = vec![];
+    group.bench_function("iter_with_setup_wrapper", |b| {
+        b.iter_with_setup_wrapper(|runner| {
+            global_data.clear();
+            global_data.extend(&[1, 2, 3, 4, 5]);
+            let len = runner.run(|| {
+                global_data.push(6);
+                global_data.len()
+            });
+            assert_eq!(len, 6);
+            assert_eq!(global_data.len(), 6);
+        })
+    });
 }
 
 #[test]
@@ -295,6 +308,27 @@ fn test_timing_loops() {
 fn test_bench_with_no_iteration_panics() {
     let dir = temp_dir();
     short_benchmark(&dir).bench_function("no_iter", |_b| {});
+}
+
+#[test]
+#[should_panic(expected = "setup function must call `WrapperRunner::run`")]
+fn test_setup_wrapper_with_no_runner_call_panics() {
+    let dir = temp_dir();
+    short_benchmark(&dir).bench_function("no_run_call", |b| {
+        b.iter_with_setup_wrapper(|_runner| {});
+    });
+}
+
+#[test]
+#[should_panic(expected = "setup function must call `WrapperRunner::run` only once")]
+fn test_setup_wrapper_with_multiple_runner_calls_panics() {
+    let dir = temp_dir();
+    short_benchmark(&dir).bench_function("no_run_call", |b| {
+        b.iter_with_setup_wrapper(|runner| {
+            runner.run(|| {});
+            runner.run(|| {});
+        });
+    });
 }
 
 #[test]

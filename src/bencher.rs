@@ -360,6 +360,80 @@ impl<'a, M: Measurement> Bencher<'a, M> {
         self.elapsed_time = time_start.elapsed();
     }
 
+    /// Times a routine that requires some setup which mutably borrows data from outside the setup
+    /// function.
+    ///
+    /// The setup function is passed a [`WrapperRunner`]. It should perform whatever setup is required
+    /// and then call `run` with the `routine` function. Only the execution time of the `routine`
+    /// function is measured.
+    ///
+    /// Each iteration of the benchmark is executed in series. So `setup` can mutably borrow data from
+    /// outside its closure mutably and know that it has exclusive access to that data throughout each
+    /// `setup` + `routine` iteration.
+    /// i.e. equivalent to [`BatchSize::PerIteration`].
+    ///
+    /// Value returned by `routine` is returned from `run`. If you do not wish include drop time of
+    /// a value in the measurement, return it from `routine` so it is dropped outside of the measured
+    /// section.
+    ///
+    /// # Example
+    ///
+    /// ```rust
+    /// use criterion::*;
+    ///
+    /// fn create_global_data() -> Vec<u64> {
+    ///     # vec![]
+    ///     // ...
+    /// }
+    ///
+    /// fn reset_global_data(data: &mut Vec<u64>) {
+    ///     // ...
+    /// }
+    ///
+    /// // The algorithm to test
+    /// fn do_something_with(data: &mut [u64]) -> Vec<u64> {
+    ///     # vec![]
+    ///     // ...
+    /// }
+    ///
+    /// fn bench(c: &mut Criterion) {
+    ///     let mut data = create_global_data();
+    ///
+    ///     c.bench_function("with_setup_wrapper", |b| {
+    ///         b.iter_with_setup_wrapper(|runner| {
+    ///             // Perform setup on each iteration. Not included in measurement.
+    ///             reset_global_data(&mut data);
+    ///
+    ///             runner.run(|| {
+    ///                 // Code in this closure is measured
+    ///                 let result = do_something_with(&mut data);
+    ///                 // Return result if do not want to include time dropping it in measure
+    ///                 result
+    ///             });
+    ///         });
+    ///     });
+    /// }
+    ///
+    /// criterion_group!(benches, bench);
+    /// criterion_main!(benches);
+    /// ```
+    ///
+    #[inline(never)]
+    pub fn iter_with_setup_wrapper<S>(&mut self, mut setup: S)
+    where
+        S: FnMut(&mut WrapperRunner<'a, '_, M>),
+    {
+        self.iterated = true;
+        let time_start = Instant::now();
+        self.value = self.measurement.zero();
+
+        for _ in 0..self.iters {
+            WrapperRunner::execute(self, &mut setup);
+        }
+
+        self.elapsed_time = time_start.elapsed();
+    }
+
     // Benchmarks must actually call one of the iter methods. This causes benchmarks to fail loudly
     // if they don't.
     pub(crate) fn assert_iterated(&mut self) {
@@ -371,6 +445,37 @@ impl<'a, M: Measurement> Bencher<'a, M> {
     #[cfg(feature = "async")]
     pub fn to_async<'b, A: AsyncExecutor>(&'b mut self, runner: A) -> AsyncBencher<'a, 'b, A, M> {
         AsyncBencher { b: self, runner }
+    }
+}
+
+/// Runner used by [`Bencher::iter_with_setup_wrapper`].
+pub struct WrapperRunner<'a, 'b, M: Measurement> {
+    bencher: &'b mut Bencher<'a, M>,
+    has_run: bool,
+}
+
+impl<'a, 'b, M: Measurement> WrapperRunner<'a, 'b, M> {
+    fn execute<S>(bencher: &'b mut Bencher<'a, M>, setup: &mut S)
+    where
+        S: FnMut(&mut Self),
+    {
+        let mut runner = Self { bencher, has_run: false };
+        setup(&mut runner);
+        assert!(runner.has_run, "setup function must call `WrapperRunner::run`");
+    }
+
+    pub fn run<O, R: FnOnce() -> O>(&mut self, routine: R) -> O {
+        assert!(!self.has_run, "setup function must call `WrapperRunner::run` only once");
+        self.has_run = true;
+
+        let bencher = &mut self.bencher;
+
+        let start: <M as Measurement>::Intermediate = bencher.measurement.start();
+        let output = routine();
+        let end = bencher.measurement.end(start);
+        bencher.value = bencher.measurement.add(&bencher.value, &end);
+
+        black_box(output)
     }
 }
 
@@ -801,5 +906,12 @@ impl<'a, 'b, A: AsyncExecutor, M: Measurement> AsyncBencher<'a, 'b, A, M> {
             }
             b.elapsed_time = time_start.elapsed();
         });
+    }
+
+    pub fn iter_with_setup_wrapper<S>(&mut self, mut setup: S)
+    where
+        S: FnMut(&mut WrapperRunner<'a, '_, M>),
+    {
+        unimplemented!("Unsupported at present");
     }
 }
