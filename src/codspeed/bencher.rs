@@ -120,9 +120,59 @@ impl<'a> Bencher<'a> {
         }
     }
 
+    #[inline(never)]
+    pub fn iter_with_setup_wrapper<S>(&mut self, mut setup: S)
+    where
+        S: FnMut(&mut WrapperRunner),
+    {
+        let mut codspeed = self.codspeed.borrow_mut();
+        let name = self.uri.as_str();
+
+        for i in 0..codspeed::codspeed::WARMUP_RUNS + 1 {
+            if i < codspeed::codspeed::WARMUP_RUNS {
+                WrapperRunner::execute(None, name, &mut setup)
+            } else {
+                WrapperRunner::execute(Some(&mut *codspeed), name, &mut setup)
+            }
+        }
+    }
+
     #[cfg(feature = "async")]
     pub fn to_async<'b, A: AsyncExecutor>(&'b mut self, runner: A) -> AsyncBencher<'a, 'b, A> {
         AsyncBencher { b: self, runner }
+    }
+}
+
+/// Runner used by [`Bencher::iter_with_setup_wrapper`].
+pub struct WrapperRunner<'c> {
+    codspeed: Option<&'c mut CodSpeed>,
+    name: &'c str,
+    has_run: bool,
+}
+
+impl<'c> WrapperRunner<'c> {
+    fn execute<S>(codspeed: Option<&'c mut CodSpeed>, name: &'c str, setup: &mut S)
+    where
+        S: FnMut(&mut Self),
+    {
+        let mut runner = Self { codspeed, name, has_run: false };
+        setup(&mut runner);
+        assert!(runner.has_run, "setup function must call `WrapperRunner::run`");
+    }
+
+    pub fn run<O, R: FnOnce() -> O>(&mut self, routine: R) -> O {
+        assert!(!self.has_run, "setup function must call `WrapperRunner::run` only once");
+        self.has_run = true;
+
+        let output = if let Some(codspeed) = self.codspeed.as_mut() {
+            codspeed.start_benchmark(self.name);
+            let output = black_box(routine());
+            codspeed.end_benchmark();
+            output
+        } else {
+            routine()
+        };
+        black_box(output)
     }
 }
 
@@ -255,5 +305,12 @@ impl<'a, 'b, A: AsyncExecutor> AsyncBencher<'a, 'b, A> {
                 drop(black_box(input));
             }
         });
+    }
+
+    pub fn iter_with_setup_wrapper<S>(&mut self, mut setup: S)
+    where
+        S: FnMut(&mut WrapperRunner),
+    {
+        unimplemented!("Unsupported at present");
     }
 }
