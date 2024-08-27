@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [1.1.0](https://github.com/Boshen/criterion2.rs/compare/v1.0.0...v1.1.0) - 2024-08-27
+
+### Added
+- add `Bencher::iter_with_setup_wrapper` ([#49](https://github.com/Boshen/criterion2.rs/pull/49))
+
+### Fixed
+- fix integration tests not being run
+
 ## [0.11.0](https://github.com/Boshen/criterion2.rs/compare/v0.10.0...v0.11.0) - 2024-06-14
 
 ### Added
