@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [1.1.1](https://github.com/Boshen/criterion2.rs/compare/v1.1.0...v1.1.1) - 2024-09-23
+
+### Other
+
+- *(renovate)* bump crates
+- *(deps)* update rust crates ([#56](https://github.com/Boshen/criterion2.rs/pull/56))
+- *(deps)* update dependency rust to v1.81.0 ([#55](https://github.com/Boshen/criterion2.rs/pull/55))
+- rust v1.80.1
+
 ## [1.1.0](https://github.com/Boshen/criterion2.rs/compare/v1.0.0...v1.1.0) - 2024-08-27
 
 ### Added
