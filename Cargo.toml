@@ -38,7 +38,7 @@ oorandom   = "11.1.4"
 
 # Optional dependencies
 rayon     = { version = "1.10", optional = true }
-futures   = { version = "0.3.30", default-features = false, optional = true }
+futures   = { version = "0.3.31", default-features = false, optional = true }
 smol      = { version = "2.0.2", default-features = false, optional = true }
 tokio     = { version = "1.40.0", default-features = false, features = ["rt"], optional = true }
 async-std = { version = "1.13.0", optional = true }
@@ -52,7 +52,7 @@ tempfile   = "3.13.0"
 approx     = "0.5.1"
 quickcheck = { version = "1.0.3", default-features = false }
 rand       = "0.8.5"
-futures    = { version = "0.3.30", default-features = false, features = ["executor"] }
+futures    = { version = "0.3.31", default-features = false, features = ["executor"] }
 
 [features]
 default = ["cargo_bench_support", "rayon"]
