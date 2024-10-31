@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [2.0.0](https://github.com/Boshen/criterion2.rs/compare/v1.1.1...v2.0.0) - 2024-10-31
+
+### Other
+
+- Make filters to look for a substring unless exact is given ([#65](https://github.com/Boshen/criterion2.rs/pull/65))
+- *(deps)* update rust crates ([#64](https://github.com/Boshen/criterion2.rs/pull/64))
+- *(deps)* update rust crate serde_json to 1.0.132 ([#63](https://github.com/Boshen/criterion2.rs/pull/63))
+- *(deps)* update dependency rust to v1.82.0 ([#62](https://github.com/Boshen/criterion2.rs/pull/62))
+- *(deps)* update rust crate bpaf to 0.9.15 ([#61](https://github.com/Boshen/criterion2.rs/pull/61))
+- *(deps)* update rust crate futures to 0.3.31 ([#60](https://github.com/Boshen/criterion2.rs/pull/60))
+- *(deps)* update rust crate tempfile to 3.13.0 ([#59](https://github.com/Boshen/criterion2.rs/pull/59))
+- *(deps)* update rust crates ([#57](https://github.com/Boshen/criterion2.rs/pull/57))
+
 ## [1.1.1](https://github.com/Boshen/criterion2.rs/compare/v1.1.0...v1.1.1) - 2024-09-23
 
 ### Other
