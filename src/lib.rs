@@ -291,6 +291,8 @@ pub enum BenchmarkFilter {
     AcceptAll,
     /// Run the benchmark matching this string exactly.
     Exact(String),
+    /// Look for benchmark that contain substring
+    Substring(String),
     /// Do not run any benchmarks.
     RejectAll,
 }

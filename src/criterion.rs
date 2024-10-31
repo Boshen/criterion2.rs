@@ -379,9 +379,12 @@ impl<M: Measurement> Criterion<M> {
             // --ignored overwrites any name-based filters passed in.
             BenchmarkFilter::RejectAll
         } else if let Some(filter) = opts.filter.as_ref() {
-            // if opts.exact {
-            BenchmarkFilter::Exact(filter.to_owned())
-            // }
+            let filter = filter.to_owned();
+            if opts.exact {
+                BenchmarkFilter::Exact(filter)
+            } else {
+                BenchmarkFilter::Substring(filter)
+            }
         } else {
             BenchmarkFilter::AcceptAll
         };
@@ -475,6 +478,7 @@ impl<M: Measurement> Criterion<M> {
             BenchmarkFilter::AcceptAll => true,
             BenchmarkFilter::Exact(exact) => id == exact,
             BenchmarkFilter::RejectAll => false,
+            BenchmarkFilter::Substring(s) => id.contains(s),
         }
     }
 
