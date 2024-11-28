@@ -13,6 +13,7 @@ fn create_command() -> Command {
     command
 }
 
+#[allow(clippy::zombie_processes)]
 fn python_fibonacci(c: &mut Criterion) {
     let has_python3 = Command::new("python3")
         .arg("--version")
