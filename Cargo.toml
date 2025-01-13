@@ -43,7 +43,7 @@ smol      = { version = "2.0.2", default-features = false, optional = true }
 tokio     = { version = "1.43.0", default-features = false, features = ["rt"], optional = true }
 async-std = { version = "1.13.0", optional = true }
 codspeed  = { version = "2.7.2", optional = true }
-colored   = { version = "2.2.0", optional = true }
+colored   = { version = "3.0.0", optional = true }
 
 document-features = { version = "0.2.10", optional = true }
 
