@@ -30,7 +30,7 @@ anes       = "0.2.0"
 serde      = "1.0.217"
 serde_json = "1.0.137"
 ciborium   = "0.2.2"
-bpaf       = { version = "0.9.15", default-features = false }
+bpaf       = { version = "0.9.16", default-features = false }
 walkdir    = "2.5"
 cast       = "0.3"
 num-traits = { version = "0.2.19", default-features = false, features = ["std"] }
