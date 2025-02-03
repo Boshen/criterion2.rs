@@ -1,17 +1,17 @@
 use rand::{
-    distributions::{Distribution, Standard},
+    distr::{Distribution, StandardUniform},
     prelude::*,
     rngs::StdRng,
 };
 
 pub fn vec<T>(size: usize, start: usize) -> Option<Vec<T>>
 where
-    Standard: Distribution<T>,
+    StandardUniform: Distribution<T>,
 {
     if size > start + 2 {
-        let mut rng = StdRng::from_entropy();
+        let mut rng = StdRng::from_os_rng();
 
-        Some((0..size).map(|_| rng.gen()).collect())
+        Some((0..size).map(|_| rng.random()).collect())
     } else {
         None
     }
