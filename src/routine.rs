@@ -1,6 +1,7 @@
 use std::{marker::PhantomData, time::Duration};
 
 use crate::{
+    ActualSamplingMode,
     bencher::Bencher,
     benchmark::BenchmarkConfig,
     black_box,
@@ -8,7 +9,6 @@ use crate::{
     criterion::Criterion,
     measurement::Measurement,
     report::{BenchmarkId, Report, ReportContext},
-    ActualSamplingMode,
 };
 
 /// PRIVATE

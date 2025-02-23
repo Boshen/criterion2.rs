@@ -1,6 +1,6 @@
 use std::{thread::sleep, time::Duration};
 
-use criterion::{criterion_group, Criterion, SamplingMode};
+use criterion::{Criterion, SamplingMode, criterion_group};
 
 fn sampling_mode_tests(c: &mut Criterion) {
     let mut group = c.benchmark_group("sampling_mode");

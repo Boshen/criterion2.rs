@@ -19,22 +19,24 @@ where
     ///
     /// - Make sure that `p` is in the range `[0, 100]`
     unsafe fn at_unchecked(&self, p: A) -> A {
-        let _100 = A::cast(100);
-        debug_assert!(p >= A::cast(0) && p <= _100);
-        debug_assert!(self.0.len() > 0);
-        let len = self.0.len() - 1;
+        unsafe {
+            let _100 = A::cast(100);
+            debug_assert!(p >= A::cast(0) && p <= _100);
+            debug_assert!(self.0.len() > 0);
+            let len = self.0.len() - 1;
 
-        if p == _100 {
-            self.0[len]
-        } else {
-            let rank = (p / _100) * A::cast(len);
-            let integer = rank.floor();
-            let fraction = rank - integer;
-            let n = usize(integer).unwrap();
-            let &floor = self.0.get_unchecked(n);
-            let &ceiling = self.0.get_unchecked(n + 1);
+            if p == _100 {
+                self.0[len]
+            } else {
+                let rank = (p / _100) * A::cast(len);
+                let integer = rank.floor();
+                let fraction = rank - integer;
+                let n = usize(integer).unwrap();
+                let &floor = self.0.get_unchecked(n);
+                let &ceiling = self.0.get_unchecked(n + 1);
 
-            floor + (ceiling - floor) * fraction
+                floor + (ceiling - floor) * fraction
+            }
         }
     }
 

@@ -8,9 +8,8 @@ use std::{
 #[cfg(feature = "async")]
 use crate::async_executor::AsyncExecutor;
 use crate::{
-    black_box,
+    BatchSize, black_box,
     measurement::{Measurement, WallTime},
-    BatchSize,
 };
 
 // ================================== MAINTENANCE NOTE =============================================

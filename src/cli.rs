@@ -2,7 +2,7 @@ use std::{str::FromStr, time::Duration};
 
 use bpaf::*;
 
-use crate::{report::CliVerbosity, BenchmarkConfig, ListFormat};
+use crate::{BenchmarkConfig, ListFormat, report::CliVerbosity};
 
 #[derive(Debug, Clone)]
 pub struct Opts {

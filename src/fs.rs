@@ -5,7 +5,7 @@ use std::{
     path::Path,
 };
 
-use serde::{de::DeserializeOwned, Serialize};
+use serde::{Serialize, de::DeserializeOwned};
 use walkdir::{DirEntry, WalkDir};
 
 use crate::{

@@ -87,11 +87,11 @@ macro_rules! test {
     ($ty:ident) => {
         mod $ty {
             use approx::relative_eq;
-            use quickcheck::{quickcheck, TestResult};
+            use quickcheck::{TestResult, quickcheck};
 
             use crate::stats::univariate::{
-                kde::{kernel::Gaussian, Bandwidth, Kde},
                 Sample,
+                kde::{Bandwidth, Kde, kernel::Gaussian},
             };
 
             // The [-inf inf] integral of the estimated PDF should be one

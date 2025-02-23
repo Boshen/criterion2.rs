@@ -1,18 +1,19 @@
 use std::{
     cell::RefCell,
     collections::HashSet,
-    io::{stdout, IsTerminal},
+    io::{IsTerminal, stdout},
     path::{Path, PathBuf},
     sync::MutexGuard,
     time::Duration,
 };
 
 use crate::{
+    Baseline, BencherReport, BenchmarkConfig, BenchmarkFilter, CliReport, CliVerbosity, Connection,
+    ExternalProfiler, Measurement, Mode, OutgoingMessage, Profiler, Report, ReportContext, Reports,
+    WallTime,
     bencher::Bencher,
     benchmark_group::{BenchmarkGroup, BenchmarkId},
-    cargo_criterion_connection, debug_enabled, default_output_directory, Baseline, BencherReport,
-    BenchmarkConfig, BenchmarkFilter, CliReport, CliVerbosity, Connection, ExternalProfiler,
-    Measurement, Mode, OutgoingMessage, Profiler, Report, ReportContext, Reports, WallTime,
+    cargo_criterion_connection, debug_enabled, default_output_directory,
 };
 
 /// The benchmark manager

@@ -3,9 +3,9 @@ use std::{cell::RefCell, marker::PhantomData, rc::Rc, time::Duration};
 use codspeed::codspeed::CodSpeed;
 
 use crate::{
+    Bencher, BenchmarkGroup, BenchmarkId,
     measurement::{Measurement, WallTime},
     profiler::Profiler,
-    Bencher, BenchmarkGroup, BenchmarkId,
 };
 
 pub struct Criterion<M: Measurement = WallTime> {

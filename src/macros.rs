@@ -59,7 +59,7 @@
 /// function.
 #[macro_export]
 macro_rules! criterion_group {
-    (name = $name:ident; config = $config:expr; targets = $( $target:path ),+ $(,)*) => {
+    (name = $name:ident; config = $config:expr_2021; targets = $( $target:path ),+ $(,)*) => {
         pub fn $name() {
             let mut criterion: $crate::Criterion<_> = $config
                 .configure_from_args();

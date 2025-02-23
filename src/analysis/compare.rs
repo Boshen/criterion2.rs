@@ -1,19 +1,19 @@
 use crate::{
+    SavedSample,
     benchmark::BenchmarkConfig,
     criterion::Criterion,
     error::Result,
     estimate::{
-        build_change_estimates, ChangeDistributions, ChangeEstimates, ChangePointEstimates,
-        Estimates,
+        ChangeDistributions, ChangeEstimates, ChangePointEstimates, Estimates,
+        build_change_estimates,
     },
     fs,
     measurement::Measurement,
     report::BenchmarkId,
     stats::{
-        univariate::{self, mixed, Sample},
         Distribution,
+        univariate::{self, Sample, mixed},
     },
-    SavedSample,
 };
 
 // Common comparison procedure

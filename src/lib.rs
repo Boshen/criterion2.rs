@@ -489,11 +489,7 @@ impl ActualSamplingMode {
         let sample_size = (sample_size / 10) * 10;
 
         // Clamp it to be at least 10, since criterion.rs doesn't allow sample sizes smaller than 10.
-        if sample_size < 10 {
-            10
-        } else {
-            sample_size
-        }
+        if sample_size < 10 { 10 } else { sample_size }
     }
 
     fn recommend_flat_sample_size(target_time: f64, met: f64) -> u64 {
@@ -503,11 +499,7 @@ impl ActualSamplingMode {
         let sample_size = (sample_size / 10) * 10;
 
         // Clamp it to be at least 10, since criterion.rs doesn't allow sample sizes smaller than 10.
-        if sample_size < 10 {
-            10
-        } else {
-            sample_size
-        }
+        if sample_size < 10 { 10 } else { sample_size }
     }
 }
 

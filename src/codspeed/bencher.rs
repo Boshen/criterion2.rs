@@ -2,7 +2,7 @@
 use std::future::Future;
 use std::{cell::RefCell, rc::Rc};
 
-use codspeed::codspeed::{black_box, CodSpeed};
+use codspeed::codspeed::{CodSpeed, black_box};
 use colored::Colorize;
 
 #[cfg(feature = "async")]

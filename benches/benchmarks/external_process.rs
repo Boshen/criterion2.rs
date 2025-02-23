@@ -5,7 +5,7 @@ use std::{
     time::Duration,
 };
 
-use criterion::{criterion_group, Criterion};
+use criterion::{Criterion, criterion_group};
 
 fn create_command() -> Command {
     let mut command = Command::new("python3");
