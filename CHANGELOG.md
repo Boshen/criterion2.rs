@@ -7,6 +7,34 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [2.0.1](https://github.com/Boshen/criterion2.rs/compare/v2.0.0...v2.0.1) - 2025-02-23
+
+### Other
+
+- Rust Edition 2024 ([#86](https://github.com/Boshen/criterion2.rs/pull/86))
+- use oxc-project/setup-rust
+- pinGitHubActionDigestsToSemver
+- *(deps)* update dependency rust to v1.85.0 (#85)
+- *(deps)* lock file maintenance rust crates (#84)
+- *(deps)* update rust crates (#83)
+- *(deps)* update dependency rust to v1.84.1 (#82)
+- *(deps)* update rust crate bpaf to 0.9.16 (#81)
+- *(deps)* update rust crate serde_json to 1.0.137 (#80)
+- *(deps)* update rust crate serde_json to 1.0.136 (#79)
+- *(deps)* update rust crate colored to v3 (#77)
+- *(deps)* update rust crates (#78)
+- disable wasi test
+- *(deps)* update dependency rust to v1.84.0 (#76)
+- *(deps)* update rust crate tempfile to 3.15.0 (#75)
+- *(deps)* update rust crate serde to 1.0.217 (#74)
+- *(deps)* update rust crate serde_json to 1.0.134 (#73)
+- *(deps)* update rust crates (#72)
+- *(deps)* update rust crate tokio to 1.42.0 (#71)
+- *(deps)* update dependency rust to v1.83.0 (#70)
+- *(deps)* update rust crates (#69)
+- *(deps)* update rust crates (#68)
+- *(deps)* update rust crate serde to 1.0.214 (#66)
+
 ## [2.0.0](https://github.com/Boshen/criterion2.rs/compare/v1.1.1...v2.0.0) - 2024-10-31
 
 ### Other
