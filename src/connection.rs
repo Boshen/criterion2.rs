@@ -8,7 +8,7 @@ use std::{
 
 use serde::{Deserialize, Serialize};
 
-use crate::{report::BenchmarkId as InternalBenchmarkId, Throughput};
+use crate::{Throughput, report::BenchmarkId as InternalBenchmarkId};
 
 #[derive(Debug)]
 pub enum MessageError {

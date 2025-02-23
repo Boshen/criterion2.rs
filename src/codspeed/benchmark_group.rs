@@ -4,8 +4,8 @@ use codspeed::{codspeed::CodSpeed, utils::get_git_relative_path};
 
 use super::{bencher::Bencher, criterion::Criterion};
 use crate::{
-    measurement::{Measurement, WallTime},
     SamplingMode, Throughput,
+    measurement::{Measurement, WallTime},
 };
 
 /// Deprecated: using the default measurement will be removed in the next major version.

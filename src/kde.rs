@@ -1,6 +1,6 @@
 use crate::stats::univariate::{
-    kde::{kernel::Gaussian, Bandwidth, Kde},
     Sample,
+    kde::{Bandwidth, Kde, kernel::Gaussian},
 };
 
 pub fn sweep(

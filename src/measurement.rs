@@ -4,7 +4,7 @@
 
 use std::time::{Duration, Instant};
 
-use crate::{format::short, Throughput};
+use crate::{Throughput, format::short};
 
 /// Trait providing functions to format measured values to string so that they can be displayed on
 /// the command line or in the reports. The functions of this trait take measured values in f64

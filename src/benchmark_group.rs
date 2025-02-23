@@ -1,7 +1,7 @@
 use std::time::Duration;
 
 use crate::{
-    analysis,
+    Mode, SamplingMode, Throughput, analysis,
     bencher::Bencher,
     benchmark::PartialBenchmarkConfig,
     connection::OutgoingMessage,
@@ -9,7 +9,6 @@ use crate::{
     measurement::Measurement,
     report::{BenchmarkId as InternalBenchmarkId, Report, ReportContext},
     routine::{Function, Routine},
-    Mode, SamplingMode, Throughput,
 };
 
 /// Structure used to group together a set of related benchmarks, along with custom configuration

@@ -1,26 +1,26 @@
 use std::path::Path;
 
 use crate::{
+    Baseline, SavedSample, Throughput,
     benchmark::BenchmarkConfig,
     connection::OutgoingMessage,
     criterion::Criterion,
     estimate::{
-        build_estimates, ConfidenceInterval, Distributions, Estimate, Estimates, PointEstimates,
+        ConfidenceInterval, Distributions, Estimate, Estimates, PointEstimates, build_estimates,
     },
     fs,
     measurement::Measurement,
     report::{BenchmarkId, Report, ReportContext},
     routine::Routine,
     stats::{
-        bivariate::{regression::Slope, Data},
-        univariate::{outliers::tukey, Sample},
         Distribution, Tails,
+        bivariate::{Data, regression::Slope},
+        univariate::{Sample, outliers::tukey},
     },
-    Baseline, SavedSample, Throughput,
 };
 
 macro_rules! elapsed {
-    ($msg:expr, $block:expr) => {{
+    ($msg:expr_2021, $block:expr_2021) => {{
         let start = ::std::time::Instant::now();
         let out = $block;
         let elapsed = &start.elapsed();

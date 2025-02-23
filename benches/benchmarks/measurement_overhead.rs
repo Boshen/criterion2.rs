@@ -1,4 +1,4 @@
-use criterion::{criterion_group, BatchSize, Criterion};
+use criterion::{BatchSize, Criterion, criterion_group};
 
 fn some_benchmark(c: &mut Criterion) {
     let mut group = c.benchmark_group("overhead");

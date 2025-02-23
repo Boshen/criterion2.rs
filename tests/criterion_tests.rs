@@ -7,9 +7,9 @@ use std::{
     time::{Duration, SystemTime},
 };
 
-use criterion::{profiler::Profiler, BatchSize, BenchmarkFilter, BenchmarkId, Criterion};
+use criterion::{BatchSize, BenchmarkFilter, BenchmarkId, Criterion, profiler::Profiler};
 use serde_json::value::Value;
-use tempfile::{tempdir, TempDir};
+use tempfile::{TempDir, tempdir};
 use walkdir::WalkDir;
 
 /*

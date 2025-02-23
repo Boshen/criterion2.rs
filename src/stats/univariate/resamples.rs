@@ -2,7 +2,7 @@ use std::mem;
 
 use crate::stats::{
     float::Float,
-    rand_util::{new_rng, Rng},
+    rand_util::{Rng, new_rng},
     univariate::Sample,
 };
 
@@ -63,9 +63,9 @@ where
 mod test {
     use std::collections::HashSet;
 
-    use quickcheck::{quickcheck, TestResult};
+    use quickcheck::{TestResult, quickcheck};
 
-    use crate::stats::univariate::{resamples::Resamples, Sample};
+    use crate::stats::univariate::{Sample, resamples::Resamples};
 
     // Check that the resample is a subset of the sample
     quickcheck! {

@@ -2,7 +2,7 @@
 
 /// Logs an error, ignores an `Ok` value.
 macro_rules! log_if_err {
-    ($x:expr) => {
+    ($x:expr_2021) => {
         let closure = || {
             try_else_return!($x);
         };
@@ -15,10 +15,10 @@ macro_rules! log_if_err {
 /// A closure which returns the return value for the function can
 /// be passed as second parameter.
 macro_rules! try_else_return {
-    ($x:expr) => {
+    ($x:expr_2021) => {
         try_else_return!($x, || {})
     };
-    ($x:expr, $el:expr) => {
+    ($x:expr_2021, $el:expr_2021) => {
         match $x {
             Ok(x) => x,
             Err(e) => {

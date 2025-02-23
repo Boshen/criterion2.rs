@@ -2,7 +2,7 @@ use std::{
     cmp,
     collections::HashSet,
     fmt,
-    io::{stderr, Write},
+    io::{Write, stderr},
     path::{Path, PathBuf},
 };
 
@@ -10,15 +10,15 @@ use anes::{Attribute, ClearLine, Color, ResetAttributes, SetAttribute, SetForegr
 use serde::{Deserialize, Serialize};
 
 use crate::{
+    Throughput,
     estimate::{ChangeDistributions, ChangeEstimates, Distributions, Estimate, Estimates},
     format,
     measurement::ValueFormatter,
     stats::{
-        bivariate::{regression::Slope, Data},
-        univariate::{outliers::tukey::LabeledSample, Sample},
         Distribution,
+        bivariate::{Data, regression::Slope},
+        univariate::{Sample, outliers::tukey::LabeledSample},
     },
-    Throughput,
 };
 
 const MAX_DIRECTORY_NAME_LEN: usize = 64;
