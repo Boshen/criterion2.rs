@@ -2,9 +2,9 @@
 name = "criterion2"
 version = "3.0.0"
 authors = [
+  "Boshen <boshenc@gmail.com>",
   "Brook Heisler <brookheisler@gmail.com>",
   "Jorge Aparicio <japaricious@gmail.com>",
-  "Boshen <boshenc@gmail.com>",
 ]
 edition = "2024"
 rust-version = "1.85.0"
