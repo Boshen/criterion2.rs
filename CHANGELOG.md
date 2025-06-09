@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [3.0.1](https://github.com/Boshen/criterion2.rs/compare/v3.0.0...v3.0.1) - 2025-03-23
+
+### Other
+
+- *(deps)* lock file maintenance rust crates ([#94](https://github.com/Boshen/criterion2.rs/pull/94))
+- *(deps)* update dependency rust to v1.85.1 ([#92](https://github.com/Boshen/criterion2.rs/pull/92))
+
 ## [2.0.0](https://github.com/Boshen/criterion2.rs/compare/v1.1.1...v2.0.0) - 2024-10-31
 
 ### Other
