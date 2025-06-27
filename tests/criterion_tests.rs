@@ -51,7 +51,7 @@ impl Default for Counter {
 
 fn verify_file(dir: &Path, path: &str) -> PathBuf {
     let full_path = dir.join(path);
-    assert!(full_path.is_file(), "File {:?} does not exist or is not a file", full_path);
+    assert!(full_path.is_file(), "File {full_path:?} does not exist or is not a file");
     let metadata = full_path.metadata().unwrap();
     assert!(metadata.len() > 0);
     full_path
@@ -64,10 +64,10 @@ fn verify_json(dir: &Path, path: &str) {
 }
 
 fn verify_stats(dir: &Path, baseline: &str) {
-    verify_json(dir, &format!("{}/estimates.json", baseline));
-    verify_json(dir, &format!("{}/sample.json", baseline));
-    verify_json(dir, &format!("{}/tukey.json", baseline));
-    verify_json(dir, &format!("{}/benchmark.json", baseline));
+    verify_json(dir, &format!("{baseline}/estimates.json"));
+    verify_json(dir, &format!("{baseline}/sample.json"));
+    verify_json(dir, &format!("{baseline}/tukey.json"));
+    verify_json(dir, &format!("{baseline}/benchmark.json"));
 }
 
 fn verify_not_exists(dir: &Path, path: &str) {

@@ -34,7 +34,7 @@ fn python_fibonacci(c: &mut Criterion) {
         let mut stdout = BufReader::new(stdout);
         c.bench_function("fibonacci-python", |b| {
             b.iter_custom(|iters| {
-                writeln!(stdin, "{}", iters)
+                writeln!(stdin, "{iters}")
                     .expect("Unable to send iteration count to child process");
                 let mut line = String::new();
                 stdout.read_line(&mut line).expect("Unable to read time from child process");
