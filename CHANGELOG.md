@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [3.0.2](https://github.com/Boshen/criterion2.rs/compare/v3.0.1...v3.0.2) - 2025-06-29
+
+### Other
+
+- *(deps)* lock file maintenance ([#110](https://github.com/Boshen/criterion2.rs/pull/110))
+- update release-plz.yml
+
 ## [3.0.1](https://github.com/Boshen/criterion2.rs/compare/v3.0.0...v3.0.1) - 2025-03-23
 
 ### Other
