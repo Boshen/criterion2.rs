@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [3.0.2](https://github.com/Boshen/criterion2.rs/compare/v3.0.1...v3.0.2) - 2025-07-13
+
+### Other
+
+- *(deps)* lock file maintenance rust crates ([#113](https://github.com/Boshen/criterion2.rs/pull/113))
+- *(deps)* update rust crate codspeed to v3 ([#111](https://github.com/Boshen/criterion2.rs/pull/111))
+- *(deps)* lock file maintenance rust crates ([#112](https://github.com/Boshen/criterion2.rs/pull/112))
+- *(deps)* lock file maintenance ([#110](https://github.com/Boshen/criterion2.rs/pull/110))
+- update release-plz.yml
+
 ## [3.0.1](https://github.com/Boshen/criterion2.rs/compare/v3.0.0...v3.0.1) - 2025-03-23
 
 ### Other
