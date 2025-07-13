@@ -325,9 +325,9 @@ dependencies = [
 
 [[package]]
 name = "codspeed"
-version = "3.0.2"
+version = "3.0.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "922018102595f6668cdd09c03f4bff2d951ce2318c6dca4fe11bdcb24b65b2bf"
+checksum = "a7524e02ff6173bc143d9abc01b518711b77addb60de871bbe5686843f88fb48"
 dependencies = [
  "anyhow",
  "bincode",
