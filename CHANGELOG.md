@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file.
 
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [Unreleased]
+
+## [3.0.2](https://github.com/Boshen/criterion2.rs/compare/v3.0.1...v3.0.2) - 2025-07-28
+
+### Other
+
+- *(release)* enable trusted publishing
+- *(deps)* lock file maintenance rust crates ([#116](https://github.com/Boshen/criterion2.rs/pull/116))
+- *(deps)* lock file maintenance rust crates ([#115](https://github.com/Boshen/criterion2.rs/pull/115))
+- *(deps)* lock file maintenance rust crates ([#114](https://github.com/Boshen/criterion2.rs/pull/114))
+- *(deps)* lock file maintenance rust crates ([#113](https://github.com/Boshen/criterion2.rs/pull/113))
+- *(deps)* update rust crate codspeed to v3 ([#111](https://github.com/Boshen/criterion2.rs/pull/111))
+- *(deps)* lock file maintenance rust crates ([#112](https://github.com/Boshen/criterion2.rs/pull/112))
+- *(deps)* lock file maintenance ([#110](https://github.com/Boshen/criterion2.rs/pull/110))
+- update release-plz.yml
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
