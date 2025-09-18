@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.0.3](https://github.com/Boshen/criterion2.rs/compare/v3.0.2...v3.0.3) - 2025-09-18
+
+### Other
+
+- *(deps)* update dependency rust to v1.90.0 ([#127](https://github.com/Boshen/criterion2.rs/pull/127))
+- *(deps)* lock file maintenance ([#126](https://github.com/Boshen/criterion2.rs/pull/126))
+- *(deps)* lock file maintenance ([#125](https://github.com/Boshen/criterion2.rs/pull/125))
+- *(deps)* lock file maintenance rust crates ([#124](https://github.com/Boshen/criterion2.rs/pull/124))
+- *(deps)* lock file maintenance rust crates ([#123](https://github.com/Boshen/criterion2.rs/pull/123))
+- *(deps)* lock file maintenance ([#122](https://github.com/Boshen/criterion2.rs/pull/122))
+- *(deps)* update dependency rust to v1.89.0 ([#120](https://github.com/Boshen/criterion2.rs/pull/120))
+
 ## [3.0.2](https://github.com/Boshen/criterion2.rs/compare/v3.0.1...v3.0.2) - 2025-07-28
 
 ### Other
