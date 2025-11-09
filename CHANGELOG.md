@@ -7,6 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.0.3](https://github.com/Boshen/criterion2.rs/compare/v3.0.2...v3.0.3) - 2025-11-09
+
+### Other
+
+- *(deps)* update rust crate codspeed to v4.1.0 ([#135](https://github.com/Boshen/criterion2.rs/pull/135))
+- *(deps)* lock file maintenance ([#134](https://github.com/Boshen/criterion2.rs/pull/134))
+- *(deps)* update dependency rust to v1.91.0 ([#133](https://github.com/Boshen/criterion2.rs/pull/133))
+- *(deps)* lock file maintenance rust crates ([#132](https://github.com/Boshen/criterion2.rs/pull/132))
+- *(deps)* lock file maintenance rust crates ([#131](https://github.com/Boshen/criterion2.rs/pull/131))
+- *(deps)* lock file maintenance rust crates ([#130](https://github.com/Boshen/criterion2.rs/pull/130))
+- *(deps)* update rust crate codspeed to v4 ([#129](https://github.com/Boshen/criterion2.rs/pull/129))
+- *(deps)* lock file maintenance rust crates ([#128](https://github.com/Boshen/criterion2.rs/pull/128))
+- *(deps)* update dependency rust to v1.90.0 ([#127](https://github.com/Boshen/criterion2.rs/pull/127))
+- *(deps)* lock file maintenance ([#126](https://github.com/Boshen/criterion2.rs/pull/126))
+- *(deps)* lock file maintenance ([#125](https://github.com/Boshen/criterion2.rs/pull/125))
+- *(deps)* lock file maintenance rust crates ([#124](https://github.com/Boshen/criterion2.rs/pull/124))
+- *(deps)* lock file maintenance rust crates ([#123](https://github.com/Boshen/criterion2.rs/pull/123))
+- *(deps)* lock file maintenance ([#122](https://github.com/Boshen/criterion2.rs/pull/122))
+- *(deps)* update dependency rust to v1.89.0 ([#120](https://github.com/Boshen/criterion2.rs/pull/120))
+
 ## [3.0.2](https://github.com/Boshen/criterion2.rs/compare/v3.0.1...v3.0.2) - 2025-07-28
 
 ### Other
