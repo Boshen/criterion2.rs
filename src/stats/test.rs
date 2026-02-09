@@ -1,6 +1,6 @@
 use rand::{
+    RngExt, SeedableRng,
     distr::{Distribution, StandardUniform},
-    prelude::*,
     rngs::StdRng,
 };
 
@@ -9,7 +9,8 @@ where
     StandardUniform: Distribution<T>,
 {
     if size > start + 2 {
-        let mut rng = StdRng::from_os_rng();
+        let seed = ((start as u64) << 32) ^ (size as u64);
+        let mut rng = StdRng::seed_from_u64(seed);
 
         Some((0..size).map(|_| rng.random()).collect())
     } else {
