@@ -1,7 +1,7 @@
 use rand::{
+    RngExt, SeedableRng,
     distr::{Distribution, StandardUniform},
     rngs::StdRng,
-    RngExt, SeedableRng,
 };
 
 pub fn vec<T>(size: usize, start: usize) -> Option<Vec<T>>
