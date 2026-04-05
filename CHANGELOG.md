@@ -64,6 +64,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [3.0.4](https://github.com/Boshen/criterion2.rs/compare/v3.0.3...v3.0.4) - 2026-04-05
+
+### Other
+
+- *(deps)* update rust crate tokio to v1.51.0 ([#157](https://github.com/Boshen/criterion2.rs/pull/157))
+- *(deps)* update github-actions ([#156](https://github.com/Boshen/criterion2.rs/pull/156))
+- *(deps)* update github-actions ([#155](https://github.com/Boshen/criterion2.rs/pull/155))
+- *(deps)* update dependency rust to v1.94.1 ([#153](https://github.com/Boshen/criterion2.rs/pull/153))
+
 ## [3.0.1](https://github.com/Boshen/criterion2.rs/compare/v3.0.0...v3.0.1) - 2025-03-23
 
 ### Other
