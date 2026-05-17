@@ -92,7 +92,7 @@ jobs:
           shared-key: test
           save-if: ${{ github.ref_name == 'main' }}
 
-      - uses: taiki-e/install-action@6fb7e047ecef54aa053294f996a8feb3a5769baf # nextest
+      - uses: taiki-e/install-action@9c6953334daacc48e55a35db9a19c771f79ffa9d # nextest
 
       - run: ci/nextest-compat.sh
 
