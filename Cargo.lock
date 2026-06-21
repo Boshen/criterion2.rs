@@ -3,12 +3,6 @@
 version = 4
 
 [[package]]
-name = "anes"
-version = "0.2.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "dc43e46599f3d77fcf2f2ca89e4d962910b0c19c44e7b58679cbbdfd1820a662"
-
-[[package]]
 name = "anyhow"
 version = "1.0.102"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -362,7 +356,6 @@ dependencies = [
 name = "criterion2"
 version = "3.0.3"
 dependencies = [
- "anes",
  "approx",
  "async-std",
  "bpaf",
