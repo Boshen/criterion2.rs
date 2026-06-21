@@ -6,7 +6,6 @@ use std::{
     path::{Path, PathBuf},
 };
 
-use anes::{Attribute, ClearLine, Color, ResetAttributes, SetAttribute, SetForegroundColor};
 use serde::{Deserialize, Serialize};
 
 use crate::{
@@ -23,6 +22,15 @@ use crate::{
 
 const MAX_DIRECTORY_NAME_LEN: usize = 64;
 const MAX_TITLE_LEN: usize = 100;
+
+// ANSI escape sequences, previously provided by the `anes` crate.
+const ANSI_CLEAR_LINE: &str = "\x1b[2K";
+const ANSI_RESET: &str = "\x1b[0m";
+const ANSI_BOLD: &str = "\x1b[1m";
+const ANSI_FAINT: &str = "\x1b[2m";
+const ANSI_FG_RED: &str = "\x1b[31m";
+const ANSI_FG_GREEN: &str = "\x1b[32m";
+const ANSI_FG_YELLOW: &str = "\x1b[33m";
 
 pub(crate) struct ComparisonData {
     pub p_value: f64,
@@ -371,7 +379,7 @@ impl CliReport {
 
     fn text_overwrite(&self) {
         if self.enable_text_overwrite {
-            eprint!("\r{}", ClearLine::All)
+            eprint!("\r{ANSI_CLEAR_LINE}")
         }
     }
 
@@ -385,40 +393,28 @@ impl CliReport {
         }
     }
 
-    fn with_color(&self, color: Color, s: &str) -> String {
-        if self.enable_text_coloring {
-            format!("{}{}{}", SetForegroundColor(color), s, ResetAttributes)
-        } else {
-            String::from(s)
-        }
+    fn with_color(&self, color: &str, s: &str) -> String {
+        if self.enable_text_coloring { format!("{color}{s}{ANSI_RESET}") } else { String::from(s) }
     }
 
     fn green(&self, s: &str) -> String {
-        self.with_color(Color::DarkGreen, s)
+        self.with_color(ANSI_FG_GREEN, s)
     }
 
     fn yellow(&self, s: &str) -> String {
-        self.with_color(Color::DarkYellow, s)
+        self.with_color(ANSI_FG_YELLOW, s)
     }
 
     fn red(&self, s: &str) -> String {
-        self.with_color(Color::DarkRed, s)
+        self.with_color(ANSI_FG_RED, s)
     }
 
     fn bold(&self, s: String) -> String {
-        if self.enable_text_coloring {
-            format!("{}{}{}", SetAttribute(Attribute::Bold), s, ResetAttributes)
-        } else {
-            s
-        }
+        if self.enable_text_coloring { format!("{ANSI_BOLD}{s}{ANSI_RESET}") } else { s }
     }
 
     fn faint(&self, s: String) -> String {
-        if self.enable_text_coloring {
-            format!("{}{}{}", SetAttribute(Attribute::Faint), s, ResetAttributes)
-        } else {
-            s
-        }
+        if self.enable_text_coloring { format!("{ANSI_FAINT}{s}{ANSI_RESET}") } else { s }
     }
 
     pub fn outliers(&self, sample: &LabeledSample<'_, f64>) {
