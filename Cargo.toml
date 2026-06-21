@@ -27,33 +27,33 @@ name  = "criterion"
 bench = false
 
 [dependencies]
-anes       = "0.2.0"
-serde      = "1.0.217"
-serde_json = "1.0.138"
+anes       = "0.2.1"
+serde      = "1.0.228"
+serde_json = "1.0.150"
 ciborium   = "0.2.2"
-bpaf       = { version = "0.9.16", default-features = false }
+bpaf       = { version = "0.9.26", default-features = false }
 walkdir    = "2.5"
 cast       = "0.3"
 num-traits = { version = "0.2.19", default-features = false, features = ["std"] }
-oorandom   = "11.1.4"
+oorandom   = "11.1.5"
 
 # Optional dependencies
-rayon     = { version = "1.10", optional = true }
-futures   = { version = "0.3.31", default-features = false, optional = true }
+rayon     = { version = "1.12", optional = true }
+futures   = { version = "0.3.32", default-features = false, optional = true }
 smol      = { version = "2.0.2", default-features = false, optional = true }
-tokio     = { version = "1.43.0", default-features = false, features = ["rt"], optional = true }
-async-std = { version = "1.13.0", optional = true }
-codspeed  = { version = "4.0.0", optional = true }
-colored   = { version = "3.0.0", optional = true }
+tokio     = { version = "1.52.3", default-features = false, features = ["rt"], optional = true }
+async-std = { version = "1.13.2", optional = true }
+codspeed  = { version = "4.7.0", optional = true }
+colored   = { version = "3.1.1", optional = true }
 
-document-features = { version = "0.2.11", optional = true }
+document-features = { version = "0.2.12", optional = true }
 
 [dev-dependencies]
-tempfile   = "3.16.0"
+tempfile   = "3.27.0"
 approx     = "0.5.1"
-quickcheck = { version = "1.0.3", default-features = false }
-rand       = { version = "0.10.0", default-features = false, features = ["std_rng"] }
-futures    = { version = "0.3.31", default-features = false, features = ["executor"] }
+quickcheck = { version = "1.1.0", default-features = false }
+rand       = { version = "0.10.1", default-features = false, features = ["std_rng"] }
+futures    = { version = "0.3.32", default-features = false, features = ["executor"] }
 
 [features]
 default = ["cargo_bench_support", "rayon"]
