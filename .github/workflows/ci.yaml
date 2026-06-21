@@ -23,7 +23,7 @@ jobs:
     steps:
       - uses: taiki-e/checkout-action@7d1e50e93dc4fb3bba58f85018fadf77898aee8b # v1.4.2
 
-      - uses: dtolnay/rust-toolchain@3c5f7ea28cd621ae0bf5283f0e981fb97b8a7af9 # master
+      - uses: dtolnay/rust-toolchain@67ef31d5b988238dd797d409d6f9574278e20537 # master
         name: Setup rust toolchain
         with:
           toolchain: ${{ matrix.rust }}
@@ -82,7 +82,7 @@ jobs:
     steps:
       - uses: taiki-e/checkout-action@7d1e50e93dc4fb3bba58f85018fadf77898aee8b # v1.4.2
 
-      - uses: dtolnay/rust-toolchain@3c5f7ea28cd621ae0bf5283f0e981fb97b8a7af9 # master
+      - uses: dtolnay/rust-toolchain@67ef31d5b988238dd797d409d6f9574278e20537 # master
         with:
           toolchain: ${{ matrix.rust }}
           components: rustfmt, clippy
@@ -92,7 +92,7 @@ jobs:
           shared-key: test
           save-if: ${{ github.ref_name == 'main' }}
 
-      - uses: taiki-e/install-action@1ff94e96eee448734f1060c7332194641ad3a1dd # nextest
+      - uses: taiki-e/install-action@5493e0f047e7f902b4c43c6e0760b2f40c585268 # nextest
 
       - run: ci/nextest-compat.sh
 
