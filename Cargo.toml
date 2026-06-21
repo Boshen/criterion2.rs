@@ -32,7 +32,6 @@ serde      = "1.0.228"
 serde_json = "1.0.150"
 ciborium   = "0.2.2"
 bpaf       = { version = "0.9.26", default-features = false }
-walkdir    = "2.5"
 cast       = "0.3"
 num-traits = { version = "0.2.19", default-features = false, features = ["std"] }
 oorandom   = "11.1.5"
