@@ -10,7 +10,21 @@ use std::{
 use criterion::{BatchSize, BenchmarkFilter, BenchmarkId, Criterion, profiler::Profiler};
 use serde_json::value::Value;
 use tempfile::{TempDir, tempdir};
-use walkdir::WalkDir;
+
+/// Recursively collect every file and directory entry under `dir`.
+fn walk(dir: &Path) -> Vec<PathBuf> {
+    let mut entries = vec![];
+    if let Ok(read_dir) = std::fs::read_dir(dir) {
+        for entry in read_dir.flatten() {
+            let path = entry.path();
+            if path.is_dir() {
+                entries.extend(walk(&path));
+            }
+            entries.push(path);
+        }
+    }
+    entries
+}
 
 /*
  * Please note that these tests are not complete examples of how to use
@@ -76,9 +90,8 @@ fn verify_not_exists(dir: &Path, path: &str) {
 
 fn latest_modified(dir: &Path) -> SystemTime {
     let mut newest_update: Option<SystemTime> = None;
-    for entry in WalkDir::new(dir) {
-        let entry = entry.unwrap();
-        let modified = entry.metadata().unwrap().modified().unwrap();
+    for path in std::iter::once(dir.to_path_buf()).chain(walk(dir)) {
+        let modified = path.metadata().unwrap().modified().unwrap();
         newest_update = match newest_update {
             Some(latest) => Some(max(latest, modified)),
             None => Some(modified),
@@ -100,18 +113,13 @@ fn test_without_plots() {
     let dir = temp_dir();
     short_benchmark(&dir).bench_function("test_without_plots", |b| b.iter(|| 10));
 
-    for entry in WalkDir::new(dir.path().join("test_without_plots")) {
-        let entry = entry.ok();
-        let is_svg = entry
-            .as_ref()
-            .and_then(|entry| entry.path().extension())
-            .and_then(|ext| ext.to_str())
-            .map(|ext| ext == "svg")
-            .unwrap_or(false);
+    for path in walk(&dir.path().join("test_without_plots")) {
+        let is_svg =
+            path.extension().and_then(|ext| ext.to_str()).map(|ext| ext == "svg").unwrap_or(false);
         assert!(
             !is_svg,
             "Found SVG file ({:?}) in output directory with plots disabled",
-            entry.unwrap().file_name()
+            path.file_name()
         );
     }
 }

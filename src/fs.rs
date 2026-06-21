@@ -2,11 +2,10 @@ use std::{
     ffi::OsStr,
     fs::{self, File},
     io::Read,
-    path::Path,
+    path::{Path, PathBuf},
 };
 
 use serde::{Serialize, de::DeserializeOwned};
-use walkdir::{DirEntry, WalkDir};
 
 use crate::{
     error::{Error, Result},
@@ -82,22 +81,34 @@ pub fn list_existing_benchmarks<P>(directory: &P) -> Result<Vec<BenchmarkId>>
 where
     P: AsRef<Path>,
 {
-    fn is_benchmark(entry: &DirEntry) -> bool {
+    fn is_benchmark(path: &Path) -> bool {
         // Look for benchmark.json files inside folders named "new" (because we want to ignore
         // the baselines)
-        entry.file_name() == OsStr::new("benchmark.json")
-            && entry.path().parent().unwrap().file_name().unwrap() == OsStr::new("new")
+        path.file_name() == Some(OsStr::new("benchmark.json"))
+            && path.parent().and_then(Path::file_name) == Some(OsStr::new("new"))
     }
 
-    let mut ids = vec![];
+    // Recursively collect every file under `directory`, ignoring any I/O errors
+    // (e.g. unreadable directories) the same way the previous `walkdir` based
+    // implementation did.
+    fn visit(dir: &Path, files: &mut Vec<PathBuf>) {
+        let Ok(entries) = fs::read_dir(dir) else { return };
+        for entry in entries.flatten() {
+            let path = entry.path();
+            match entry.file_type() {
+                Ok(file_type) if file_type.is_dir() => visit(&path, files),
+                Ok(_) => files.push(path),
+                Err(_) => {}
+            }
+        }
+    }
 
-    for entry in WalkDir::new(directory)
-        .into_iter()
-        // Ignore errors.
-        .filter_map(::std::result::Result::ok)
-        .filter(is_benchmark)
-    {
-        let id: BenchmarkId = load(entry.path())?;
+    let mut paths = vec![];
+    visit(directory.as_ref(), &mut paths);
+
+    let mut ids = vec![];
+    for path in paths.into_iter().filter(|p| is_benchmark(p)) {
+        let id: BenchmarkId = load(&path)?;
         ids.push(id);
     }
 
