@@ -64,6 +64,37 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [3.0.4](https://github.com/Boshen/criterion2.rs/compare/v3.0.3...v3.0.4) - 2026-06-21
+
+### Other
+
+- *(deps)* drop anes in favor of inline ANSI escapes ([#179](https://github.com/Boshen/criterion2.rs/pull/179))
+- *(deps)* drop walkdir in favor of std recursion ([#178](https://github.com/Boshen/criterion2.rs/pull/178))
+- *(deps)* update rust crates ([#177](https://github.com/Boshen/criterion2.rs/pull/177))
+- *(deps)* update taiki-e/install-action digest to 1ff94e9 ([#176](https://github.com/Boshen/criterion2.rs/pull/176))
+- *(deps)* update github actions ([#175](https://github.com/Boshen/criterion2.rs/pull/175))
+- *(deps)* update dependency rust to v1.96.0 ([#174](https://github.com/Boshen/criterion2.rs/pull/174))
+- *(deps)* update taiki-e/install-action digest to 2b5ff36 ([#173](https://github.com/Boshen/criterion2.rs/pull/173))
+- *(deps)* update rust crates ([#172](https://github.com/Boshen/criterion2.rs/pull/172))
+- *(deps)* update taiki-e/install-action digest to 132b6d4 ([#171](https://github.com/Boshen/criterion2.rs/pull/171))
+- *(deps)* update rust crate bpaf to v0.9.26 ([#170](https://github.com/Boshen/criterion2.rs/pull/170))
+- *(deps)* update taiki-e/install-action digest to 9c69533 ([#169](https://github.com/Boshen/criterion2.rs/pull/169))
+- *(deps)* update taiki-e/install-action digest to 6fb7e04 ([#168](https://github.com/Boshen/criterion2.rs/pull/168))
+- *(deps)* update rust crate tokio to v1.52.3 ([#167](https://github.com/Boshen/criterion2.rs/pull/167))
+- *(deps)* update taiki-e/install-action digest to 503e871 ([#166](https://github.com/Boshen/criterion2.rs/pull/166))
+- *(deps)* update rust crate codspeed to v4.6.0 ([#165](https://github.com/Boshen/criterion2.rs/pull/165))
+- *(deps)* update taiki-e/install-action digest to 6ab583e ([#164](https://github.com/Boshen/criterion2.rs/pull/164))
+- *(deps)* update taiki-e/install-action digest to e537394 ([#163](https://github.com/Boshen/criterion2.rs/pull/163))
+- *(deps)* update rust crates ([#162](https://github.com/Boshen/criterion2.rs/pull/162))
+- *(deps)* update taiki-e/install-action digest to 1222bc9 ([#161](https://github.com/Boshen/criterion2.rs/pull/161))
+- *(deps)* update dependency rust to v1.95.0 ([#160](https://github.com/Boshen/criterion2.rs/pull/160))
+- *(deps)* update rust crates ([#159](https://github.com/Boshen/criterion2.rs/pull/159))
+- *(deps)* update taiki-e/install-action digest to 773334c ([#158](https://github.com/Boshen/criterion2.rs/pull/158))
+- *(deps)* update rust crate tokio to v1.51.0 ([#157](https://github.com/Boshen/criterion2.rs/pull/157))
+- *(deps)* update github-actions ([#156](https://github.com/Boshen/criterion2.rs/pull/156))
+- *(deps)* update github-actions ([#155](https://github.com/Boshen/criterion2.rs/pull/155))
+- *(deps)* update dependency rust to v1.94.1 ([#153](https://github.com/Boshen/criterion2.rs/pull/153))
+
 ## [3.0.1](https://github.com/Boshen/criterion2.rs/compare/v3.0.0...v3.0.1) - 2025-03-23
 
 ### Other
