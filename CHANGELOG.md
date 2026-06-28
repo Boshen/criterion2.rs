@@ -64,6 +64,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [3.0.5](https://github.com/Boshen/criterion2.rs/compare/v3.0.4...v3.0.5) - 2026-06-28
+
+### Other
+
+- *(deps)* update rust crate codspeed to v5 ([#183](https://github.com/Boshen/criterion2.rs/pull/183))
+- *(deps)* update taiki-e/install-action digest to 96c7780 ([#182](https://github.com/Boshen/criterion2.rs/pull/182))
+- *(deps)* update github actions ([#181](https://github.com/Boshen/criterion2.rs/pull/181))
+
 ## [3.0.4](https://github.com/Boshen/criterion2.rs/compare/v3.0.3...v3.0.4) - 2026-06-21
 
 ### Other
