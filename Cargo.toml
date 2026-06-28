@@ -41,7 +41,7 @@ futures   = { version = "0.3.32", default-features = false, optional = true }
 smol      = { version = "2.0.2", default-features = false, optional = true }
 tokio     = { version = "1.52.3", default-features = false, features = ["rt"], optional = true }
 async-std = { version = "1.13.2", optional = true }
-codspeed  = { version = "4.7.0", optional = true }
+codspeed  = { version = "5.0.0", optional = true }
 colored   = { version = "3.1.1", optional = true }
 
 document-features = { version = "0.2.12", optional = true }
