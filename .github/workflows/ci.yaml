@@ -17,11 +17,17 @@ jobs:
       matrix:
         rust:
           - stable
-          - 1.70.0 # MSRV
+          - 1.85.0 # MSRV
           - nightly
 
     steps:
       - uses: taiki-e/checkout-action@7d1e50e93dc4fb3bba58f85018fadf77898aee8b # v1.4.2
+
+      # rust-toolchain.toml overrides the installed toolchain for every cargo
+      # invocation, so versioned lanes must opt out of it to test what they claim.
+      - name: Override pinned toolchain for versioned lanes
+        if: ${{ matrix.rust != 'stable' && matrix.rust != 'nightly' }}
+        run: echo "RUSTUP_TOOLCHAIN=${{ matrix.rust }}" >> "$GITHUB_ENV"
 
       - uses: dtolnay/rust-toolchain@fa04a1451ff1842e2626ccb99004d0195b455a88 # master
         name: Setup rust toolchain
