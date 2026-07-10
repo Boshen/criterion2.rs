@@ -19,7 +19,7 @@ pub struct BenchmarkGroup<'a, M: Measurement = WallTime> {
 }
 
 impl<'a, M: Measurement> BenchmarkGroup<'a, M> {
-    pub fn new(criterion: &mut Criterion<M>, group_name: String) -> BenchmarkGroup<M> {
+    pub fn new(criterion: &mut Criterion<M>, group_name: String) -> BenchmarkGroup<'_, M> {
         BenchmarkGroup::<M> {
             codspeed: criterion
                 .codspeed
