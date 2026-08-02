@@ -64,6 +64,31 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [3.0.5](https://github.com/Boshen/criterion2.rs/compare/v3.0.4...v3.0.5) - 2026-08-02
+
+### Fixed
+
+- address new clippy and rustc lints for Rust 1.97.0
+
+### Other
+
+- *(deps)* update rust crate bpaf to v0.9.27 ([#196](https://github.com/Boshen/criterion2.rs/pull/196))
+- *(deps)* update rust crates ([#195](https://github.com/Boshen/criterion2.rs/pull/195))
+- *(deps)* update taiki-e/install-action digest to 69db1bb ([#194](https://github.com/Boshen/criterion2.rs/pull/194))
+- *(deps)* update rust crates ([#193](https://github.com/Boshen/criterion2.rs/pull/193))
+- *(deps)* update github actions ([#192](https://github.com/Boshen/criterion2.rs/pull/192))
+- remove dead WASI test step ([#191](https://github.com/Boshen/criterion2.rs/pull/191))
+- *(deps)* update dependency rust to v1.97.1 ([#190](https://github.com/Boshen/criterion2.rs/pull/190))
+- *(deps)* update taiki-e/install-action digest to e658deb ([#189](https://github.com/Boshen/criterion2.rs/pull/189))
+- make the MSRV job actually test its MSRV toolchain ([#188](https://github.com/Boshen/criterion2.rs/pull/188))
+- *(deps)* update dependency rust to v1.97.0 ([#187](https://github.com/Boshen/criterion2.rs/pull/187))
+- *(deps)* update rust to v1.96.1 ([#186](https://github.com/Boshen/criterion2.rs/pull/186))
+- *(deps)* update rust crate rand to v0.10.2 ([#185](https://github.com/Boshen/criterion2.rs/pull/185))
+- *(deps)* update github actions ([#184](https://github.com/Boshen/criterion2.rs/pull/184))
+- *(deps)* update rust crate codspeed to v5 ([#183](https://github.com/Boshen/criterion2.rs/pull/183))
+- *(deps)* update taiki-e/install-action digest to 96c7780 ([#182](https://github.com/Boshen/criterion2.rs/pull/182))
+- *(deps)* update github actions ([#181](https://github.com/Boshen/criterion2.rs/pull/181))
+
 ## [3.0.4](https://github.com/Boshen/criterion2.rs/compare/v3.0.3...v3.0.4) - 2026-06-21
 
 ### Other
