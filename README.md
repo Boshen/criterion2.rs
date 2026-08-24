@@ -34,7 +34,7 @@ This is fork is updated with:
 
 * renovate bot dependency update
 * builtin [codspeed](https://codspeed.io) feature
-* `clap` replaced with [`bpaf`](https://github.com/pacak/bpaf) to reduce binary size and compilation time
+* `clap` replaced with [`usage-rs`](https://crates.io/crates/usage-rs) to reduce binary size and CLI parsing overhead
 * merged the `criterion-plot` crate into `criterion2`
 * remove regex filter support to reduce compilation time
 * added `Bencher::iter_with_setup_wrapper` method

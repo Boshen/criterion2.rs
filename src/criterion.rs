@@ -330,7 +330,7 @@ impl<M: Measurement> Criterion<M> {
     pub fn configure_from_args(mut self) -> Criterion<M> {
         use crate::cli::*;
 
-        let opts = options(&self.config).fallback_to_usage().run();
+        let opts = parse(&self.config);
 
         if self.connection.is_some() {
             if opts.color != Color::Auto {

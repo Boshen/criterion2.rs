@@ -220,12 +220,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "bpaf"
-version = "0.9.27"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c670d65eea33846872d5ccf668c00a94c5c67dbdcc0289ea1c362671ce1ddb82"
-
-[[package]]
 name = "bumpalo"
 version = "3.20.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -348,7 +342,6 @@ version = "3.0.4"
 dependencies = [
  "approx",
  "async-std",
- "bpaf",
  "cast",
  "ciborium",
  "codspeed",
@@ -365,6 +358,7 @@ dependencies = [
  "smol",
  "tempfile",
  "tokio",
+ "usage-rs",
 ]
 
 [[package]]
@@ -1044,6 +1038,33 @@ name = "unicode-xid"
 version = "0.2.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ebc1c04c71510c7f702b52b7c350734c9ff1295c464a03335b00bb84fc54f853"
+
+[[package]]
+name = "usage-argv"
+version = "6.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "857c0a155957d220665b2257ac7c58e168476ff7de09286940055ff78f622fb0"
+
+[[package]]
+name = "usage-derive"
+version = "6.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a9b6be9a69c5659c8002ac46be4262fd6e3ef57db53787df0f85b2d116c9e790"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn 3.0.0",
+]
+
+[[package]]
+name = "usage-rs"
+version = "6.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "689ff9bfcf0c894d94a44171b27f6533db7d44a9615b17cef9b846590df13463"
+dependencies = [
+ "usage-argv",
+ "usage-derive",
+]
 
 [[package]]
 name = "value-bag"
