@@ -1,6 +1,6 @@
-use std::{str::FromStr, time::Duration};
+use std::{path::Path, str::FromStr, sync::OnceLock, time::Duration};
 
-use bpaf::*;
+use usage::{ArgGroup, Cli};
 
 use crate::{BenchmarkConfig, ListFormat, report::CliVerbosity};
 
@@ -35,6 +35,7 @@ pub enum OutputFormat {
     Criterion,
     Bencher,
 }
+
 impl FromStr for OutputFormat {
     type Err = &'static str;
 
@@ -62,6 +63,7 @@ pub enum Color {
     Always,
     Never,
 }
+
 impl FromStr for Color {
     type Err = &'static str;
 
@@ -85,15 +87,15 @@ impl std::fmt::Display for Color {
     }
 }
 
-fn verbosity() -> impl Parser<CliVerbosity> {
-    let verbose = short('v')
-        .long("verbose")
-        .help("Print additional statistical information.")
-        .req_flag(CliVerbosity::Verbose);
+#[derive(ArgGroup)]
+#[usage(name = "verbosity")]
+enum Verbosity {
+    /// Print additional statistical information.
+    #[usage(short = 'v', long = "verbose")]
+    Verbose,
 
-    let quiet =
-        long("quiet").help("Print only the benchmark results.").req_flag(CliVerbosity::Quiet);
-    construct!([verbose, quiet]).fallback(CliVerbosity::Normal)
+    /// Print only the benchmark results.
+    Quiet,
 }
 
 #[derive(Debug, Clone, Eq, PartialEq)]
@@ -104,36 +106,26 @@ pub enum Baseline_ {
     Strict(String),
 }
 
-fn baseline() -> impl Parser<Baseline_> {
-    let save_baseline = short('s')
-        .long("save-baseline")
-        .help("Save results under a named baseline.")
-        .argument("ARG")
-        .map(Baseline_::Save);
+#[derive(ArgGroup)]
+#[usage(name = "baseline")]
+enum Baseline {
+    /// Save results under a named baseline.
+    #[usage(short = 's', long = "save-baseline", value_name = "ARG")]
+    Save(String),
 
-    let discard_baseline =
-        long("discard-baseline").help("Discard benchmark results").req_flag(Baseline_::Discard);
+    /// Discard benchmark results.
+    #[usage(long = "discard-baseline")]
+    Discard,
 
-    let use_baseline = short('b')
-        .long("baseline")
-        .help(
-            "Compare to a named baseline. If any benchmarks do not have the specified baseline \
-                            this command fails.",
-        )
-        .argument::<String>("BASE")
-        .map(Baseline_::Strict);
+    /// Compare to a named baseline. If any benchmarks do not have the specified baseline this
+    /// command fails.
+    #[usage(short = 'b', long = "baseline", value_name = "BASE")]
+    Strict(String),
 
-    let baseline_lenient =
-                        long("baseline-lenient")
-
-                        .help("Compare to a named baseline. If any benchmarks do not have the specified baseline \
-                            then just those benchmarks are not compared against the baseline while every other \
-                            benchmark is compared against the baseline.")
-                        .argument("BASE")
-                        .map(Baseline_::Lenient);
-
-    construct!([save_baseline, discard_baseline, use_baseline, baseline_lenient])
-        .fallback(Baseline_::Save("baseline".to_owned()))
+    /// Compare to a named baseline. Benchmarks without the specified baseline are not compared,
+    /// while every other benchmark is compared against the baseline.
+    #[usage(long = "baseline-lenient", value_name = "BASE")]
+    Lenient(String),
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -145,10 +137,57 @@ pub enum Op {
     Benchmark,
 }
 
+struct ProfileTime(Duration);
+
+impl FromStr for ProfileTime {
+    type Err = String;
+
+    fn from_str(value: &str) -> Result<Self, Self::Err> {
+        let seconds = value.parse::<f64>().map_err(|error| error.to_string())?;
+        if !(seconds > 1.0) {
+            return Err("Profile time must be at least one second.".to_owned());
+        }
+        Ok(Self(Duration::from_secs_f64(seconds)))
+    }
+}
+
+#[derive(ArgGroup)]
+#[usage(name = "operation")]
+enum Operation {
+    /// List all benchmarks.
+    List,
+
+    #[usage(long = "profile-time", value_name = "DUR")]
+    Profile(ProfileTime),
+
+    /// Run the benchmarks once, to verify that they execute successfully, but do not measure or
+    /// report the results.
+    Test,
+
+    /// Load a previous baseline instead of sampling new data.
+    #[usage(long = "load-baseline", value_name = "BASE")]
+    LoadBaseline(String),
+
+    /// Run the benchmarks (default).
+    #[usage(long = "bench")]
+    Benchmark,
+}
+
 #[derive(Debug, Clone, Copy, Eq, PartialEq)]
 pub enum Sample {
     Specific(usize),
     Quick,
+}
+
+#[derive(ArgGroup)]
+#[usage(name = "sample")]
+enum Sampling {
+    /// Benchmark only until the significance level has been reached.
+    Quick,
+
+    /// Changes the default size of the sample for this run.
+    #[usage(long = "sample-size", value_name = "SIZE")]
+    Specific(usize),
 }
 
 impl FromStr for ListFormat {
@@ -162,156 +201,257 @@ impl FromStr for ListFormat {
         })
     }
 }
-fn format() -> impl Parser<ListFormat> {
-    // Note that libtest's --format also works during test execution, but criterion
-    // doesn't support that at the moment.
-    long("format").help("Output formatting").argument("FORMAT").fallback(ListFormat::Pretty)
+
+const AFTER_HELP: &str = "This executable is a Criterion.rs benchmark.
+See https://github.com/bheisler/criterion.rs for more details.
+
+To enable debug output, define the environment variable CRITERION_DEBUG.
+Criterion.rs will output more debug information and will save the gnuplot
+scripts alongside the generated plots.
+
+To test that the benchmarks work, run `cargo test --benches`
+
+NOTE: If you see an 'unrecognized option' error using any of the options above, see:
+https://bheisler.github.io/criterion.rs/book/faq.html";
+
+#[derive(Cli)]
+#[usage(
+    name = executable_name(),
+    name_spec = "benchmark",
+    bin = executable_name(),
+    bin_spec = "benchmark",
+    unknown_flags = "error",
+    args_override_self = false,
+    spec_endpoint = false,
+    after_help = AFTER_HELP
+)]
+struct RawOpts {
+    /// Configure coloring of output. always = always colorize output, never = never colorize
+    /// output, auto = colorize output if output is a tty and compiled for unix.
+    #[usage(
+        short = 'c',
+        long,
+        visible_alias = "colour",
+        value_name = "COLOR",
+        choices("auto", "always", "never"),
+        default = "auto"
+    )]
+    color: Color,
+
+    #[usage(arg_group)]
+    verbosity: Option<Verbosity>,
+
+    /// Disable plot and HTML generation.
+    #[usage(short = 'n')]
+    noplot: bool,
+
+    #[usage(arg_group)]
+    baseline: Option<Baseline>,
+
+    #[usage(arg_group)]
+    sample: Option<Sampling>,
+
+    #[usage(arg_group)]
+    op: Option<Operation>,
+
+    /// Output formatting.
+    #[usage(long, value_name = "FORMAT", choices("pretty", "terse"), default = "pretty")]
+    format: ListFormat,
+
+    /// Changes the default warm up time for this run.
+    #[usage(long = "warm-up-time", value_name = "TIME")]
+    warm_up_time: Option<f64>,
+
+    /// Changes the default measurement time for this run.
+    #[usage(long = "measurement-time", value_name = "TIME")]
+    measurement_time: Option<f64>,
+
+    /// Changes the default number of resamples for this run.
+    #[usage(long, value_name = "N")]
+    nresamples: Option<usize>,
+
+    /// Changes the default noise threshold for this run.
+    #[usage(long = "noise-threshold", value_name = "ARG")]
+    noise_threshold: Option<f64>,
+
+    /// Changes the default confidence level for this run.
+    #[usage(long = "confidence-level", value_name = "ARG")]
+    confidence_level: Option<f64>,
+
+    /// Changes the default significance level for this run.
+    #[usage(long = "significance-level", value_name = "ARG")]
+    significance_level: Option<f64>,
+
+    /// Ignored, but added for compatibility with libtest.
+    #[usage(long, hide)]
+    nocapture: bool,
+
+    /// Ignored, but added for compatibility with libtest.
+    #[usage(long = "show-output", hide)]
+    show_output: bool,
+
+    /// Ignored, but added for compatibility with libtest.
+    #[usage(long = "include-ignored", hide)]
+    include_ignored: bool,
+
+    /// Change the CLI output format. By default, Criterion.rs will use its own format. If output
+    /// format is set to 'bencher', Criterion.rs will print output in a format that resembles the
+    /// 'bencher' crate.
+    #[usage(
+        long = "output-format",
+        value_name = "FORMAT",
+        choices("criterion", "bencher"),
+        default = "criterion"
+    )]
+    output_format: OutputFormat,
+
+    /// List or run ignored benchmarks (currently means skip all benchmarks).
+    #[usage(long)]
+    ignored: bool,
+
+    /// Run benchmarks that exactly match the provided filter.
+    #[usage(long)]
+    exact: bool,
+
+    /// Skip benchmarks whose names do not contain FILTER.
+    filter: Option<String>,
 }
 
-fn sample(default_sample: usize) -> impl Parser<Sample> {
-    let quick = long("quick")
-        .help("Benchmark only until the significance level has been reached")
-        .req_flag(Sample::Quick);
-    let sample = long("sample-size")
-        .help("Changes the default size of the sample for this run")
-        .argument::<usize>("SIZE")
-        .fallback(default_sample)
-        .display_fallback()
-        .map(Sample::Specific);
-    construct!([quick, sample])
+impl RawOpts {
+    fn with_config(self, config: &BenchmarkConfig) -> Opts {
+        let verbosity = match self.verbosity {
+            Some(Verbosity::Verbose) => CliVerbosity::Verbose,
+            Some(Verbosity::Quiet) => CliVerbosity::Quiet,
+            None => CliVerbosity::Normal,
+        };
+        let baseline = match self.baseline {
+            Some(Baseline::Save(name)) => Baseline_::Save(name),
+            Some(Baseline::Discard) => Baseline_::Discard,
+            Some(Baseline::Strict(name)) => Baseline_::Strict(name),
+            Some(Baseline::Lenient(name)) => Baseline_::Lenient(name),
+            None => Baseline_::Save("baseline".to_owned()),
+        };
+        let sample = match self.sample {
+            Some(Sampling::Quick) => Sample::Quick,
+            Some(Sampling::Specific(size)) => Sample::Specific(size),
+            None => Sample::Specific(config.sample_size),
+        };
+        let op = match self.op {
+            Some(Operation::List) => Op::List,
+            Some(Operation::Profile(ProfileTime(time))) => Op::ProfileTime(time),
+            Some(Operation::Test) => Op::Test,
+            Some(Operation::LoadBaseline(name)) => Op::LoadBaseline(name),
+            Some(Operation::Benchmark) | None => Op::Benchmark,
+        };
+
+        Opts {
+            color: self.color,
+            verbosity,
+            noplot: self.noplot,
+            filter: self.filter,
+            baseline,
+            format: self.format,
+            sample,
+            op,
+            ignored: self.ignored,
+            exact: self.exact,
+            warm_up_time: self.warm_up_time.map_or(config.warm_up_time, Duration::from_secs_f64),
+            measurement_time: self
+                .measurement_time
+                .map_or(config.measurement_time, Duration::from_secs_f64),
+            nresamples: self.nresamples.unwrap_or(config.nresamples),
+            noise_threshold: self.noise_threshold.unwrap_or(config.noise_threshold),
+            confidence_level: self.confidence_level.unwrap_or(config.confidence_level),
+            significance_level: self.significance_level.unwrap_or(config.significance_level),
+            output_format: self.output_format,
+            nocapture: self.nocapture,
+            show_output: self.show_output,
+            include_ignored: self.include_ignored,
+        }
+    }
 }
 
-fn op() -> impl Parser<Op> {
-    let list = long("list").help("List all benchmarks").req_flag(Op::List);
-    let profile = long("profile-time")
-        .argument::<f64>("DUR")
-        .guard(|d| *d > 1.0, "Profile time must be at least one second.")
-        .map(|s| Op::ProfileTime(Duration::from_secs_f64(s)));
-    let test = long("test")
-        .help(
-            "Run the benchmarks once, to verify that they execute successfully, \
-                            but do not measure or report the results.",
-        )
-        .req_flag(Op::Test);
-    let load_baseline = long("load-baseline")
-        .help("Load a previous baseline instead of sampling new data.")
-        .argument::<String>("BASE")
-        .map(Op::LoadBaseline);
-    let bench = long("bench").help("Run the benchmarks (default)").req_flag(Op::Benchmark);
-    construct!([list, profile, load_baseline, test, bench])
-        .fallback(Op::Benchmark)
-        .group_help("Operation to perform")
+fn executable_name() -> &'static str {
+    static NAME: OnceLock<String> = OnceLock::new();
+    NAME.get_or_init(|| {
+        std::env::args_os()
+            .next()
+            .and_then(|argument| Path::new(&argument).file_name().map(|name| name.to_owned()))
+            .map(|name| name.to_string_lossy().into_owned())
+            .unwrap_or_else(|| "benchmark".to_owned())
+    })
 }
 
-pub fn options(config: &BenchmarkConfig) -> OptionParser<Opts> {
-    let filter = positional::<String>("FILTER")
-        .help("Skip benchmarks whose names do not contain FILTER.")
-        .optional();
-
-    let color = short('c')
-        .long("color")
-        .long("colour")
-        .help(
-            "Configure coloring of output. always = always colorize output, \
-                    never = never colorize output, auto = colorize output if output \
-                    is a tty and compiled for unix.",
-        )
-        .argument::<Color>("COLOR")
-        .fallback(Color::Auto);
-
-    let noplot = short('n').help("Disable plot and HTML generation.").switch();
-
-    let ignored = long("ignored")
-        .help("List or run ignored benchmarks (currently means skip all benchmarks)")
-        .switch();
-
-    let exact =
-        long("exact").help("Run benchmarks that exactly match the provided filter").switch();
-
-    let sample = sample(config.sample_size);
-
-    let warm_up_time = long("warm-up-time")
-        .help("Changes the default warm up time for this run")
-        .argument("TIME")
-        .fallback(config.warm_up_time.as_secs_f64())
-        .display_fallback()
-        .map(Duration::from_secs_f64);
-
-    let measurement_time = long("measurement-time")
-        .help("Changes the default measurement time for this run.")
-        .argument::<f64>("TIME")
-        .fallback(config.measurement_time.as_secs_f64())
-        .display_fallback()
-        .map(Duration::from_secs_f64);
-
-    let nresamples = long("nresamples")
-        .help("Changes the default number of resamples for this run")
-        .argument::<usize>("N")
-        .fallback(config.nresamples)
-        .display_fallback();
-    let noise_threshold = long("noise-threshold")
-        .help("Changes the default noise threshold for this run.")
-        .argument::<f64>("ARG")
-        .fallback(config.noise_threshold)
-        .display_fallback();
-    let confidence_level = long("confidence-level")
-        .help("Changes the default confidence level for this run.")
-        .argument::<f64>("ARG")
-        .fallback(config.confidence_level)
-        .display_fallback();
-    let significance_level = long("significance-level")
-        .help("Changes the default significance level for this run.")
-        .argument::<f64>("ARG")
-        .fallback(config.significance_level)
-        .display_fallback();
-    let nocapture = long("nocapture")
-        .help("Ignored, but added for compatibility with libsets.")
-        .switch()
-        .hide();
-    let show_output = long("show-output")
-        .help("Ignored, but added for compatibility with libsets.")
-        .switch()
-        .hide();
-    let include_ignored = long("include-ignored")
-        .help("Ignored, but added for compatibility with libsets.")
-        .switch()
-        .hide();
-
-    let output_format =
-                        long("output-format")
-
-                        .help("Change the CLI output format. By default, Criterion.rs will use its own \
-                             format. If output format is set to 'bencher', Criterion.rs will print output \
-                             in a format that resembles the 'bencher' crate.")
-                        .argument("FORMAT").fallback(OutputFormat::Criterion);
-
-    construct!(Opts { color, verbosity(),  noplot, baseline(), sample, op(), format(),
-        warm_up_time, measurement_time,
-        nresamples, noise_threshold, confidence_level, significance_level,
-        nocapture, show_output, include_ignored,
-        output_format,
-        ignored, exact, filter})
-    .to_options()
-    .footer(
-        "
-This executable is a Criterion.rs benchmark.
- See https://github.com/bheisler/criterion.rs for more details.
-
-  To enable debug output, define the environment variable CRITERION_DEBUG.
-  Criterion.rs will output more debug information and will save the gnuplot
-  scripts alongside the generated plots.
-
-  To test that the benchmarks work, run `cargo test --benches`
-
-  NOTE: If you see an 'unrecognized option' error using any of the options above, see:
-  https://bheisler.github.io/criterion.rs/book/faq.html",
-    )
+pub fn parse(config: &BenchmarkConfig) -> Opts {
+    RawOpts::parse().with_config(config)
 }
 
-#[test]
-fn check_invariants() {
-    let cfg = BenchmarkConfig::default();
-    let parser = options(&cfg);
+#[cfg(test)]
+mod tests {
+    use std::ffi::OsStr;
 
-    parser.check_invariants(true);
+    use super::*;
+
+    fn parse(args: &[&str], config: &BenchmarkConfig) -> Opts {
+        let args: Vec<&OsStr> = args.iter().map(OsStr::new).collect();
+        RawOpts::parse_from(&args).unwrap().with_config(config)
+    }
+
+    #[test]
+    fn uses_benchmark_configuration_as_defaults() {
+        let mut config = BenchmarkConfig::default();
+        config.sample_size = 42;
+        config.nresamples = 1234;
+
+        let opts = parse(&[], &config);
+
+        assert_eq!(opts.sample, Sample::Specific(42));
+        assert_eq!(opts.nresamples, 1234);
+        assert_eq!(opts.op, Op::Benchmark);
+        assert_eq!(opts.baseline, Baseline_::Save("baseline".to_owned()));
+    }
+
+    #[test]
+    fn parses_alternative_modes_and_aliases() {
+        let config = BenchmarkConfig::default();
+        let opts = parse(
+            &[
+                "--colour",
+                "always",
+                "--quiet",
+                "--baseline-lenient",
+                "previous",
+                "--quick",
+                "--list",
+                "--format",
+                "terse",
+                "--exact",
+                "filter",
+            ],
+            &config,
+        );
+
+        assert_eq!(opts.color, Color::Always);
+        assert_eq!(opts.verbosity, CliVerbosity::Quiet);
+        assert_eq!(opts.baseline, Baseline_::Lenient("previous".to_owned()));
+        assert_eq!(opts.sample, Sample::Quick);
+        assert_eq!(opts.op, Op::List);
+        assert!(matches!(opts.format, ListFormat::Terse));
+        assert!(opts.exact);
+        assert_eq!(opts.filter.as_deref(), Some("filter"));
+    }
+
+    #[test]
+    fn rejects_conflicting_modes() {
+        let args = [OsStr::new("--quick"), OsStr::new("--sample-size"), OsStr::new("20")];
+
+        assert!(RawOpts::parse_from(&args).is_err());
+    }
+
+    #[test]
+    fn rejects_short_profile_times() {
+        let args = [OsStr::new("--profile-time"), OsStr::new("1")];
+
+        assert!(RawOpts::parse_from(&args).is_err());
+    }
 }

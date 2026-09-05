@@ -7,7 +7,7 @@ authors = [
   "Jorge Aparicio <japaricious@gmail.com>",
 ]
 edition = "2024"
-rust-version = "1.85.0"
+rust-version = "1.91.0"
 
 description = "Statistics-driven micro-benchmarking library"
 homepage    = "https://bheisler.github.io/criterion.rs/book/index.html"
@@ -30,7 +30,7 @@ bench = false
 serde      = "1.0.228"
 serde_json = "1.0.150"
 ciborium   = "0.2.2"
-bpaf       = { version = "0.9.26", default-features = false }
+usage      = { package = "usage-rs", version = "6.2.0" }
 cast       = "0.3"
 num-traits = { version = "0.2.19", default-features = false, features = ["std"] }
 oorandom   = "11.1.5"
