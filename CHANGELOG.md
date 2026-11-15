@@ -64,6 +64,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [3.0.6](https://github.com/Boshen/criterion2.rs/compare/v3.0.5...v3.0.6) - 2026-11-15
+
+### Other
+
+- *(deps)* update rust crates ([#212](https://github.com/Boshen/criterion2.rs/pull/212))
+- *(deps)* update dependency rust to v1.100.0 ([#211](https://github.com/Boshen/criterion2.rs/pull/211))
+
 ## [3.0.5](https://github.com/Boshen/criterion2.rs/compare/v3.0.4...v3.0.5) - 2026-10-25
 
 ### Fixed
